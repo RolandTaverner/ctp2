@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\D3d">
+      <UniqueIdentifier>{908a9547-7d4e-4116-b5fb-6d0d7d2a0ddb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\D3d">
+      <UniqueIdentifier>{4e69b081-64c7-4888-8bfc-085d696645d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{4c2c320f-896e-40a4-8d55-434d7f35a0e8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Bitmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Region.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3d\D3dBitmap.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3d\D3dCreateTexture.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3d\D3dInterfaces.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3d\D3dTextureCache.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3d\DXGIFactory.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3d\Renderer.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3d\TextureShader.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bitmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Region.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3d\D3dBitmap.cpp">
+      <Filter>Source Files\D3d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3d\D3dCreateTexture.cpp">
+      <Filter>Source Files\D3d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3d\D3dTextureCache.cpp">
+      <Filter>Source Files\D3d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3d\DXGIFactory.cpp">
+      <Filter>Source Files\D3d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3d\Renderer.cpp">
+      <Filter>Source Files\D3d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3d\TextureShader.cpp">
+      <Filter>Source Files\D3d</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\D3dTiles.fx">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\D3dTiles_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\D3dTiles_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

@@ -45,6 +45,7 @@
 
 #ifdef _DEBUG
 
+#include <cstdlib>
 #include "ctp/debugtools/debugmemory.h"	// own declarations
 
 #include "ctp/debugtools/log.h"
@@ -177,7 +178,7 @@ static void DebugMemory_CreateDefaultHeap (void)
 {
 	MemoryHeap heap;
 
-	heap = (MemoryHeap) malloc (sizeof (MemoryHeapDescriptor));
+	heap = (MemoryHeap) std::malloc (sizeof (MemoryHeapDescriptor));
 
 	heap->name = _strdup ("Default Heap");
 
@@ -225,7 +226,7 @@ void DebugMemory_Initialise (void)
 
 void DebugMemory_Allocate(void)
 {
-	debug_memory = (DebugMemory *)malloc(sizeof(DebugMemory));
+	debug_memory = (DebugMemory *)std::malloc(sizeof(DebugMemory));
 
 	debug_memory->open = FALSE;
 	debug_memory->initialised = FALSE;
@@ -372,7 +373,7 @@ void *DebugMemory_FastMalloc  (unsigned size)
 {
 	void *memory;
 
-	memory = malloc (size);
+	memory = std::malloc (size);
 
 	if (!memory)
 	{
@@ -963,7 +964,7 @@ MemPtr DebugMemory_GuardedBlockAlloc (
 	ASSERT_INDIRECT (module_name, module_line, size >= 0);
 
 	total_size = size + sizeof (AllocHeader) + sizeof (AllocBuffer) + sizeof (AllocBuffer);
-	header = (AllocHeader *) malloc (total_size);
+	header = (AllocHeader *) std::malloc (total_size);
 	if (header == NULL)
 	{
 		LOG ((LOG_FATAL, "Out of Memory"));
@@ -1257,7 +1258,7 @@ MemoryHeap DebugMemoryHeap_GuardedOpen (const char *file, int line, const char *
 	MemoryHeap heap;
 	MemoryHeap descriptor_ptr;
 
-	heap = (MemoryHeap) malloc (sizeof (MemoryHeapDescriptor));
+	heap = (MemoryHeap) std::malloc (sizeof (MemoryHeapDescriptor));
 
 	heap->name = _strdup (name);
 
@@ -1469,7 +1470,7 @@ void Debug_MemNodeAdd (const char *filename, int line_number, int size, CallStac
   MemNode *new_node;
 
   if (!mem_node) {
-    new_node = (MemNode *) malloc (sizeof (MemNode));
+    new_node = (MemNode *) std::malloc (sizeof (MemNode));
 
     if (!new_node)
     {

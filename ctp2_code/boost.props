@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="UserMacros">
+    <BOOST_INC>x:\libs_2017\boost-1.67.0\include</BOOST_INC>
+    <BOOST_LIB>x:\libs_2017\boost-1.67.0\lib</BOOST_LIB>
+    <BZIP2_INC>x:\libs_2017\bzip2\include</BZIP2_INC>
+    <BZIP2_LIB>x:\libs_2017\bzip2\lib</BZIP2_LIB>
+    <ICU_INC>x:\libs_2017\icu59\include</ICU_INC>
+    <ICU_LIB>x:\libs_2017\icu59\lib</ICU_LIB>
+    <ZLIB_INC>x:\libs_2017\zlib-1.2.8\include</ZLIB_INC>
+    <ZLIB_LIB>x:\libs_2017\zlib-1.2.8\lib</ZLIB_LIB>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(BOOST_INC);$(BZIP2_INC);$(ICU_INC);$(ZLIB_INC);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>U_STATIC_IMPLEMENTATION;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(BOOST_LIB);$(BZIP2_LIB);$(ICU_LIB);$(ZLIB_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">sicudtd.lib;sicuind.lib;sicuiod.lib;sicutud.lib;sicuucd.lib;libboost_atomic-vc141-mt-gd-x32-1_67.lib;libboost_bzip2-vc141-mt-gd-x32-1_67.lib;libboost_chrono-vc141-mt-gd-x32-1_67.lib;libboost_date_time-vc141-mt-gd-x32-1_67.lib;libboost_filesystem-vc141-mt-gd-x32-1_67.lib;libboost_iostreams-vc141-mt-gd-x32-1_67.lib;libboost_locale-vc141-mt-gd-x32-1_67.lib;libboost_program_options-vc141-mt-gd-x32-1_67.lib;libboost_regex-vc141-mt-gd-x32-1_67.lib;libboost_system-vc141-mt-gd-x32-1_67.lib;libboost_thread-vc141-mt-gd-x32-1_67.lib;libboost_zlib-vc141-mt-gd-x32-1_67.lib;libboost_serialization-vc141-mt-gd-x32-1_67.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">sicudt.lib;sicuin.lib;sicuio.lib;sicutu.lib;sicuuc.lib;libboost_bzip2-vc141-mt-x32-1_67.lib;libboost_chrono-vc141-mt-x32-1_67.lib;libboost_date_time-vc141-mt-x32-1_67.lib;libboost_filesystem-vc141-mt-x32-1_67.lib;libboost_iostreams-vc141-mt-x32-1_67.lib;libboost_locale-vc141-mt-x32-1_67.lib;libboost_program_options-vc141-mt-x32-1_67.lib;libboost_regex-vc141-mt-x32-1_67.lib;libboost_system-vc141-mt-x32-1_67.lib;libboost_thread-vc141-mt-x32-1_67.lib;libboost_zlib-vc141-mt-x32-1_67.lib;libboost_serialization-vc141-mt-x32-1_67.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(BOOST_LIB);$(BZIP2_LIB);$(ICU_LIB);$(ZLIB_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="BOOST_INC">
+      <Value>$(BOOST_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BOOST_LIB">
+      <Value>$(BOOST_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BZIP2_INC">
+      <Value>$(BZIP2_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BZIP2_LIB">
+      <Value>$(BZIP2_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ICU_INC">
+      <Value>$(ICU_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ICU_LIB">
+      <Value>$(ICU_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ZLIB_INC">
+      <Value>$(ZLIB_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ZLIB_LIB">
+      <Value>$(ZLIB_LIB)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

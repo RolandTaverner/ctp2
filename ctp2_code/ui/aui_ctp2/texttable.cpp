@@ -8,6 +8,7 @@
 #include "ui/aui_ctp2/c3scroller.h"
 #include "ui/aui_ctp2/c3ui.h"
 #include "ui/aui_ctp2/pattern.h"
+#include "ui/aui_common/aui_ldl.h"
 #include "ui/aui_common/aui_static.h"
 #include "ui/aui_ctp2/textswitch.h"
 

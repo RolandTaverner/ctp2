@@ -55,7 +55,7 @@ namespace
 // Remark(s)  : Assumption: file exists and is open for writing.
 //
 //----------------------------------------------------------------------------
-class DumpToFile : public std::unary_function<GameEventHook::Node const &, void>
+class DumpToFile
 {
 public:
     DumpToFile(FILE * f) : m_file(f) { ; };
