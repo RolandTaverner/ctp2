@@ -13,7 +13,8 @@ public:
   typedef std::uint32_t Pixel;
   typedef boost::shared_array<Pixel> PixelData;
   typedef boost::shared_array<const Pixel> ConstPixelData;
-  typedef std::shared_ptr<Bitmap> BitmapPtr;
+  typedef std::shared_ptr<Bitmap> Ptr;
+  typedef std::shared_ptr<const Bitmap> ConstPtr;
 
   Bitmap(unsigned width, unsigned height, const std::string &staticID, PixelData pixels);
   Bitmap(unsigned width, unsigned height, PixelData pixels);

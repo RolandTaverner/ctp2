@@ -8,7 +8,7 @@
 namespace TileEngine::D3d::Utils {
 
 ID3D11Texture2DPtr CreateD3dTexture(ID3D11DevicePtr device, const TileEngine::Bitmap &s) {
-  const unsigned bpp = sizeof(std::uint32_t);
+  const unsigned bpp = sizeof(TileEngine::Color);
 
   // setting up D3D11_SUBRESOURCE_DATA 
   D3D11_SUBRESOURCE_DATA tbsd;
@@ -24,6 +24,43 @@ ID3D11Texture2DPtr CreateD3dTexture(ID3D11DevicePtr device, const TileEngine::Bi
 
   tdesc.Width = s.Width();
   tdesc.Height = s.Height();
+  tdesc.MipLevels = 1;
+  tdesc.ArraySize = 1;
+  tdesc.SampleDesc.Count = 1;
+  tdesc.SampleDesc.Quality = 0;
+  tdesc.Usage = D3D11_USAGE_DEFAULT;
+  tdesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+  tdesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+  tdesc.CPUAccessFlags = 0;
+  tdesc.MiscFlags = 0;
+
+  // create the texture
+  ID3D11Texture2DPtr tex;
+  if (FAILED(device->CreateTexture2D(&tdesc, &tbsd, &tex.GetInterfacePtr()))) {
+    return ID3D11Texture2DPtr();
+  }
+
+  return tex;
+}
+
+ID3D11Texture2DPtr CreateD3dTexture(ID3D11DevicePtr device, TileEngine::Color color) {
+  const unsigned bpp = sizeof(TileEngine::Color);
+
+  // setting up D3D11_SUBRESOURCE_DATA 
+  D3D11_SUBRESOURCE_DATA tbsd;
+  memset(&tbsd, 0, sizeof(tbsd));
+
+  const unsigned width = 1, height = 1;
+  tbsd.pSysMem = (void *)&color;
+  tbsd.SysMemPitch = 1 * bpp;
+  tbsd.SysMemSlicePitch = width*height*bpp; // Not needed since this is a 2d texture
+
+  // setting up D3D11_TEXTURE2D_DESC 
+  D3D11_TEXTURE2D_DESC tdesc;
+  memset(&tdesc, 0, sizeof(tdesc));
+
+  tdesc.Width = width;
+  tdesc.Height = height;
   tdesc.MipLevels = 1;
   tdesc.ArraySize = 1;
   tdesc.SampleDesc.Count = 1;

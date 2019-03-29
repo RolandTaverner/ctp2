@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <string.h>
+#include <string>
 
 #include <directxcolors.h>
 
@@ -203,7 +204,7 @@ void Renderer::Render() {
   // Just clear the backbuffer
   m_deviceContext->ClearRenderTargetView(m_renderTargetView, ::DirectX::Colors::DarkBlue);
   m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-  
+
   float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
   m_deviceContext->OMSetBlendState(m_blendStateAlphaBlend, blendFactor, 0xffffffff);
 
@@ -218,9 +219,11 @@ void Renderer::Render() {
   if (FAILED(hr)) {
     throw std::runtime_error("Present() failed");
   }
+
+  m_oneFrameTexCache.Clear();
 }
 
-void Renderer::RenderBitmap(unsigned level, const Rect &absRect, Bitmap::BitmapPtr b) {
+void Renderer::RenderBitmap(unsigned level, const Rect &absRect, Bitmap::Ptr b) {
   const float zLevel = (float)level / (float)LevelsCount();
 
   ID3D11Texture2DPtr tex;
@@ -254,9 +257,38 @@ void Renderer::RenderBitmap(unsigned level, const Rect &absRect, Bitmap::BitmapP
     srv);
 }
 
-void Renderer::RenderPrimitive(unsigned level) {
+void Renderer::RenderColoredRectangle(unsigned level, const Position &position, ColoredRectangle::Ptr p) {
   const float zLevel = (float)level / (float)LevelsCount();
 
+  ID3D11Texture2DPtr tex;
+  const std::string id = std::to_string(p->GetColor());
+  tex = GetFromFrameTextureCache(id);
+  if (!tex) {
+    tex = Utils::CreateD3dTexture(m_device, p->GetColor());
+    if (tex) {
+      if (!AddToFrameTextureCache(id, tex)) {
+        // TODO: adding twice or non-unique StaticID
+      } 
+    }
+  }
+
+  if (!tex) {
+    throw std::runtime_error("CreateD3dTexture() failed");
+  }
+
+  ID3D11ShaderResourceViewPtr srv = Utils::CreateTexture2DSRV(m_device, tex);
+  
+  D3dBitmap bitmap;
+  bitmap.Initialize(m_device, ScreenWidth(), ScreenHeight(), p->Width(), p->Height());
+  bitmap.Render(m_deviceContext, position, zLevel);
+
+  const bool result = m_textureShader.Render(m_deviceContext, bitmap.GetIndexCount(),
+    m_worldMatrix, m_viewMatrix, m_orthoMatrix,
+    srv);
+}
+
+void Renderer::RenderTexturedRectangle(unsigned level, const Position &position, TexturedRectangle::Ptr p) {
+  const float zLevel = (float)level / (float)LevelsCount();
 }
 
 unsigned Renderer::ScreenWidth() const {
@@ -281,6 +313,14 @@ ID3D11Texture2DPtr Renderer::GetFromTextureCache(const std::string &id) {
 
 bool Renderer::AddToTextureCache(const std::string &id, ID3D11Texture2DPtr texture) {
   return m_texCache.Set(id, texture);
+}
+
+ID3D11Texture2DPtr Renderer::GetFromFrameTextureCache(const std::string &id) {
+  return m_oneFrameTexCache.TryGet(id);
+}
+
+bool Renderer::AddToFrameTextureCache(const std::string &id, ID3D11Texture2DPtr texture) {
+  return m_oneFrameTexCache.Set(id, texture);
 }
 
 } // namespace TileEngine::D3d

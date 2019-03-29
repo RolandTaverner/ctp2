@@ -33,8 +33,9 @@ public:
   void Render();
 
   // RendererBase
-  void RenderBitmap(unsigned level, const Rect &absRect, Bitmap::BitmapPtr s) override;
-  void RenderPrimitive(unsigned level) override;
+  void RenderBitmap(unsigned level, const Rect &absRect, Bitmap::Ptr s) override;
+  void RenderColoredRectangle(unsigned level, const Position &position, ColoredRectangle::Ptr p) override;
+  void RenderTexturedRectangle(unsigned level, const Position &position, TexturedRectangle::Ptr p) override;
 
   unsigned ScreenWidth() const;
   unsigned ScreenHeight() const;
@@ -52,6 +53,9 @@ private:
 
   ID3D11Texture2DPtr GetFromTextureCache(const std::string &id);
   bool AddToTextureCache(const std::string &id, ID3D11Texture2DPtr texture);
+
+  ID3D11Texture2DPtr GetFromFrameTextureCache(const std::string &id);
+  bool AddToFrameTextureCache(const std::string &id, ID3D11Texture2DPtr texture);
 
 private:
   unsigned m_screenWidth, m_screenHeight;
@@ -72,6 +76,7 @@ private:
 
   unsigned m_levelsCount;
   TextureCache m_texCache;
+  TextureCache m_oneFrameTexCache;
   TextureShader m_textureShader;
 };
 

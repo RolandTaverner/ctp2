@@ -1718,6 +1718,8 @@ int WINAPI CivMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 			{
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
+        g_civApp->Render();
+        Sleep(15);
 			}
 #endif // __AUI_USE_SDL__
 		}
@@ -1725,6 +1727,8 @@ int WINAPI CivMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 		g_letUIProcess = FALSE;
 	}
 
+  g_civApp->Render();
+  Sleep(15);
 #ifdef __AUI_USE_SDL__
 	return 0;
 #else

@@ -3052,6 +3052,12 @@ void CivApp::PostLoadScenarioGameAction(MBCHAR const * filename)
 	g_c3ui->AddAction(new LoadScenarioGameAction(filename));
 }
 
+void CivApp::Render() {
+  if (m_UI) {
+    m_UI->Render();
+ }
+}
+
 void StartGameAction::Execute(aui_Control *control, uint32 action, uint32 data )
 {
 	g_civApp->StartGame();

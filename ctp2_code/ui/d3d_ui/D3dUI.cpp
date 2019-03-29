@@ -56,7 +56,6 @@ void D3dUI::Initialize(HINSTANCE hinst, int cmdshow,
     std::basic_string<TCHAR> exeFile(filepath, filepathLength);
     const std::filesystem::path shaderPath = std::filesystem::path(exeFile).parent_path() / "Shader";
 
-
     m_renderer->CreateDevice(Wnd(), adapter, shaderPath.wstring());
     break;
   }
@@ -70,6 +69,16 @@ void D3dUI::Initialize(HINSTANCE hinst, int cmdshow,
   unsigned screenWidth = rc.right - rc.left;
   unsigned screenHeight = rc.bottom - rc.top;
 
+  m_scene = std::make_shared<TileEngine::Scene>(screenWidth, screenHeight);
+  m_renderer->SetScene(m_scene);
+
+  m_desktopLayer = m_scene->Root()->AddLayer(0);
+
+  m_desktopLayer->DrawPrimitive(TileEngine::Position(),
+    std::make_shared<TileEngine::ColoredRectangle>(m_desktopLayer->Width(), m_desktopLayer->Height(),
+      TileEngine::MakeColor(255, 150, 150, 200)));
+
+  m_mouseLayer = m_scene->Root()->AddLayer(0xFFFFFFFFu >> 1);
 }
 
 unsigned D3dUI::Width() {

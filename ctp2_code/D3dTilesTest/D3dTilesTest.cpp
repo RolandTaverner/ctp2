@@ -72,7 +72,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
   unsigned screenWidth = rc.right - rc.left;
   unsigned screenHeight = rc.bottom - rc.top;
 
-  TileEngine::Bitmap::BitmapPtr b1(std::make_shared<TileEngine::Bitmap>(screenWidth, screenHeight));
+  TileEngine::Bitmap::Ptr b1(std::make_shared<TileEngine::Bitmap>(screenWidth, screenHeight));
   {
     const unsigned width = b1->Width();
     const unsigned height = b1->Height();
@@ -86,7 +86,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
       pixels[y*width + x] = (x < width/2) ? 0xff0000ff : 0xffff0000;
     }
   }
-  TileEngine::Bitmap::BitmapPtr b2(std::make_shared<TileEngine::Bitmap>(100, 100));
+  TileEngine::Bitmap::Ptr b2(std::make_shared<TileEngine::Bitmap>(100, 100));
   {
     const unsigned width = b2->Width();
     const unsigned height = b2->Height();
@@ -104,12 +104,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
   }
 
-  TileEngine::Scene::ScenePtr scene(std::make_shared<TileEngine::Scene>(screenWidth, screenHeight));
+  TileEngine::Scene::Ptr scene(std::make_shared<TileEngine::Scene>(screenWidth, screenHeight));
   auto layer = scene->Root()->AddLayer(0);
+  layer->DrawPrimitive(TileEngine::Position(20, 20),
+    std::make_shared<TileEngine::ColoredRectangle>(screenWidth - 40, screenHeight - 40, TileEngine::MakeColor(0, 200, 200, 100)));
+
   auto region = layer->AddChild(TileEngine::Position(0, 0), screenWidth, screenHeight);
   region->DrawImage(TileEngine::Position(0, 0), b1);
   auto region1 = region->AddLayer(1);
   region1->DrawImage(TileEngine::Position(20, 20), b2);
+
+  auto layer2 = scene->Root()->AddLayer(1);
+  layer2->DrawPrimitive(TileEngine::Position(30, 30),
+    std::make_shared<TileEngine::ColoredRectangle>(screenWidth - 60, screenHeight - 60, TileEngine::MakeColor(0, 200, 200, 100)));
 
   rendererPtr->SetScene(scene);
 

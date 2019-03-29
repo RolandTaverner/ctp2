@@ -22,5 +22,9 @@ bool TextureCache::Set(const std::string &id, ID3D11Texture2DPtr texture) {
   return result;
 }
 
+void TextureCache::Clear() {
+  m_cache.clear();
+}
+
 } // namespace D3d
 } // namespace TileEngine

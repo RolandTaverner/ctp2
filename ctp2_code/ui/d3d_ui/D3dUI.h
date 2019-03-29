@@ -43,7 +43,10 @@ private:
 
 private:
   TileEngine::D3d::RendererPtr m_renderer;
-  TileEngine::Scene::ScenePtr m_scene;
+  TileEngine::Scene::Ptr m_scene;
+  TileEngine::Region::Ptr m_desktopLayer;
+  TileEngine::Region::Ptr m_mouseLayer;
+
   HWND m_hWnd;
   HINSTANCE m_hinst;
 

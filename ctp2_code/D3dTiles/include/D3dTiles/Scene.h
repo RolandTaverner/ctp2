@@ -11,7 +11,7 @@ namespace TileEngine {
   class Scene {
   public:
     typedef std::shared_ptr<RendererBase> RendererBasePtr;
-    typedef std::shared_ptr<Scene> ScenePtr;
+    typedef std::shared_ptr<Scene> Ptr;
 
     Scene() = delete;
     Scene(const Scene &) = delete;
@@ -24,10 +24,10 @@ namespace TileEngine {
     unsigned Height() const;
     unsigned GetLevelsCount() const;
     void Render(RendererBasePtr renderer);
-    Region::RegionPtr Root();
+    Region::Ptr Root();
 
   private:
-    Region::RegionPtr m_root;
+    Region::Ptr m_root;
   };
 
 } // namespace TileEngine

@@ -129,6 +129,8 @@ public:
   sint32 StartGame(void);
   void StopKeyboardScrolling(sint32 key);
 
+  void Render();
+
 private:
   void CleanupAppUI(void);
   void CleanupGame(bool keepScenInfo);

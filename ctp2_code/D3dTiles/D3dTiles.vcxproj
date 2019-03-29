@@ -100,6 +100,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -164,6 +165,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\D3dTiles\Bitmap.h" />
+    <ClInclude Include="include\D3dTiles\Color.h" />
     <ClInclude Include="include\D3dTiles\D3d\D3dBitmap.h" />
     <ClInclude Include="include\D3dTiles\D3d\D3dCreateTexture.h" />
     <ClInclude Include="include\D3dTiles\D3d\D3dInterfaces.h" />
@@ -172,6 +174,10 @@
     <ClInclude Include="include\D3dTiles\D3d\Renderer.h" />
     <ClInclude Include="include\D3dTiles\D3d\TextureShader.h" />
     <ClInclude Include="include\D3dTiles\Geometry.h" />
+    <ClInclude Include="include\D3dTiles\Primitives\ColoredRectangle.h" />
+    <ClInclude Include="include\D3dTiles\Primitives\Primitive.h" />
+    <ClInclude Include="include\D3dTiles\Primitives\Rectangle.h" />
+    <ClInclude Include="include\D3dTiles\Primitives\TexturedRectangle.h" />
     <ClInclude Include="include\D3dTiles\Region.h" />
     <ClInclude Include="include\D3dTiles\RendererBase.h" />
     <ClInclude Include="include\D3dTiles\Scene.h" />
@@ -180,12 +186,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Bitmap.cpp" />
+    <ClCompile Include="src\Color.cpp" />
     <ClCompile Include="src\D3d\D3dBitmap.cpp" />
     <ClCompile Include="src\D3d\D3dCreateTexture.cpp" />
     <ClCompile Include="src\D3d\D3dTextureCache.cpp" />
     <ClCompile Include="src\D3d\DXGIFactory.cpp" />
     <ClCompile Include="src\D3d\Renderer.cpp" />
     <ClCompile Include="src\D3d\TextureShader.cpp" />
+    <ClCompile Include="src\Primitives\ColoredRectangle.cpp" />
+    <ClCompile Include="src\Primitives\Primitive.cpp" />
+    <ClCompile Include="src\Primitives\Rectangle.cpp" />
+    <ClCompile Include="src\Primitives\TexturedRectangle.cpp" />
     <ClCompile Include="src\Region.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="stdafx.cpp">

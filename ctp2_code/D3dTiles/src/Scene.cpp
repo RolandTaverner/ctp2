@@ -6,7 +6,7 @@
 namespace TileEngine {
 
   Scene::Scene(unsigned width, unsigned height) :
-    m_root(std::make_shared<Region>(Region::RegionWeakPtr(), 0, Position(0, 0), width, height)) {
+    m_root(std::make_shared<Region>(Region::WeakPtr(), 0, Position(0, 0), width, height)) {
   }
 
   Scene::~Scene() {
@@ -28,7 +28,7 @@ namespace TileEngine {
     m_root->Render(0, Position(0, 0), renderer);
   }
 
-  Region::RegionPtr Scene::Root() {
+  Region::Ptr Scene::Root() {
     return m_root;
   }
 

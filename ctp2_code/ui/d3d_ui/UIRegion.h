@@ -24,13 +24,13 @@ public:
   UIRegionPtr CreateChild(unsigned id, const TileEngine::Position &pos, unsigned width, unsigned height);
 
 protected:
-  TileEngine::Region::RegionPtr Region();
-  TileEngine::Region::RegionPtr CreateChildUIRegion(const TileEngine::Position &pos, unsigned width, unsigned height);
+  TileEngine::Region::Ptr Region();
+  TileEngine::Region::Ptr CreateChildUIRegion(const TileEngine::Position &pos, unsigned width, unsigned height);
 
 private:
   unsigned m_id;
 
-  TileEngine::Region::RegionPtr m_region;
+  TileEngine::Region::Ptr m_region;
   UIRegionWPtr m_parent;
   ChildList m_children;
 };

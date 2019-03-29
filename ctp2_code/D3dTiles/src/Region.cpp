@@ -8,10 +8,10 @@
 
 namespace TileEngine {
 
-  Region::Region() : Region(RegionWeakPtr(), 0, Position(0, 0), 0, 0) {
+  Region::Region() : Region(WeakPtr(), 0, Position(0, 0), 0, 0) {
   }
 
-  Region::Region(RegionWeakPtr parent, RegionID id, const Position &position, unsigned width, unsigned height) :
+  Region::Region(WeakPtr parent, RegionID id, const Position &position, unsigned width, unsigned height) :
     m_parent(parent), m_ID(id), m_position(position), m_width(width), m_height(height) {
   }
 
@@ -54,7 +54,7 @@ namespace TileEngine {
     return childLevels + 1 + layersLevels;
   }
 
-  Region::RegionPtr Region::AddChild(const Position &position, unsigned width, unsigned height) {
+  Region::Ptr Region::AddChild(const Position &position, unsigned width, unsigned height) {
     const Rect thisRect(Position(0, 0), Position(Width(), Height()));
     
     const Position newMin(position);
@@ -74,23 +74,23 @@ namespace TileEngine {
     }
 
     const RegionID newID = m_children.empty() ? 0 : (m_children.rbegin()->first + 1);
-    RegionPtr newRegion(std::make_shared<Region>(shared_from_this(), newID, position, width, height));
+    Ptr newRegion(std::make_shared<Region>(shared_from_this(), newID, position, width, height));
     m_children[newID] = newRegion;
     return newRegion;
   }
 
-  Region::RegionPtr Region::AddLayer(unsigned level) {
+  Region::Ptr Region::AddLayer(unsigned level) {
     LayersMap::const_iterator i = m_layers.find(level);
     if (i != m_layers.end()) {
       throw std::invalid_argument("layer already exists");
     }
 
-    RegionPtr newLevel(std::make_shared<Region>(shared_from_this(), level, Position(0, 0), Width(), Height()));
+    Ptr newLevel(std::make_shared<Region>(shared_from_this(), level, Position(0, 0), Width(), Height()));
     m_layers[level] = newLevel;
     return newLevel;
   }
 
-  Region::RegionPtr Region::AddLayer() {
+  Region::Ptr Region::AddLayer() {
     if (m_layers.empty()) {
       return AddLayer(0);
     }
@@ -121,17 +121,25 @@ namespace TileEngine {
       m_level(level), m_position(position), m_renderer(renderer){
     }
 
-    void operator()(Bitmap::BitmapPtr &s) {
+    void operator()(Bitmap::Ptr &s) {
       Position minPoint(m_position);
       Position maxPoint(m_position);
       boost::geometry::add_point(maxPoint, Position(s->Width(), s->Height()));
       m_renderer->RenderBitmap(m_level, Rect(minPoint, maxPoint), s);
     }
-  
+
+    void operator()(ColoredRectangle::Ptr &s) {
+      m_renderer->RenderColoredRectangle(m_level, m_position, s);
+    }
+
+    void operator()(TexturedRectangle::Ptr &s) {
+      m_renderer->RenderTexturedRectangle(m_level, m_position, s);
+    }
+
   private:
     unsigned m_level;
     Position m_position;
-    RendererBase::RendererBasePtr m_renderer;
+    RendererBase::Ptr m_renderer;
   };
 
   void Region::RenderSelf(unsigned level, const Position &position, Region::RendererBasePtr renderer) {
@@ -145,11 +153,15 @@ namespace TileEngine {
     }
   }
   
-  void Region::DrawPrimitive() {
-    // TODO
+  void Region::DrawPrimitive(const Position &position, ColoredRectangle::Ptr p) {
+    m_graphics.push_back(GraphicElementPosition{ position, GraphicElement(p) });
+  }
+  
+  void Region::DrawPrimitive(const Position &position, TexturedRectangle::Ptr p) {
+    m_graphics.push_back(GraphicElementPosition{ position, GraphicElement(p) });
   }
 
-  void Region::DrawImage(const Position &position, Bitmap::BitmapPtr bitmap) {
+  void Region::DrawImage(const Position &position, Bitmap::Ptr bitmap) {
     m_graphics.push_back(GraphicElementPosition{ position, GraphicElement(bitmap) });
   }
 

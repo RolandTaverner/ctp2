@@ -15,6 +15,7 @@ public:
 
   ID3D11Texture2DPtr TryGet(const std::string &id);
   bool Set(const std::string &id, ID3D11Texture2DPtr texture);
+  void Clear();
 
 private:
   typedef std::map<std::string, ID3D11Texture2DPtr> CacheType;

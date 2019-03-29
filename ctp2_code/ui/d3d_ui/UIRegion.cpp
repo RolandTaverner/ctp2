@@ -17,11 +17,11 @@ UIRegion::UIRegion(UIRegion::UIRegionPtr parent, unsigned id,
 
 UIRegion::~UIRegion() {}
 
-TileEngine::Region::RegionPtr UIRegion::Region() {
+TileEngine::Region::Ptr UIRegion::Region() {
   return m_region;
 }
 
-TileEngine::Region::RegionPtr UIRegion::CreateChildUIRegion(const TileEngine::Position & pos, 
+TileEngine::Region::Ptr UIRegion::CreateChildUIRegion(const TileEngine::Position & pos, 
   unsigned width, unsigned height) {
   return m_region->AddLayer()->AddChild(pos, width, height);
 }
