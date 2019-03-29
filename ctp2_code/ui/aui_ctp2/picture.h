@@ -11,14 +11,14 @@ class aui_Surface;
 
 
 
-class Picture : public aui_Image
+class aui_Picture : public aui_Image
 {
 public:
 
-	Picture(
+	aui_Picture(
 		AUI_ERRCODE *retval,
 		MBCHAR const *szFileName = NULL );
-	virtual ~Picture();
+	virtual ~aui_Picture();
 
 	aui_Surface *TheMipmap( void ) const { return m_mipmap; }
 

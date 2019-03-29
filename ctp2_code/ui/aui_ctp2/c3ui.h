@@ -118,12 +118,12 @@ public:
 	AUI_ERRCODE	RemoveIconSearchPath(MBCHAR const * path)
 		{ return m_iconResource->RemoveSearchPath(path); }
 
-	aui_Resource<Picture>	*GetPictureResource( void ) const { return m_pictureResource; }
+	aui_Resource<aui_Picture>	*GetPictureResource( void ) const { return m_pictureResource; }
 
-	Picture	*LoadPicture(MBCHAR const * name)
+	aui_Picture	*LoadPicture(MBCHAR const * name)
 		{ return m_pictureResource->Load(name); }
 
-	AUI_ERRCODE	UnloadPicture( Picture *resource )
+	AUI_ERRCODE	UnloadPicture( aui_Picture *resource )
 		{ return m_pictureResource->Unload( resource ); }
 	AUI_ERRCODE	UnloadPicture(MBCHAR const * name)
 		{ return m_pictureResource->Unload(name); }
@@ -139,7 +139,7 @@ public:
 private:
 	aui_Resource<Pattern> *         m_patternResource;
 	aui_Resource<Icon> *            m_iconResource;
-	aui_Resource<Picture> *         m_pictureResource;
+	aui_Resource<aui_Picture> *         m_pictureResource;
     std::list<UiCleanupCallback>    m_cleanupActions;
 };
 

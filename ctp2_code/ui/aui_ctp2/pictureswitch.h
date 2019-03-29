@@ -7,7 +7,7 @@
 #include "ui/aui_common/aui_switch.h"
 
 class Pattern;
-class Picture;
+class aui_Picture;
 
 class PictureSwitch : public aui_Switch
 {
@@ -20,19 +20,19 @@ public:
 		sint32 y,
 		sint32 width,
 		sint32 height,
-		Picture *pictureOn = NULL,
-		Picture *pictureOff = NULL,
-		Picture *pictureActiveOn = NULL,
-		Picture *pictureActiveOff = NULL,
+		aui_Picture *pictureOn = NULL,
+		aui_Picture *pictureOff = NULL,
+		aui_Picture *pictureActiveOn = NULL,
+		aui_Picture *pictureActiveOff = NULL,
 		ControlActionCallback *ActionFunc = NULL,
 		void *cookie = NULL,
 		BOOL selected = FALSE );
 	virtual ~PictureSwitch() {}
 
-	Picture *&ThePictureOn( void ) { return m_pictureOn; }
-	Picture *&ThePictureOff( void ) { return m_pictureOff; }
-	Picture *&ThePictureActiveOn( void ) { return m_pictureActiveOn; }
-	Picture *&ThePictureActiveOff( void ) { return m_pictureActiveOff; }
+	aui_Picture *&ThePictureOn( void ) { return m_pictureOn; }
+	aui_Picture *&ThePictureOff( void ) { return m_pictureOff; }
+	aui_Picture *&ThePictureActiveOn( void ) { return m_pictureActiveOn; }
+	aui_Picture *&ThePictureActiveOff( void ) { return m_pictureActiveOff; }
 
 	virtual AUI_ERRCODE DrawThis(
 		aui_Surface *surface = NULL,
@@ -40,10 +40,10 @@ public:
 		sint32 y = 0 );
 
 protected:
-	Picture *m_pictureOn;
-	Picture *m_pictureOff;
-	Picture *m_pictureActiveOn;
-	Picture *m_pictureActiveOff;
+	aui_Picture *m_pictureOn;
+	aui_Picture *m_pictureOff;
+	aui_Picture *m_pictureActiveOn;
+	aui_Picture *m_pictureActiveOff;
 };
 
 #endif

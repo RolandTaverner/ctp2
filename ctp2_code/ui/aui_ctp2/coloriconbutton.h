@@ -43,7 +43,7 @@ enum COLORICONBUTTON_ACTION {
 	COLORICONBUTTON_ACTION_RIGHTCLK
 };
 
-class Picture;
+class aui_Picture;
 
 
 class ColorIconButton : public c3_Button

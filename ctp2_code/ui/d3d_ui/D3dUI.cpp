@@ -1,8 +1,11 @@
 #include "ctp/c3.h"
 
+#include <filesystem>
 #include <stdexcept>
 
-#include "D3dUI.h"
+#include <comutil.h>
+
+#include "ui/d3d_ui/D3dUI.h"
 
 #define k_MSWHEEL_ROLLMSG		0xC7AF
 
@@ -11,7 +14,9 @@ namespace ui::d3d {
 LPCSTR gszMainWindowClass = "CTP II";
 LPCSTR gszMainWindowName = "CTP II";
 
-D3dUI::D3dUIPtr m_self;
+D3dUI::D3dUIPtr D3dUI::m_self;
+
+LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 
 D3dUI::D3dUI() :
   m_hWnd(0), m_hinst(0) {}
@@ -45,9 +50,20 @@ void D3dUI::Initialize(HINSTANCE hinst, int cmdshow,
     if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
       continue;
 
-    m_renderer->CreateDevice(Wnd(), adapter);
+    CHAR  filepath[MAX_PATH];
+    DWORD filepathLength = GetModuleFileNameA(NULL, filepath, MAX_PATH);
+
+    std::basic_string<TCHAR> exeFile(filepath, filepathLength);
+    const std::filesystem::path shaderPath = std::filesystem::path(exeFile).parent_path() / "Shader";
+
+
+    m_renderer->CreateDevice(Wnd(), adapter, shaderPath.wstring());
     break;
   }
+
+  SetFocus(Wnd());
+  ShowWindow(Wnd(), cmdshow);
+  UpdateWindow(Wnd());
 
   RECT rc;
   GetClientRect(Wnd(), &rc);
@@ -77,6 +93,10 @@ void D3dUI::HandleKeyPress(WPARAM wParam, LPARAM lParam) {}
 void D3dUI::HandleWindowsMessage(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {}
 
 void D3dUI::HandleMouseWheel(std::int16_t delta) {}
+
+void D3dUI::Render() {
+  m_renderer->Render();
+}
 
 void D3dUI::Destroy() {
   D3dUI::Free();
@@ -153,10 +173,6 @@ void D3dUI::InitWindow(int cmdshow, unsigned windowWidth, unsigned windowHeight)
   if (!Wnd()) {
     throw std::runtime_error("RegisterClass() failed");
   }
-
-  SetFocus(Wnd());
-  ShowWindow(Wnd(), cmdshow);
-  UpdateWindow(Wnd());
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
@@ -166,7 +182,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
     PostQuitMessage(-1);
   }
 
-  if (!gDone && ui) {
+  if (/*!gDone && */ ui) { // TODO
     ui->HandleWindowsMessage(hwnd, iMsg, wParam, lParam);
   }
 
@@ -242,8 +258,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
     if (hwnd != ui->Wnd()) {
       break;
     }
-
-    gDone = TRUE;
+    // TODO
+   //gDone = TRUE;
     ui->Destroy();
     return 0;
 
@@ -269,7 +285,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
     ui->HandleMouseWheel((sint16)HIWORD(wParam));
     break;
   }
+
   return DefWindowProc(hwnd, iMsg, wParam, lParam);
 }
 
-}
+} // namespace ui::d3d

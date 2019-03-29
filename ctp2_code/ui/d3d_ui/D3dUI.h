@@ -13,7 +13,7 @@ namespace ui::d3d {
 extern LPCSTR	gszMainWindowClass;
 extern LPCSTR	gszMainWindowName;
 
-class D3dUI : std::enable_shared_from_this<D3dUI> {
+class D3dUI : public std::enable_shared_from_this<D3dUI> {
 public:
   typedef std::shared_ptr<D3dUI> D3dUIPtr;
 
@@ -32,7 +32,7 @@ public:
   void HandleKeyPress(WPARAM wParam, LPARAM lParam);
   void HandleWindowsMessage(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
   void HandleMouseWheel(std::int16_t delta);
-
+  void Render();
   void Destroy();
 
   static D3dUIPtr Self();
@@ -50,4 +50,4 @@ private:
   static D3dUIPtr m_self;
 };
 
-}
+} // namespace ui::d3d

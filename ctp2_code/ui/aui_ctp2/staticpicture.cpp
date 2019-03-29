@@ -85,7 +85,7 @@ AUI_ERRCODE StaticPicture::InitCommon( MBCHAR *picture )
 	if (g_civPaths->FindFile(C3DIR_PICTURES, picture, filename))
     {
 	    AUI_ERRCODE errcode;
-		m_picture = new Picture(&errcode, filename);
+		m_picture = new aui_Picture(&errcode, filename);
 	} else {
 		m_picture = NULL;
 	}
@@ -134,7 +134,7 @@ void StaticPicture::SetPicture(MBCHAR *picture)
 	if (g_civPaths->FindFile(C3DIR_PICTURES, picture, filename))
     {
 	    AUI_ERRCODE errcode;
-		m_picture = new Picture(&errcode, filename);
+		m_picture = new aui_Picture(&errcode, filename);
 	}
     else
     {

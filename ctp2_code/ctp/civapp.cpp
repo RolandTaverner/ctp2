@@ -1285,17 +1285,12 @@ sint32 CivApp::InitializeApp(HINSTANCE hInstance, int iCmdShow)
 	gameWatch.RecordingSystem("gwciv");
 #endif
 
-  m_UI.reset(new ui::d3d::D3dUI());
+  m_UI = std::make_shared<ui::d3d::D3dUI>();
   m_UI->Initialize(hInstance, iCmdShow, 1024, 768); // TODO: use config
 	init_keymap();
   return 0;
 	//(void) ui_Initialize();
 	SoundManager::Initialize();
-
-	if ( sharedsurface_Initialize() != AUI_ERRCODE_OK ) {
-		c3errors_FatalDialog( "CivApp", "Unable to init shared surface." );
-		return -1;
-	}
 
 	CursorManager::Initialize();
 
@@ -1555,7 +1550,7 @@ void CivApp::CleanupApp(void)
 		CoUninitialize();
 #endif
 
-		display_Cleanup();
+		//display_Cleanup();
 	}
 
 	m_appLoaded = false;
@@ -2635,6 +2630,10 @@ sint32 CivApp::ProcessProfile(void)
 
 sint32 CivApp::Process(void)
 {
+  // TODO
+  m_UI->Render();
+  Sleep(15);
+  return 0;
 #ifdef _DEBUG
 	if(g_tempLeakCheck) {
 		_CrtMemState new_state;

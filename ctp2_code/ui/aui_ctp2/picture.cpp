@@ -11,7 +11,7 @@
 
 extern C3UI		*g_c3ui;
 
-Picture::Picture(
+aui_Picture::aui_Picture(
 	AUI_ERRCODE *retval,
 	MBCHAR const * szFileName )
 : aui_Image( retval, szFileName ), m_mipmap( NULL )
@@ -20,7 +20,7 @@ Picture::Picture(
 	MakeMipmap();
 }
 
-AUI_ERRCODE Picture::MakeMipmap( void )
+AUI_ERRCODE aui_Picture::MakeMipmap( void )
 {
 	Assert(m_surface);
 	if (m_surface == NULL) return AUI_ERRCODE_INVALIDPARAM;
@@ -77,7 +77,7 @@ AUI_ERRCODE Picture::MakeMipmap( void )
 }
 
 
-Pixel16 Picture::AveragePixels( uint16 *pBuffer, sint32 width )
+Pixel16 aui_Picture::AveragePixels( uint16 *pBuffer, sint32 width )
 {
 	Pixel16 upperLeft,upperRight,lowerLeft,lowerRight;
 
@@ -122,7 +122,7 @@ Pixel16 Picture::AveragePixels( uint16 *pBuffer, sint32 width )
 
 
 
-Picture::~Picture()
+aui_Picture::~aui_Picture()
 {
 	delete m_mipmap;
 }
@@ -134,7 +134,7 @@ Picture::~Picture()
 
 
 
-AUI_ERRCODE Picture::Draw( aui_Surface *pDestSurf, RECT *pDestRect )
+AUI_ERRCODE aui_Picture::Draw( aui_Surface *pDestSurf, RECT *pDestRect )
 {
 	Assert(m_surface->BitsPerPixel() == 16 );
 

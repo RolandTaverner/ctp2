@@ -8,7 +8,7 @@
 #include "ui/aui_ctp2/c3_switch.h"
 
 
-class Picture;
+class aui_Picture;
 
 
 class ColorIconSwitch : public c3_Switch

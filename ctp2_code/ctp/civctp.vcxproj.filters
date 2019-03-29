@@ -219,6 +219,9 @@
     <Filter Include="ui\d3d_ui">
       <UniqueIdentifier>{bbb877f3-ca77-4e7f-afef-669e51de980b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ui\d3d_ui\Mouse">
+      <UniqueIdentifier>{24f70817-e68b-4f6a-a423-a0601adc6dc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ctp2_rsrc\civ3.rc">
@@ -2602,8 +2605,17 @@
     <ClInclude Include="..\gfx\spritesys\DirectorActionHandlers.h">
       <Filter>gfx\spritesys</Filter>
     </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\UIRegion.h">
+      <Filter>ui\d3d_ui</Filter>
+    </ClInclude>
     <ClInclude Include="..\ui\d3d_ui\D3dUI.h">
       <Filter>ui\d3d_ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\UIWindow.h">
+      <Filter>ui\d3d_ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\Mouse\Mouse.h">
+      <Filter>ui\d3d_ui\Mouse</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4862,6 +4874,15 @@
     </ClCompile>
     <ClCompile Include="..\ui\d3d_ui\D3dUI.cpp">
       <Filter>ui\d3d_ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\UIRegion.cpp">
+      <Filter>ui\d3d_ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\UIWindow.cpp">
+      <Filter>ui\d3d_ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\Mouse\Mouse.cpp">
+      <Filter>ui\d3d_ui\Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

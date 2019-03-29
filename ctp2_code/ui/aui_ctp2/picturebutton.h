@@ -6,7 +6,7 @@
 
 #include "ui/aui_common/aui_button.h"
 
-class Picture;
+class aui_Picture;
 
 
 class PictureButton : public aui_Button
@@ -42,12 +42,12 @@ public:
 		sint32 y = 0 );
 
 
-	Picture *&UpPicture( void ) { return m_upPicture; }
-	Picture *&DownPicture( void ) { return m_downPicture; }
+	aui_Picture *&UpPicture( void ) { return m_upPicture; }
+	aui_Picture *&DownPicture( void ) { return m_downPicture; }
 
 protected:
-	Picture *m_upPicture;
-	Picture *m_downPicture;
+	aui_Picture *m_upPicture;
+	aui_Picture *m_downPicture;
 };
 
 #endif

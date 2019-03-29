@@ -238,7 +238,7 @@ DipWizard::DipWizard(AUI_ERRCODE *err)
 	m_parchment = (ctp2_Static *)aui_Ldl::GetObject(s_dipWizardBlock, "Details.Parchment");
 	m_responseDiplomat = (ctp2_Static *)aui_Ldl::GetObject(s_dipWizardBlock, "Stage3.Diplomat");
 	//Added by Martin Gühmann to display the emissary photo of recipient
-	m_emissary_photo = (ctp2_Static *)aui_Ldl::GetObject(s_dipWizardBlock, "Details.Picture");
+	m_emissary_photo = (ctp2_Static *)aui_Ldl::GetObject(s_dipWizardBlock, "Details.aui_Picture");
 
 	m_threatList = (ctp2_ListBox *)aui_Ldl::GetObject(s_dipWizardBlock, "Stage4.List");
 	m_threatList->SetActionFuncAndCookie(ThreatListCallback, NULL);

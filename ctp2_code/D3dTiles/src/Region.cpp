@@ -90,6 +90,14 @@ namespace TileEngine {
     return newLevel;
   }
 
+  Region::RegionPtr Region::AddLayer() {
+    if (m_layers.empty()) {
+      return AddLayer(0);
+    }
+    const unsigned maxLayer = m_layers.rbegin()->first;
+    return AddLayer(maxLayer + 1);
+  }
+
   void Region::Render(unsigned ownLevel, const Position &parentPosition, Region::RendererBasePtr renderer) {
     Position absPosition(parentPosition);
     boost::geometry::add_point(absPosition, Pos());

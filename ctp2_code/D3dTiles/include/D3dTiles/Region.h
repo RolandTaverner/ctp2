@@ -47,6 +47,7 @@ namespace TileEngine {
     unsigned GetLevelsCount() const;
     RegionPtr AddChild(const Position &position, unsigned width, unsigned height);
     RegionPtr AddLayer(unsigned level);
+    RegionPtr AddLayer();
     void Render(unsigned level, const Position &parentPosition, RendererBasePtr renderer);
 
     void DrawPrimitive();

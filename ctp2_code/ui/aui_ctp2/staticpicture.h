@@ -1,7 +1,7 @@
 #ifndef __STATICPICTURE_H__
 #define __STATICPICTURE_H__
 
-class Picture;
+class aui_Picture;
 
 #include "ui/aui_common/aui_static.h"
 
@@ -42,7 +42,7 @@ public:
 	void SetPicture(MBCHAR *picture);
 
 protected:
-	Picture *m_picture;
+	aui_Picture *m_picture;
 };
 
 #endif

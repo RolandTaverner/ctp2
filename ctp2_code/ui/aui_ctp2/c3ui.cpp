@@ -73,7 +73,7 @@ C3UI::C3UI
 {
 	m_patternResource   = new aui_Resource<Pattern>;
 	m_iconResource      = new aui_Resource<Icon>;
-	m_pictureResource   = new aui_Resource<Picture>;
+	m_pictureResource   = new aui_Resource<aui_Picture>;
 }
 
 //----------------------------------------------------------------------------

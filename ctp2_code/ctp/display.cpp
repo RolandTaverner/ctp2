@@ -31,7 +31,7 @@ extern BOOL					g_createDirectDrawOnSecondary;
 
 #include "gs/database/profileDB.h"
 extern ProfileDB			*g_theProfileDB;
-
+/*
 #ifdef WIN32
 BOOL CALLBACK display_FindDeviceCallbackEx(GUID* lpGUID, LPSTR szName,
   LPSTR szDevice, LPVOID lParam, HMONITOR hMonitor) {
@@ -357,3 +357,4 @@ void display_Cleanup() {
     g_displayModes = NULL;
   }
 }
+*/

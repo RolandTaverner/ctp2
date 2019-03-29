@@ -6,7 +6,7 @@
 
 #include "ui/aui_common/aui_tab.h"
 
-class Picture;
+class aui_Picture;
 
 class PictureTab : public aui_Tab
 {
@@ -21,19 +21,19 @@ public:
 		sint32 height,
 		sint32 paneWidth,
 		sint32 paneHeight,
-		Picture *pictureOn,
-		Picture *pictureOff,
-		Picture *pictureActiveOn,
-		Picture *pictureActiveOff,
+		aui_Picture *pictureOn,
+		aui_Picture *pictureOff,
+		aui_Picture *pictureActiveOn,
+		aui_Picture *pictureActiveOff,
 		ControlActionCallback *ActionFunc = NULL,
 		void *cookie = NULL,
 		BOOL selected = FALSE );
 	virtual ~PictureTab() {}
 
-	Picture *&ThePictureOn( void ) { return m_pictureOn; }
-	Picture *&ThePictureOff( void ) { return m_pictureOff; }
-	Picture *&ThePictureActiveOn( void ) { return m_pictureActiveOn; }
-	Picture *&ThePictureActiveOff( void ) { return m_pictureActiveOff; }
+	aui_Picture *&ThePictureOn( void ) { return m_pictureOn; }
+	aui_Picture *&ThePictureOff( void ) { return m_pictureOff; }
+	aui_Picture *&ThePictureActiveOn( void ) { return m_pictureActiveOn; }
+	aui_Picture *&ThePictureActiveOff( void ) { return m_pictureActiveOff; }
 
 	virtual AUI_ERRCODE DrawThis(
 		aui_Surface *surface = NULL,
@@ -41,10 +41,10 @@ public:
 		sint32 y = 0 );
 
 protected:
-	Picture *m_pictureOn;
-	Picture *m_pictureOff;
-	Picture *m_pictureActiveOn;
-	Picture *m_pictureActiveOff;
+	aui_Picture *m_pictureOn;
+	aui_Picture *m_pictureOff;
+	aui_Picture *m_pictureActiveOn;
+	aui_Picture *m_pictureActiveOff;
 };
 
 #endif

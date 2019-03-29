@@ -299,11 +299,11 @@
       <Optimization>Disabled</Optimization>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)D3dTiles\include;$(SolutionDir)libs\freetype\lib;$(SolutionDir)libs\freetype\utils;$(SolutionDir)libs\freetype\win32;$(SolutionDir)libs\freetype;$(SolutionDir)libs\tiff;$(SolutionDir)libs\anet\h;$(SolutionDir)mm;$(SolutionDir)libs\miles;$(SolutionDir)libs\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_PLAYTEST;_DEBUG;_AI_BACKDOOR;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;__GW_USE_IMPORT;__GWCIV_USE_IMPORT;_DEBUGTOOLS;_DEBUG_MEMORY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_ENABLE_EXTENDED_ALIGNED_STORAGE;_PLAYTEST;_DEBUG;_AI_BACKDOOR;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;__GW_USE_IMPORT;__GWCIV_USE_IMPORT;_DEBUGTOOLS;_DEBUG_MEMORY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug\civctp.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -338,7 +338,7 @@
       <SubSystem>Windows</SubSystem>
       <IgnoreSpecificDefaultLibraries>LIBC.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <OutputFile>CivCTP_dbg.exe</OutputFile>
-      <AdditionalDependencies>..\libs\anet\win\lib\anet2.lib;imagehlp.lib;..\libs\GameWatch\gamewatch.lib;..\libs\GameWatch\gwciv.lib;amstrmid.lib;quartz.lib;winmm.lib;dxguid.lib;ddraw.lib;dinput8.lib;dsound.lib;..\libs\tiff\libtiff.lib;..\ui\freetype\freetype.lib;vfw32.lib;..\libs\miles\mss32.lib;..\libs\zlib\zlib.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\libs\anet\win\lib\anet2.lib;imagehlp.lib;..\libs\GameWatch\gamewatch.lib;..\libs\GameWatch\gwciv.lib;amstrmid.lib;quartz.lib;winmm.lib;dxguid.lib;ddraw.lib;dinput8.lib;dsound.lib;..\libs\tiff\libtiff.lib;..\ui\freetype\freetype.lib;vfw32.lib;..\libs\miles\mss32.lib;..\libs\zlib\zlib.lib;wsock32.lib;comsuppw.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
@@ -1183,6 +1183,9 @@ rem                                                 if                          
     <ClInclude Include="..\ui\aui_utils\textutils.h" />
     <ClInclude Include="..\ui\aui_utils\vidplay.h" />
     <ClInclude Include="..\ui\d3d_ui\D3dUI.h" />
+    <ClInclude Include="..\ui\d3d_ui\Mouse\Mouse.h" />
+    <ClInclude Include="..\ui\d3d_ui\UIRegion.h" />
+    <ClInclude Include="..\ui\d3d_ui\UIWindow.h" />
     <ClInclude Include="..\ui\freetype\freetype.h" />
     <ClInclude Include="..\ui\freetype\fterrid.h" />
     <ClInclude Include="..\ui\freetype\ftnameid.h" />
@@ -2683,6 +2686,9 @@ rem                                                 if                          
     <ClCompile Include="..\ui\aui_utils\textutils.cpp" />
     <ClCompile Include="..\ui\aui_utils\vidplay.cpp" />
     <ClCompile Include="..\ui\d3d_ui\D3dUI.cpp" />
+    <ClCompile Include="..\ui\d3d_ui\Mouse\Mouse.cpp" />
+    <ClCompile Include="..\ui\d3d_ui\UIRegion.cpp" />
+    <ClCompile Include="..\ui\d3d_ui\UIWindow.cpp" />
     <ClCompile Include="..\ui\interface\agesscreen.cpp" />
     <ClCompile Include="..\ui\interface\ancientwindows.cpp" />
     <ClCompile Include="..\ui\interface\armymanagerwindow.cpp" />
