@@ -247,3 +247,6 @@ ctp2_code/ctp/ldlparselog.txt
 ctp2_code/ctp/slicdbg.txt
 ctp2_code/ctp/usercritmsgs.txt
 ctp2_code/ctp/CTP_LEAKS*
+
+# Extarnal deps
+ctp2_code/externals

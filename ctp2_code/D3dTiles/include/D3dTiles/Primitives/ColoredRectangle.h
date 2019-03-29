@@ -19,6 +19,11 @@ public:
   Color GetColor() const;
   void SetColor(Color c);
 
+  template<typename ...Args>
+  static Ptr New(Args...) {
+      return std::make_shared<ColoredRectangle>(Args...);
+  }
+
 private:
   Color m_color;
 };

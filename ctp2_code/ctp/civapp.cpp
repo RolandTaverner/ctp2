@@ -1262,6 +1262,8 @@ sint32 CivApp::InitializeApp(HINSTANCE hInstance, int iCmdShow)
     // COM needed for DirectX/Movies
 	CoInitialize(NULL);
 #endif
+  m_UI = std::make_shared<ui::d3d::D3dUI>();
+  m_UI->Initialize(hInstance, iCmdShow, 1024, 768); // TODO: use config
 
 	Splash::Initialize();
 
@@ -1285,8 +1287,6 @@ sint32 CivApp::InitializeApp(HINSTANCE hInstance, int iCmdShow)
 	gameWatch.RecordingSystem("gwciv");
 #endif
 
-  m_UI = std::make_shared<ui::d3d::D3dUI>();
-  m_UI->Initialize(hInstance, iCmdShow, 1024, 768); // TODO: use config
 	init_keymap();
   return 0;
 	//(void) ui_Initialize();

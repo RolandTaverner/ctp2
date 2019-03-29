@@ -8,6 +8,8 @@
 #include "D3dTiles/Scene.h"
 #include "D3dTiles/D3d/Renderer.h"
 
+#include "ui/d3d_ui/interface/D3dSplash.h"
+
 namespace ui::d3d {
 
 extern LPCSTR	gszMainWindowClass;
@@ -37,6 +39,7 @@ public:
 
   static D3dUIPtr Self();
   static void Free();
+  Splash::Ptr GetSplash();
 
 private:
   void InitWindow(int cmdshow, unsigned windowWidth, unsigned windowHeight);
@@ -46,6 +49,9 @@ private:
   TileEngine::Scene::Ptr m_scene;
   TileEngine::Region::Ptr m_desktopLayer;
   TileEngine::Region::Ptr m_mouseLayer;
+  TileEngine::Region::Ptr m_splashLayer;
+
+  Splash::Ptr m_splash;
 
   HWND m_hWnd;
   HINSTANCE m_hinst;

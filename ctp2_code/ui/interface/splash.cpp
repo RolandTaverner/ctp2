@@ -9,6 +9,7 @@
 #include "gfx/gfx_utils/pixelutils.h"
 #include "ui/aui_utils/primitives.h"
 #include "gs/database/profileDB.h"
+#include "..\d3d_ui\interface\Splash.h"
 
 extern C3UI	*   g_c3ui;
 

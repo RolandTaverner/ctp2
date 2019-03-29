@@ -1714,21 +1714,16 @@ int WINAPI CivMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 			{
 				gDone = TRUE;
 			}
-			else
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-        g_civApp->Render();
-        Sleep(15);
-			}
+      else {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+      }
 #endif // __AUI_USE_SDL__
 		}
 
 		g_letUIProcess = FALSE;
 	}
 
-  g_civApp->Render();
-  Sleep(15);
 #ifdef __AUI_USE_SDL__
 	return 0;
 #else

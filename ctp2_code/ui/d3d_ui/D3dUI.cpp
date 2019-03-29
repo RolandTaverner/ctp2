@@ -31,6 +31,10 @@ void D3dUI::Free() {
   m_self.reset();
 }
 
+Splash::Ptr D3dUI::GetSplash() {
+  return m_splash;
+}
+
 void D3dUI::Initialize(HINSTANCE hinst, int cmdshow,
   unsigned windowWidth, unsigned windowHeight) {
   m_self = shared_from_this();
@@ -77,8 +81,11 @@ void D3dUI::Initialize(HINSTANCE hinst, int cmdshow,
   m_desktopLayer->DrawPrimitive(TileEngine::Position(),
     std::make_shared<TileEngine::ColoredRectangle>(m_desktopLayer->Width(), m_desktopLayer->Height(),
       TileEngine::MakeColor(255, 150, 150, 200)));
+  
+  m_splashLayer = m_scene->Root()->AddLayer(0xFFFFu);
+  m_mouseLayer = m_scene->Root()->AddLayer(0xFFFFu + 1);
 
-  m_mouseLayer = m_scene->Root()->AddLayer(0xFFFFFFFFu >> 1);
+  m_splash = std::make_shared<Splash>(m_splashLayer);
 }
 
 unsigned D3dUI::Width() {

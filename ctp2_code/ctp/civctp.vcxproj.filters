@@ -222,6 +222,9 @@
     <Filter Include="ui\d3d_ui\Mouse">
       <UniqueIdentifier>{24f70817-e68b-4f6a-a423-a0601adc6dc6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ui\d3d_ui\interface">
+      <UniqueIdentifier>{821130bc-f841-4a24-9a3a-8be7879b41fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ctp2_rsrc\civ3.rc">
@@ -2617,6 +2620,9 @@
     <ClInclude Include="..\ui\d3d_ui\Mouse\Mouse.h">
       <Filter>ui\d3d_ui\Mouse</Filter>
     </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\interface\D3dSplash.h">
+      <Filter>ui\d3d_ui\interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctp2_utils\appstrings.cpp">
@@ -4883,6 +4889,9 @@
     </ClCompile>
     <ClCompile Include="..\ui\d3d_ui\Mouse\Mouse.cpp">
       <Filter>ui\d3d_ui\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\interface\D3dSplash.cpp">
+      <Filter>ui\d3d_ui\interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
