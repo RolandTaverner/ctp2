@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include <boost/geometry/algorithms/covered_by.hpp>
+#include <boost/geometry/algorithms/within.hpp>
 #include <boost/geometry/algorithms/overlaps.hpp>
 
 #include "D3dTiles/Region.h"
@@ -62,7 +62,7 @@ namespace TileEngine {
     boost::geometry::add_point(newMax, Position(width, height));
     const Rect newRect(newMin, newMax);
 
-    if (!boost::geometry::covered_by(newRect, thisRect)) {
+    if (!boost::geometry::within(newRect, thisRect)) {
       throw std::invalid_argument("New child region outside parent's bounds");
     }
 
@@ -136,6 +136,10 @@ namespace TileEngine {
       m_renderer->RenderTexturedRectangle(m_level, m_position, s);
     }
 
+    void operator()(Text::Ptr &t) {
+      m_renderer->RenderText(m_level, m_position, t);
+    }
+
   private:
     unsigned m_level;
     Position m_position;
@@ -163,6 +167,10 @@ namespace TileEngine {
 
   void Region::DrawImage(const Position &position, Bitmap::Ptr bitmap) {
     m_graphics.push_back(GraphicElementPosition{ position, GraphicElement(bitmap) });
+  }
+
+  void Region::DrawPrimitive(const Position &position, Text::Ptr p) {
+    m_graphics.push_back(GraphicElementPosition{ position, GraphicElement(p) });
   }
 
   void Region::Clear(bool children) {

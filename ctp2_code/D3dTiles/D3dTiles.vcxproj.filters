@@ -87,6 +87,12 @@
     <ClInclude Include="include\D3dTiles\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\D3dTiles\Primitives\Text.h">
+      <Filter>Header Files\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3dTiles\Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -132,6 +138,12 @@
       <Filter>Source Files\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="src\Color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Primitives\Text.cpp">
+      <Filter>Source Files\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

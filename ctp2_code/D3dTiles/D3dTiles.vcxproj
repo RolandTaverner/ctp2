@@ -173,10 +173,12 @@
     <ClInclude Include="include\D3dTiles\D3d\DXGIFactory.h" />
     <ClInclude Include="include\D3dTiles\D3d\Renderer.h" />
     <ClInclude Include="include\D3dTiles\D3d\TextureShader.h" />
+    <ClInclude Include="include\D3dTiles\Font.h" />
     <ClInclude Include="include\D3dTiles\Geometry.h" />
     <ClInclude Include="include\D3dTiles\Primitives\ColoredRectangle.h" />
     <ClInclude Include="include\D3dTiles\Primitives\Primitive.h" />
     <ClInclude Include="include\D3dTiles\Primitives\Rectangle.h" />
+    <ClInclude Include="include\D3dTiles\Primitives\Text.h" />
     <ClInclude Include="include\D3dTiles\Primitives\TexturedRectangle.h" />
     <ClInclude Include="include\D3dTiles\Region.h" />
     <ClInclude Include="include\D3dTiles\RendererBase.h" />
@@ -193,9 +195,11 @@
     <ClCompile Include="src\D3d\DXGIFactory.cpp" />
     <ClCompile Include="src\D3d\Renderer.cpp" />
     <ClCompile Include="src\D3d\TextureShader.cpp" />
+    <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\Primitives\ColoredRectangle.cpp" />
     <ClCompile Include="src\Primitives\Primitive.cpp" />
     <ClCompile Include="src\Primitives\Rectangle.cpp" />
+    <ClCompile Include="src\Primitives\Text.cpp" />
     <ClCompile Include="src\Primitives\TexturedRectangle.cpp" />
     <ClCompile Include="src\Region.cpp" />
     <ClCompile Include="src\Scene.cpp" />

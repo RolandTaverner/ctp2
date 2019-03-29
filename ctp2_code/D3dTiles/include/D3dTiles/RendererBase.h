@@ -7,6 +7,7 @@
 #include "D3dTiles/Scene.h"
 #include "D3dTiles/Primitives/ColoredRectangle.h"
 #include "D3dTiles/Primitives/TexturedRectangle.h"
+#include "D3dTiles/Primitives/Text.h"
 
 #include <memory>
 
@@ -26,6 +27,7 @@ namespace TileEngine {
     virtual void RenderBitmap(unsigned level, const Rect &absRect, Bitmap::Ptr s) = 0;
     virtual void RenderColoredRectangle(unsigned level, const Position &position, ColoredRectangle::Ptr p) = 0;
     virtual void RenderTexturedRectangle(unsigned level, const Position &position, TexturedRectangle::Ptr p) = 0;
+    virtual void RenderText(unsigned level, const Position &position, Text::Ptr p) = 0;
 
   protected:
     Scene::Ptr Scene() {

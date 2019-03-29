@@ -36,6 +36,7 @@ public:
   void RenderBitmap(unsigned level, const Rect &absRect, Bitmap::Ptr s) override;
   void RenderColoredRectangle(unsigned level, const Position &position, ColoredRectangle::Ptr p) override;
   void RenderTexturedRectangle(unsigned level, const Position &position, TexturedRectangle::Ptr p) override;
+  void RenderText(unsigned level, const Position &position, Text::Ptr p) override;
 
   unsigned ScreenWidth() const;
   unsigned ScreenHeight() const;

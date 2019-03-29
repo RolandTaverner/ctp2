@@ -11,6 +11,7 @@
 #include "D3dTiles/Geometry.h"
 #include "D3dTiles/Primitives/ColoredRectangle.h"
 #include "D3dTiles/Primitives/TexturedRectangle.h"
+#include "D3dTiles/Primitives/Text.h"
 
 namespace TileEngine {
 
@@ -29,7 +30,7 @@ namespace TileEngine {
 
     typedef std::map<unsigned, Ptr> LayersMap;
 
-    typedef std::variant<Bitmap::Ptr, ColoredRectangle::Ptr, TexturedRectangle::Ptr> GraphicElement;
+    typedef std::variant<Bitmap::Ptr, ColoredRectangle::Ptr, TexturedRectangle::Ptr, Text::Ptr> GraphicElement;
     typedef struct {  
       Position position;
       GraphicElement element;
@@ -55,6 +56,7 @@ namespace TileEngine {
     void DrawImage(const Position &position, Bitmap::Ptr bitmap);
     void DrawPrimitive(const Position &position, ColoredRectangle::Ptr p);
     void DrawPrimitive(const Position &position, TexturedRectangle::Ptr p);
+    void DrawPrimitive(const Position &position, Text::Ptr p);
 
     void Clear(bool children);
 

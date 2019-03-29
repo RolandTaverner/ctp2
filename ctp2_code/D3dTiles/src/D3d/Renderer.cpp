@@ -268,7 +268,7 @@ void Renderer::RenderColoredRectangle(unsigned level, const Position &position, 
     if (tex) {
       if (!AddToFrameTextureCache(id, tex)) {
         // TODO: adding twice or non-unique StaticID
-      } 
+      }
     }
   }
 
@@ -277,7 +277,7 @@ void Renderer::RenderColoredRectangle(unsigned level, const Position &position, 
   }
 
   ID3D11ShaderResourceViewPtr srv = Utils::CreateTexture2DSRV(m_device, tex);
-  
+
   D3dBitmap bitmap;
   bitmap.Initialize(m_device, ScreenWidth(), ScreenHeight(), p->Width(), p->Height());
   bitmap.Render(m_deviceContext, position, zLevel);
@@ -289,7 +289,14 @@ void Renderer::RenderColoredRectangle(unsigned level, const Position &position, 
 
 void Renderer::RenderTexturedRectangle(unsigned level, const Position &position, TexturedRectangle::Ptr p) {
   const float zLevel = (float)level / (float)LevelsCount();
+  // TODO
 }
+
+void Renderer::RenderText(unsigned level, const Position &position, Text::Ptr p) {
+  const float zLevel = (float)level / (float)LevelsCount();
+
+}
+
 
 unsigned Renderer::ScreenWidth() const {
   return m_screenWidth;
