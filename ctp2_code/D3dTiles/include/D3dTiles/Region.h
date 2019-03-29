@@ -7,8 +7,8 @@
 
 #include <boost/geometry/arithmetic/arithmetic.hpp>
 
-#include "Bitmap.h"
-#include "Geometry.h"
+#include "D3dTiles/Bitmap.h"
+#include "D3dTiles/Geometry.h"
 
 namespace TileEngine {
 
@@ -23,11 +23,7 @@ namespace TileEngine {
     typedef unsigned long RegionID;
 
   private:
-    typedef struct {
-      Position position;
-      RegionPtr region;
-    } ChildRegion;
-    typedef std::map<RegionID, ChildRegion> RegionsMap;
+    typedef std::map<RegionID, RegionPtr> RegionsMap;
 
     typedef std::map<unsigned, RegionPtr> LayersMap;
 
@@ -40,17 +36,18 @@ namespace TileEngine {
 
   public:
     Region();
-    Region(RegionWeakPtr parent, RegionID id, unsigned width, unsigned height);
+    Region(RegionWeakPtr parent, RegionID id, const Position &position, unsigned width, unsigned height);
     virtual ~Region();
 
     RegionID ID() const;
+    const Position &Pos() const;
     unsigned Width() const;
     unsigned Height() const;
-    Rect GetRect(const Position &relative) const;
+    Rect GetRect() const;
     unsigned GetLevelsCount() const;
-    RegionPtr AddChild(Position position, unsigned width, unsigned height);
+    RegionPtr AddChild(const Position &position, unsigned width, unsigned height);
     RegionPtr AddLayer(unsigned level);
-    void Render(unsigned level, const Position &position, RendererBasePtr renderer);
+    void Render(unsigned level, const Position &parentPosition, RendererBasePtr renderer);
 
     void DrawPrimitive();
     void DrawImage(const Position &position, Bitmap::BitmapPtr bitmap);
@@ -63,6 +60,7 @@ namespace TileEngine {
   private:
     RegionWeakPtr m_parent;
     RegionID m_ID;
+    Position m_position;
     unsigned m_width, m_height;
     RegionsMap m_children;
     LayersMap m_layers;

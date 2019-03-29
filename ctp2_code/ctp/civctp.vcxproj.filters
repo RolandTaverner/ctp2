@@ -216,6 +216,9 @@
       <UniqueIdentifier>{f41ea19c-c1ac-4abf-986d-f79965e53119}</UniqueIdentifier>
       <Extensions>*.cpp *.h</Extensions>
     </Filter>
+    <Filter Include="ui\d3d_ui">
+      <UniqueIdentifier>{bbb877f3-ca77-4e7f-afef-669e51de980b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ctp2_rsrc\civ3.rc">
@@ -2599,6 +2602,9 @@
     <ClInclude Include="..\gfx\spritesys\DirectorActionHandlers.h">
       <Filter>gfx\spritesys</Filter>
     </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\D3dUI.h">
+      <Filter>ui\d3d_ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctp2_utils\appstrings.cpp">
@@ -4853,6 +4859,9 @@
     </ClCompile>
     <ClCompile Include="..\gfx\spritesys\DirectorActionHandlers.cpp">
       <Filter>gfx\spritesys</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\D3dUI.cpp">
+      <Filter>ui\d3d_ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

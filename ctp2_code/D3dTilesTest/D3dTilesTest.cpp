@@ -7,10 +7,10 @@
 
 #include "D3dTilesTest.h"
 
-#include "Bitmap.h"
-#include "Scene.h"
+#include "D3dTiles/Bitmap.h"
+#include "D3dTiles/Scene.h"
 
-#include "D3d/Renderer.h"
+#include "D3dTiles/D3d/Renderer.h"
 
 #define MAX_LOADSTRING 100
 
@@ -62,7 +62,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
       continue;
 
-    rendererPtr->CreateDevice(g_hWnd, adapter);
+    rendererPtr->CreateDevice(g_hWnd, adapter, L"");
 
     break;
   }

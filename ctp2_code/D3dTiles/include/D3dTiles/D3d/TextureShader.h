@@ -7,7 +7,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-#include "D3d/D3dInterfaces.h"
+#include "D3dTiles/D3d/D3dInterfaces.h"
 
 namespace TileEngine::D3d {
 
@@ -24,7 +24,7 @@ public:
   TextureShader();
   ~TextureShader();
 
-  void Initialize(ID3D11DevicePtr device);
+  void Initialize(ID3D11DevicePtr device, const std::wstring &shaderPath);
   bool Render(ID3D11DeviceContextPtr deviceContext, unsigned indexCount,
     const DirectX::XMMATRIX &worldMatrix, const DirectX::XMMATRIX &viewMatrix, const DirectX::XMMATRIX &projectionMatrix,
     ID3D11ShaderResourceViewPtr texture);

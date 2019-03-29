@@ -4,9 +4,9 @@
 
 #include <directxcolors.h>
 
-#include "D3d/D3dBitmap.h"
-#include "D3d/D3dCreateTexture.h"
-#include "D3d/Renderer.h"
+#include "D3dTiles/D3d/D3dBitmap.h"
+#include "D3dTiles/D3d/D3dCreateTexture.h"
+#include "D3dTiles/D3d/Renderer.h"
 
 namespace TileEngine::D3d {
 
@@ -19,7 +19,7 @@ void Renderer::EnumerateAdapters(const AdapterReceiver &e) {
   m_dxgi.Enumerate(e);
 }
 
-void Renderer::CreateDevice(HWND hWnd, IDXGIAdapter1Ptr adapter) {
+void Renderer::CreateDevice(HWND hWnd, IDXGIAdapter1Ptr adapter, const std::wstring &shaderPath) {
   D3D_FEATURE_LEVEL featureLevels[] =
   {
       D3D_FEATURE_LEVEL_11_1,
@@ -109,7 +109,7 @@ void Renderer::CreateDevice(HWND hWnd, IDXGIAdapter1Ptr adapter) {
   DirectX::XMVECTOR Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
   m_viewMatrix = DirectX::XMMatrixLookAtLH(Eye, At, Up);
 
-  m_textureShader.Initialize(m_device);
+  m_textureShader.Initialize(m_device, shaderPath);
 }
 
 void Renderer::InitDepthStencilBuffer(const UINT &width, const UINT &height) {

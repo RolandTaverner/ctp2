@@ -4,7 +4,7 @@
 
 #include <boost/scoped_array.hpp>
 
-#include "D3d/D3dBitmap.h"
+#include "D3dTiles/D3d/D3dBitmap.h"
 
 namespace TileEngine::D3d {
 

@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-#include "D3d/DXGIFactory.h"
+#include "D3dTiles/D3d/DXGIFactory.h"
 
 namespace TileEngine {
   namespace D3d {

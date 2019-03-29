@@ -3,7 +3,7 @@
 #include <string.h>
 #include <cstdint>
 
-#include "D3d/D3dCreateTexture.h"
+#include "D3dTiles/D3d/D3dCreateTexture.h"
 
 namespace TileEngine::D3d::Utils {
 

@@ -1285,9 +1285,11 @@ sint32 CivApp::InitializeApp(HINSTANCE hInstance, int iCmdShow)
 	gameWatch.RecordingSystem("gwciv");
 #endif
 
-	display_Initialize(hInstance, iCmdShow);
+  m_UI.reset(new ui::d3d::D3dUI());
+  m_UI->Initialize(hInstance, iCmdShow, 1024, 768); // TODO: use config
 	init_keymap();
-	(void) ui_Initialize();
+  return 0;
+	//(void) ui_Initialize();
 	SoundManager::Initialize();
 
 	if ( sharedsurface_Initialize() != AUI_ERRCODE_OK ) {

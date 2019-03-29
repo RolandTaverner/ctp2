@@ -65,10 +65,17 @@
 /// \image html "../common/images/wallpaper1_640x480_2.jpg"
 
 #include "ctp/c3.h"         // Pre-compiled header
+
+#include <algorithm>                    // std::fill
+#include <clocale>
+#include <iomanip>                      // std::setfill, std::setw
+#include <sstream>                      // std::basic_stringstream
+#include <string>                       // std::basic_string
+
+
 #include "ctp/civ3_main.h"  // Own declarations: consistency check
 
 #include "gs/newdb/AdvanceRecord.h"
-#include <algorithm>                    // std::fill
 #include "ui/interface/ancientwindows.h"
 #include "ctp/ctp2_utils/appstrings.h"
 #include "ui/aui_common/aui.h"
@@ -93,7 +100,6 @@
 #include "ctp/civapp.h"
 #include "gs/fileio/CivPaths.h"                   // g_civPaths
 #include "gs/fileio/civscenarios.h"               // g_civScenarios
-#include <clocale>
 #include "gfx/gfx_utils/colorset.h"
 #include "ui/interface/controlpanelwindow.h"         // g_controlPanel
 #include "ui/aui_ctp2/ctp2_listitem.h"
@@ -116,7 +122,6 @@
 #include "ui/interface/helptile.h"
 #include "ui/aui_ctp2/icon.h"
 #include "ui/interface/initialplaywindow.h"
-#include <iomanip>                      // std::setfill, std::setw
 #include "ui/aui_ctp2/keypress.h"
 #include "ui/interface/MainControlPanel.h"
 #include "ui/interface/messagewin.h"
@@ -140,11 +145,9 @@
 #include "ui/interface/spnewgamewindow.h"
 #include "gfx/spritesys/Sprite.h"
 #include "gfx/spritesys/SpriteGroupList.h"
-#include <sstream>                      // std::basic_stringstream
 #include "ui/interface/statswindow.h"
 #include "ui/aui_ctp2/statuswindow.h"
 #include "gs/database/StrDB.h"                      // g_theStringDB
-#include <string>                       // std::basic_string
 #include "gs/newdb/TerrainRecord.h"
 #include "gfx/tilesys/tiledmap.h"
 #include "gs/gameobj/TradePool.h"
@@ -154,6 +157,8 @@
 #include "ui/interface/workwin.h"
 #include "ui/interface/workwindow.h"
 #include "gs/world/World.h"                      // g_theWorld
+
+#include "ui/d3d_ui/D3dUI.h"
 
 #if !defined(__GNUC__) // TODO: replacement needed (wine doesnt have these headers...)
 #include "ui/aui_ctp2/directvideo.h"
@@ -219,8 +224,6 @@ extern sint32           g_logCrashes;
 HWND                                gHwnd;
 HINSTANCE                           gHInstance;
 BOOL                                gDone = FALSE;
-LPCSTR                              gszMainWindowClass = "CTP II";
-LPCSTR                              gszMainWindowName = "CTP II";
 sint32                              g_ScreenWidth = 0;
 sint32                              g_ScreenHeight = 0;
 
@@ -1525,7 +1528,7 @@ int CivMain
 int WINAPI CivMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
 
-	HWND hwnd = FindWindow (gszMainWindowClass, gszMainWindowName);
+	HWND hwnd = FindWindow(ui::d3d::gszMainWindowClass, ui::d3d::gszMainWindowName);
 	if (hwnd) {
 
 		if (IsIconic(hwnd)) {
@@ -1764,7 +1767,6 @@ void DoFinalCleanup(int exitCode)
 	exit(exitCode);
 }
 
-#define k_MSWHEEL_ROLLMSG		0xC7AF
 
 #ifdef __AUI_USE_SDL__
 int SDLMessageHandler(const SDL_Event &event)
@@ -2051,122 +2053,7 @@ int SDLMessageHandler(const SDL_Event &event)
 }
 
 #elif defined(__AUI_USE_DIRECTX__)
-LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
-{
-	if (!gDone && g_c3ui)
-	{
-		(void) g_c3ui->HandleWindowsMessage(hwnd, iMsg, wParam, lParam);
-	}
 
-	static bool swallowNextChar = false;
-
-	switch (iMsg)
-	{
-	case WM_CHAR:
-		if (!swallowNextChar)
-		{
-			ui_HandleKeypress(wParam, lParam);
-		}
-		swallowNextChar = false;
-		break;
-
-	case WM_KEYDOWN:
-		switch (wParam)
-		{
-		case VK_F1:
-		case VK_F2:
-		case VK_F3:
-		case VK_F4:
-		case VK_F5:
-		case VK_F6:
-		case VK_F7:
-		case VK_F8:
-		case VK_F9:
-			if(!(GetKeyState(VK_SHIFT) & 0x8000)) {
-				ui_HandleKeypress(wParam - VK_F1 + '1' + 128, lParam);
-			}
-			break;
-		case VK_F10:
-			if(!(GetKeyState(VK_SHIFT) & 0x8000)) {
-				ui_HandleKeypress(wParam - VK_F10 + '0' + 128, lParam);
-			}
-			break;
-		case VK_F11:
-			if(!(GetKeyState(VK_SHIFT) & 0x8000)) {
-				ui_HandleKeypress('!' + 128, lParam);
-			}
-			break;
-		case VK_F12:
-			if(!(GetKeyState(VK_SHIFT) & 0x8000)) {
-				ui_HandleKeypress('@' + 128, lParam);
-			}
-			break;
-		case VK_TAB:
-			ui_HandleKeypress('\t' + 128, lParam);
-			swallowNextChar = true;
-			return 0;
-		case VK_RETURN:
-			ui_HandleKeypress('\r' + 128, lParam);
-			swallowNextChar = true;
-			return 0;
-		case VK_BACK:
-			ui_HandleKeypress(8 + 128, lParam);
-			swallowNextChar = true;
-			return 0;
-		case VK_UP:
-		case VK_DOWN:
-		case VK_LEFT:
-		case VK_RIGHT:
-			ui_HandleKeypress(wParam + 256, lParam);
-			break;
-		}
-		break;
-	case WM_SYSKEYDOWN:
-
-		if(wParam == VK_F10) {
-			if(!(GetKeyState(VK_SHIFT) & 0x8000)) {
-				ui_HandleKeypress(wParam - VK_F10 + '0' + 128, lParam);
-			}
-		}
-		break;
-	case WM_CLOSE:
-		if (hwnd != gHwnd) break;
-
-		gDone = TRUE;
-		DoFinalCleanup();
-		DestroyWindow(hwnd);
-		gHwnd = NULL;
-		return 0;
-
-	case k_MSWHEEL_ROLLMSG :
-		{
-			sint16 dir = HIWORD(wParam);
-			if (dir >= 0) dir = 1;
-			if (dir < 0) dir = -1;
-			ui_HandleMouseWheel(dir);
-		}
-
-	case WM_VSCROLL:
-		{
-			sint16 scrollCode = LOWORD(wParam);
-			if (scrollCode == SB_LINEDOWN)
-			{
-				ui_HandleMouseWheel((sint16)-1);
-			}
-			else if (scrollCode == SB_LINEUP)
-			{
-				ui_HandleMouseWheel((sint16)1);
-			}
-		}
-		break;
-	case WM_MOUSEWHEEL:
-		ui_HandleMouseWheel((sint16)HIWORD(wParam));
-		break;
-	}
-#ifdef WIN32
-	return DefWindowProc(hwnd, iMsg, wParam, lParam);
-#endif
-}
 #endif// else: Compilation error
 
 void DisplayFrame(aui_Surface *surf)

@@ -30,41 +30,41 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Bitmap.h">
+    <ClInclude Include="include\D3dTiles\D3d\D3dBitmap.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3dTiles\D3d\D3dCreateTexture.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3dTiles\D3d\D3dInterfaces.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3dTiles\D3d\D3dTextureCache.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3dTiles\D3d\DXGIFactory.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3dTiles\D3d\Renderer.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3dTiles\D3d\TextureShader.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3dTiles\Bitmap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Geometry.h">
+    <ClInclude Include="include\D3dTiles\Geometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Region.h">
+    <ClInclude Include="include\D3dTiles\Region.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererBase.h">
+    <ClInclude Include="include\D3dTiles\RendererBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Scene.h">
+    <ClInclude Include="include\D3dTiles\Scene.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\D3d\D3dBitmap.h">
-      <Filter>Header Files\D3d</Filter>
-    </ClInclude>
-    <ClInclude Include="include\D3d\D3dCreateTexture.h">
-      <Filter>Header Files\D3d</Filter>
-    </ClInclude>
-    <ClInclude Include="include\D3d\D3dInterfaces.h">
-      <Filter>Header Files\D3d</Filter>
-    </ClInclude>
-    <ClInclude Include="include\D3d\D3dTextureCache.h">
-      <Filter>Header Files\D3d</Filter>
-    </ClInclude>
-    <ClInclude Include="include\D3d\DXGIFactory.h">
-      <Filter>Header Files\D3d</Filter>
-    </ClInclude>
-    <ClInclude Include="include\D3d\Renderer.h">
-      <Filter>Header Files\D3d</Filter>
-    </ClInclude>
-    <ClInclude Include="include\D3d\TextureShader.h">
-      <Filter>Header Files\D3d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

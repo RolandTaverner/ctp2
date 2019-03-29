@@ -1,12 +1,13 @@
 #include "stdafx.h"
 
 #include <string.h>
+#include <filesystem>
 #include <stdexcept>
 
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
-#include "D3d/TextureShader.h"
+#include "D3dTiles/D3d/TextureShader.h"
 
 namespace TileEngine::D3d {
 
@@ -14,9 +15,10 @@ TextureShader::TextureShader() {}
 
 TextureShader::~TextureShader() {}
 
-void TextureShader::Initialize(ID3D11DevicePtr device) {
+void TextureShader::Initialize(ID3D11DevicePtr device, const std::wstring &shaderPath) {
   // Initialize the vertex and pixel shaders.
-  InitializeShader(device, L"D3dTiles.fx", L"D3dTiles.fx");
+  const std::filesystem::path shaderDir(shaderPath);
+  InitializeShader(device, (shaderDir / L"D3dTiles.fx").wstring(), (shaderDir / L"D3dTiles.fx").wstring());
 }
 
 void TextureShader::InitializeShader(ID3D11DevicePtr device, const std::wstring &vsFilename, const std::wstring &psFilename) {

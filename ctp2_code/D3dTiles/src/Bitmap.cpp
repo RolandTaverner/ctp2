@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-#include "Bitmap.h"
+#include "D3dTiles/Bitmap.h"
 
 namespace TileEngine {
 

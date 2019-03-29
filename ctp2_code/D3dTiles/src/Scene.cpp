@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
-#include "RendererBase.h"
-#include "Scene.h"
+#include "D3dTiles/RendererBase.h"
+#include "D3dTiles/Scene.h"
 
 namespace TileEngine {
 
   Scene::Scene(unsigned width, unsigned height) :
-    m_root(std::make_shared<Region>(Region::RegionWeakPtr(), 0, width, height)) {
+    m_root(std::make_shared<Region>(Region::RegionWeakPtr(), 0, Position(0, 0), width, height)) {
   }
 
   Scene::~Scene() {

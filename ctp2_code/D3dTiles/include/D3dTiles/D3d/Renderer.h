@@ -7,12 +7,12 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-#include "RendererBase.h"
+#include "D3dTiles/RendererBase.h"
 
-#include "D3d/DXGIFactory.h"
-#include "D3d/D3dInterfaces.h"
-#include "D3d/D3dTextureCache.h"
-#include "D3d/TextureShader.h"
+#include "D3dTiles/D3d/DXGIFactory.h"
+#include "D3dTiles/D3d/D3dInterfaces.h"
+#include "D3dTiles/D3d/D3dTextureCache.h"
+#include "D3dTiles/D3d/TextureShader.h"
 
 namespace TileEngine {
 namespace D3d {
@@ -29,7 +29,7 @@ public:
   virtual ~Renderer();
 
   void EnumerateAdapters(const AdapterReceiver &e);
-  void CreateDevice(HWND hWnd, IDXGIAdapter1Ptr adapter);
+  void CreateDevice(HWND hWnd, IDXGIAdapter1Ptr adapter, const std::wstring &shaderPath);
   void Render();
 
   // RendererBase

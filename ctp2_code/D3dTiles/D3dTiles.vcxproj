@@ -76,19 +76,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -96,7 +96,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -163,18 +163,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Bitmap.h" />
-    <ClInclude Include="include\D3d\D3dBitmap.h" />
-    <ClInclude Include="include\D3d\D3dCreateTexture.h" />
-    <ClInclude Include="include\D3d\D3dInterfaces.h" />
-    <ClInclude Include="include\D3d\D3dTextureCache.h" />
-    <ClInclude Include="include\D3d\DXGIFactory.h" />
-    <ClInclude Include="include\D3d\Renderer.h" />
-    <ClInclude Include="include\D3d\TextureShader.h" />
-    <ClInclude Include="include\Geometry.h" />
-    <ClInclude Include="include\Region.h" />
-    <ClInclude Include="include\RendererBase.h" />
-    <ClInclude Include="include\Scene.h" />
+    <ClInclude Include="include\D3dTiles\Bitmap.h" />
+    <ClInclude Include="include\D3dTiles\D3d\D3dBitmap.h" />
+    <ClInclude Include="include\D3dTiles\D3d\D3dCreateTexture.h" />
+    <ClInclude Include="include\D3dTiles\D3d\D3dInterfaces.h" />
+    <ClInclude Include="include\D3dTiles\D3d\D3dTextureCache.h" />
+    <ClInclude Include="include\D3dTiles\D3d\DXGIFactory.h" />
+    <ClInclude Include="include\D3dTiles\D3d\Renderer.h" />
+    <ClInclude Include="include\D3dTiles\D3d\TextureShader.h" />
+    <ClInclude Include="include\D3dTiles\Geometry.h" />
+    <ClInclude Include="include\D3dTiles\Region.h" />
+    <ClInclude Include="include\D3dTiles\RendererBase.h" />
+    <ClInclude Include="include\D3dTiles\Scene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

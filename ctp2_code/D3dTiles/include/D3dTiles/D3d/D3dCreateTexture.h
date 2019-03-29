@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Bitmap.h"
-#include "D3d/D3dInterfaces.h"
+#include "D3dTiles/Bitmap.h"
+#include "D3dTiles/D3d/D3dInterfaces.h"
 
 namespace TileEngine::D3d::Utils {
 

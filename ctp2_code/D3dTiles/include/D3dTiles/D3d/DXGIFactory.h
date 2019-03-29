@@ -9,7 +9,7 @@
 #include <d3d11.h>
 #include <dxgi.h>
 
-#include "D3d/D3dInterfaces.h"
+#include "D3dTiles/D3d/D3dInterfaces.h"
 
 namespace TileEngine {
   namespace D3d {

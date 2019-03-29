@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //
-// Project      : Call To Power 2
-// File type    : C++ header
-// Description  : Main application
+// Project  : Call To Power 2
+// File type : C++ header
+// Description : Main application
 //
 //----------------------------------------------------------------------------
 //
@@ -23,8 +23,8 @@
 //
 //----------------------------------------------------------------------------
 ///
-/// \file   civapp.h
-/// \brief  Main application
+/// \file civapp.h
+/// \brief Main application
 
 #if defined(HAVE_PRAGMA_ONCE)
 #pragma once
@@ -39,7 +39,7 @@
 //
 //----------------------------------------------------------------------------
 
-#include <windows.h>            // HINSTANCE, MBCHAR
+#include <windows.h>   // HINSTANCE, MBCHAR
 
 //----------------------------------------------------------------------------
 //
@@ -56,8 +56,9 @@ class CivApp;
 //----------------------------------------------------------------------------
 
 #include "ui/aui_common/aui_ldl.h"
-#include "ui/aui_common/aui_action.h"     // aui_Action
-#include "os/include/ctp2_inttypes.h"  // sint32, uint32
+#include "ui/aui_common/aui_action.h"  // aui_Action
+#include "ui/d3d_ui/D3dUI.h"
+#include "os/include/ctp2_inttypes.h" // sint32, uint32
 class CivArchive;
 
 //----------------------------------------------------------------------------
@@ -66,100 +67,94 @@ class CivArchive;
 //
 //----------------------------------------------------------------------------
 
-class CivApp
-{
+class CivApp {
 public:
-	CivApp();
+  CivApp();
 
-	void		AutoSave(sint32 player, bool isQuickSave = false);
-	void		BeginKeyboardScrolling(sint32 key);
-	void		CleanupApp(void);
-	void		CleanupAppDB(void);
-	sint32		EndGame(void);
+  void AutoSave(sint32 player, bool isQuickSave = false);
+  void BeginKeyboardScrolling(sint32 key);
+  void CleanupApp(void);
+  void CleanupAppDB(void);
+  sint32 EndGame(void);
 
-	sint32		GetKeyboardScrollingKey(void) const
-    {
-        return m_keyboardScrollingKey;
-    };
+  sint32 GetKeyboardScrollingKey(void) const {
+    return m_keyboardScrollingKey;
+  };
 
-    sint32		InitializeApp(HINSTANCE hInstance, int iCmdShow);
-	bool		InitializeAppDB(void);
-	sint32		InitializeAppDB(CivArchive &archive);
-	sint32		InitializeGame(CivArchive &archive);
+  sint32 InitializeApp(HINSTANCE hInstance, int iCmdShow);
+  bool InitializeAppDB(void);
+  sint32 InitializeAppDB(CivArchive &archive);
+  sint32 InitializeGame(CivArchive &archive);
 
-   	bool		IsGameLoaded(void) const
-    {
-        return m_gameLoaded;
-    };
+  bool IsGameLoaded(void) const {
+    return m_gameLoaded;
+  };
 
-	bool		IsInBackground(void) const
-    {
-        return m_inBackground;
-    };
+  bool IsInBackground(void) const {
+    return m_inBackground;
+  };
 
-	bool		IsKeyboardScrolling(void) const
-    {
-        return m_isKeyboardScrolling;
-    };
+  bool IsKeyboardScrolling(void) const {
+    return m_isKeyboardScrolling;
+  };
 
-	sint32		LoadSavedGame(MBCHAR const * name);
-	sint32		LoadSavedGameMap(MBCHAR const * name);
-	sint32		LoadScenarioGame(MBCHAR const * name);
-	void		PostEndGameAction(void);
-	void        PostLoadQuickSaveAction(sint32 player);
-	void		PostLoadSaveGameAction(MBCHAR const *);
-	void		PostLoadScenarioGameAction(MBCHAR const * name);
-	void		PostQuitToLobbyAction(void);
-	void		PostQuitToSPShellAction(void);
-	void		PostRestartGameAction(void);
-	void		PostRestartGameSameMapAction(void);
-	void		PostSpriteTestAction(void);
-	void		PostStartGameAction(void);
-	sint32		Process(void);
-	void		ProcessGraphicsCallback(void);
-	sint32		QuickInit(HINSTANCE hInstance, int iCmdShow);
-	void		QuitGame(void);
-	sint32		QuitToLobby(void);
-	sint32		QuitToSPShell(void);
-	sint32		RestartGame(void);
-	sint32		RestartGameSameMap(void);
-	bool		SaveDBInGameFile(void) const
-    {
-        return m_saveDBInGameFile;
-    }
-	void		SetInBackground(bool in = true)
-    {
-        m_inBackground = in;
-    }
-	sint32		StartSpriteEditor(void);
-	sint32		StartGame(void);
-	void		StopKeyboardScrolling(sint32 key);
+  sint32 LoadSavedGame(MBCHAR const * name);
+  sint32 LoadSavedGameMap(MBCHAR const * name);
+  sint32 LoadScenarioGame(MBCHAR const * name);
+  void PostEndGameAction(void);
+  void  PostLoadQuickSaveAction(sint32 player);
+  void PostLoadSaveGameAction(MBCHAR const *);
+  void PostLoadScenarioGameAction(MBCHAR const * name);
+  void PostQuitToLobbyAction(void);
+  void PostQuitToSPShellAction(void);
+  void PostRestartGameAction(void);
+  void PostRestartGameSameMapAction(void);
+  void PostSpriteTestAction(void);
+  void PostStartGameAction(void);
+  sint32 Process(void);
+  void ProcessGraphicsCallback(void);
+  sint32 QuickInit(HINSTANCE hInstance, int iCmdShow);
+  void QuitGame(void);
+  sint32 QuitToLobby(void);
+  sint32 QuitToSPShell(void);
+  sint32 RestartGame(void);
+  sint32 RestartGameSameMap(void);
+  bool SaveDBInGameFile(void) const {
+    return m_saveDBInGameFile;
+  }
+  void SetInBackground(bool in = true) {
+    m_inBackground = in;
+  }
+  sint32 StartSpriteEditor(void);
+  sint32 StartGame(void);
+  void StopKeyboardScrolling(sint32 key);
 
 private:
-	void		CleanupAppUI(void);
-	void		CleanupGame(bool keepScenInfo);
-	void		CleanupGameUI(void);
-	void 		InitializeAppUI(void);
-	sint32  	InitializeGameUI(void);
-	sint32		InitializeSpriteEditor(CivArchive &archive);
-	void		PostLoadSaveGameMapAction(MBCHAR const *);
-	sint32      ProcessAI();
-	sint32      ProcessNet(const uint32 target_milliseconds, uint32 &used_milliseconds);
-	sint32		ProcessProfile(void);
-	sint32      ProcessRobot(const uint32 target_milliseconds, uint32 &used_milliseconds);
-	sint32      ProcessSLIC(void);
-	sint32		ProcessUI(const uint32 target_milliseconds, uint32 &used_milliseconds);
-	void		RestoreAutoSave(sint32 player);
-	void        StartMessageSystem();
+  void CleanupAppUI(void);
+  void CleanupGame(bool keepScenInfo);
+  void CleanupGameUI(void);
+  void  InitializeAppUI(void);
+  sint32 InitializeGameUI(void);
+  sint32 InitializeSpriteEditor(CivArchive &archive);
+  void PostLoadSaveGameMapAction(MBCHAR const *);
+  sint32  ProcessAI();
+  sint32  ProcessNet(const uint32 target_milliseconds, uint32 &used_milliseconds);
+  sint32 ProcessProfile(void);
+  sint32  ProcessRobot(const uint32 target_milliseconds, uint32 &used_milliseconds);
+  sint32  ProcessSLIC(void);
+  sint32 ProcessUI(const uint32 target_milliseconds, uint32 &used_milliseconds);
+  void RestoreAutoSave(sint32 player);
+  void  StartMessageSystem();
 
-	bool		m_appLoaded;
-	bool		m_dbLoaded;
-	bool		m_gameLoaded;
-	bool		m_saveDBInGameFile;
-	bool		m_aiFinishedThisTurn;
-	bool		m_inBackground;
-	bool		m_isKeyboardScrolling;
-	sint32		m_keyboardScrollingKey;
+  ui::d3d::D3dUI::D3dUIPtr m_UI;
+  bool m_appLoaded;
+  bool m_dbLoaded;
+  bool m_gameLoaded;
+  bool m_saveDBInGameFile;
+  bool m_aiFinishedThisTurn;
+  bool m_inBackground;
+  bool m_isKeyboardScrolling;
+  sint32 m_keyboardScrollingKey;
 };
 
 AUI_ACTION_BASIC(EndGameAction);
@@ -170,87 +165,77 @@ AUI_ACTION_BASIC(RestartGameSameMapAction);
 AUI_ACTION_BASIC(StartGameAction);
 AUI_ACTION_BASIC(SpriteTestAction);
 
-class LoadSaveGameAction : public aui_Action
-{
+class LoadSaveGameAction : public aui_Action {
 public:
-	LoadSaveGameAction(MBCHAR const * name = NULL)
-    :   aui_Action  ()
-    {
-        if (name)
-        {
-            strncpy(m_filename, name, k_AUI_LDL_MAXBLOCK);
-        }
-        else
-        {
-            m_filename[0] = 0;
-        }
-    };
+  LoadSaveGameAction(MBCHAR const * name = NULL)
+    : aui_Action() {
+    if (name) {
+      strncpy(m_filename, name, k_AUI_LDL_MAXBLOCK);
+    } else {
+      m_filename[0] = 0;
+    }
+  };
 
-	virtual void	Execute
-	(
-		aui_Control	*	control,
-		uint32			action,
-		uint32			data
-	);
+  virtual void Execute
+  (
+    aui_Control * control,
+    uint32  action,
+    uint32  data
+  );
 
 private:
-	MBCHAR m_filename[k_AUI_LDL_MAXBLOCK + 1];
+  MBCHAR m_filename[k_AUI_LDL_MAXBLOCK + 1];
 };
 
-/*   // never used
+/* // never used
 class LoadSaveGameMapAction : public aui_Action
 {
 public:
-	LoadSaveGameMapAction(MBCHAR const * name = NULL)
-    :   aui_Action  ()
-    {
-        if (name)
-        {
-            strncpy(m_filename, name, k_AUI_LDL_MAXBLOCK);
-        }
-        else
-        {
-            m_filename[0] = 0;
-        }
-    };
+ LoadSaveGameMapAction(MBCHAR const * name = NULL)
+ : aui_Action ()
+ {
+  if (name)
+  {
+   strncpy(m_filename, name, k_AUI_LDL_MAXBLOCK);
+  }
+  else
+  {
+   m_filename[0] = 0;
+  }
+ };
 
-	virtual void	Execute
-	(
-		aui_Control	*	control,
-		uint32			action,
-		uint32			data
-	);
+ virtual void Execute
+ (
+ aui_Control * control,
+ uint32  action,
+ uint32  data
+ );
 
 private:
-	MBCHAR m_filename[k_AUI_LDL_MAXBLOCK + 1];
+ MBCHAR m_filename[k_AUI_LDL_MAXBLOCK + 1];
 };
 */
 
-class LoadScenarioGameAction : public aui_Action
-{
+class LoadScenarioGameAction : public aui_Action {
 public:
-	LoadScenarioGameAction(MBCHAR const * name)
-    :   aui_Action  ()
-    {
-        if (name)
-        {
-            strncpy(m_filename, name, _MAX_PATH);
-        }
-        else
-        {
-            m_filename[0] = 0;
-        }
-    };
+  LoadScenarioGameAction(MBCHAR const * name)
+    : aui_Action() {
+    if (name) {
+      strncpy(m_filename, name, _MAX_PATH);
+    } else {
+      m_filename[0] = 0;
+    }
+  };
 
-	virtual void	Execute
-	(
-		aui_Control	*	control,
-		uint32			action,
-		uint32			data
-	);
+  virtual void Execute
+  (
+    aui_Control * control,
+    uint32  action,
+    uint32  data
+  );
 
 private:
-	MBCHAR m_filename[_MAX_PATH];
+  MBCHAR m_filename[_MAX_PATH];
 };
 
 #endif

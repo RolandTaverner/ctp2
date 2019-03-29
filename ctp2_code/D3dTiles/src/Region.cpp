@@ -3,22 +3,26 @@
 #include <boost/geometry/algorithms/covered_by.hpp>
 #include <boost/geometry/algorithms/overlaps.hpp>
 
-#include "Region.h"
-#include "RendererBase.h"
+#include "D3dTiles/Region.h"
+#include "D3dTiles/RendererBase.h"
 
 namespace TileEngine {
 
-  Region::Region() : Region(RegionWeakPtr(), 0, 0, 0) {
+  Region::Region() : Region(RegionWeakPtr(), 0, Position(0, 0), 0, 0) {
   }
 
-  Region::Region(RegionWeakPtr parent, RegionID id, unsigned width, unsigned height) :
-    m_parent(parent), m_ID(id), m_width(width), m_height(height) {
+  Region::Region(RegionWeakPtr parent, RegionID id, const Position &position, unsigned width, unsigned height) :
+    m_parent(parent), m_ID(id), m_position(position), m_width(width), m_height(height) {
   }
 
   Region::~Region() {}
 
   Region::RegionID Region::ID() const {
     return m_ID;
+  }
+
+  const Position &Region::Pos() const {
+    return m_position;
   }
 
   unsigned Region::Width() const {
@@ -29,9 +33,9 @@ namespace TileEngine {
     return m_height;
   }
 
-  Rect Region::GetRect(const Position &relative) const {
-    const Position minPoint(relative);
-    Position maxPoint(relative);
+  Rect Region::GetRect() const {
+    const Position &minPoint = Pos();
+    Position maxPoint(minPoint);
     boost::geometry::add_point(maxPoint, Position(Width(), Height()));
     return Rect(minPoint, maxPoint);
   }
@@ -39,7 +43,7 @@ namespace TileEngine {
   unsigned Region::GetLevelsCount() const {
     unsigned childLevels = 0;
     for (auto i : m_children) {
-      childLevels = std::max<>(childLevels, i.second.region->GetLevelsCount());
+      childLevels = std::max<>(childLevels, i.second->GetLevelsCount());
     }
 
     unsigned layersLevels = 0;
@@ -50,26 +54,28 @@ namespace TileEngine {
     return childLevels + 1 + layersLevels;
   }
 
-  Region::RegionPtr Region::AddChild(Position position, unsigned width, unsigned height) {
+  Region::RegionPtr Region::AddChild(const Position &position, unsigned width, unsigned height) {
+    const Rect thisRect(Position(0, 0), Position(Width(), Height()));
+    
     const Position newMin(position);
     Position newMax(position);
     boost::geometry::add_point(newMax, Position(width, height));
     const Rect newRect(newMin, newMax);
 
-    if (!boost::geometry::covered_by(newRect, GetRect(Position(0, 0)))) {
+    if (!boost::geometry::covered_by(newRect, thisRect)) {
       throw std::invalid_argument("New child region outside parent's bounds");
     }
 
     for (auto i : m_children) {
-      const Rect curRect(i.second.region->GetRect(i.second.position));
+      const Rect curRect(i.second->GetRect());
       if (boost::geometry::overlaps(curRect, newRect)) {
         throw std::invalid_argument("New child region overlaps with existing");
       }
     }
 
     const RegionID newID = m_children.empty() ? 0 : (m_children.rbegin()->first + 1);
-    RegionPtr newRegion(std::make_shared<Region>(shared_from_this(), newID, width, height));
-    m_children[newID] = ChildRegion{ position, newRegion };
+    RegionPtr newRegion(std::make_shared<Region>(shared_from_this(), newID, position, width, height));
+    m_children[newID] = newRegion;
     return newRegion;
   }
 
@@ -79,24 +85,25 @@ namespace TileEngine {
       throw std::invalid_argument("layer already exists");
     }
 
-    RegionPtr newLevel(std::make_shared<Region>(shared_from_this(), level, Width(), Height()));
+    RegionPtr newLevel(std::make_shared<Region>(shared_from_this(), level, Position(0, 0), Width(), Height()));
     m_layers[level] = newLevel;
     return newLevel;
   }
 
-  void Region::Render(unsigned ownLevel, const Position &position, Region::RendererBasePtr renderer) {
-    RenderSelf(ownLevel, position, renderer);
+  void Region::Render(unsigned ownLevel, const Position &parentPosition, Region::RendererBasePtr renderer) {
+    Position absPosition(parentPosition);
+    boost::geometry::add_point(absPosition, Pos());
+
+    RenderSelf(ownLevel, absPosition, renderer);
 
     unsigned level = ownLevel;
 
     for (auto child : m_children) {
-      Position childPosition(position);
-      boost::geometry::add_point(childPosition, child.second.position);
-      child.second.region->Render(++level, childPosition, renderer);
+      child.second->Render(++level, absPosition, renderer);
     }
 
     for (auto layer : m_layers) {
-      layer.second->Render(++level, position, renderer);
+      layer.second->Render(++level, absPosition, renderer);
     }
   }
 
@@ -131,7 +138,7 @@ namespace TileEngine {
   }
   
   void Region::DrawPrimitive() {
-
+    // TODO
   }
 
   void Region::DrawImage(const Position &position, Bitmap::BitmapPtr bitmap) {
@@ -142,7 +149,7 @@ namespace TileEngine {
     m_graphics.clear();
     if (children) {
       for (auto child : m_children) {
-        child.second.region->Clear(children);
+        child.second->Clear(children);
       }
     }
   }

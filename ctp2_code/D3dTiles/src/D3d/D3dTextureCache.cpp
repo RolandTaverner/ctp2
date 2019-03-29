@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "D3d/D3dTextureCache.h"
+#include "D3dTiles/D3d/D3dTextureCache.h"
 
 namespace TileEngine {
 namespace D3d {

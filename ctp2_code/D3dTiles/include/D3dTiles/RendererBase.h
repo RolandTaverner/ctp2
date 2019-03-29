@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "Bitmap.h"
-#include "Geometry.h"
-#include "Scene.h"
+#include "D3dTiles/Bitmap.h"
+#include "D3dTiles/Geometry.h"
+#include "D3dTiles/Scene.h"
 
 #include <memory>
 

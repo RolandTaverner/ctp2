@@ -2,9 +2,9 @@
 
 #include <DirectXMath.h>
 
-#include "Geometry.h"
+#include "D3dTiles/Geometry.h"
 
-#include "D3d/D3dInterfaces.h"
+#include "D3dTiles/D3d/D3dInterfaces.h"
 
 namespace TileEngine::D3d {
 
