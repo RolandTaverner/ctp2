@@ -8,6 +8,7 @@
 #include "D3dTilesTest.h"
 
 #include "D3dTiles/Bitmap.h"
+#include "D3dTiles/Font.h"
 #include "D3dTiles/Scene.h"
 
 #include "D3dTiles/D3d/Renderer.h"
@@ -67,6 +68,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     break;
   }
 
+  rendererPtr->LoadFont("arial.spritefont", "Arial", TileEngine::FONTSTYLE_REGULAR);
+
   RECT rc;
   GetClientRect(g_hWnd, &rc);
   unsigned screenWidth = rc.right - rc.left;
@@ -115,8 +118,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
   region1->DrawImage(TileEngine::Position(20, 20), b2);
 
   auto layer2 = scene->Root()->AddLayer(1);
-  layer2->DrawPrimitive(TileEngine::Position(30, 30),
-    std::make_shared<TileEngine::ColoredRectangle>(screenWidth - 60, screenHeight - 60, TileEngine::MakeColor(0, 200, 200, 100)));
+  auto region3 = layer2->AddChild(TileEngine::Position(30, 30), screenWidth - 60, screenHeight - 60);
+
+  region3->DrawPrimitive(TileEngine::Position(0, 0),
+    std::make_shared<TileEngine::ColoredRectangle>(region3->Width(), region3->Height(), TileEngine::MakeColor(0, 200, 200, 100)));
+
+  TileEngine::Text::Ptr text = std::make_shared<TileEngine::Text>(
+    rendererPtr->GetFontManager(),
+    TileEngine::FontDesc("Arial", TileEngine::FONTSTYLE_REGULAR), 
+    "Test text", TileEngine::MakeColor(255, 100, 0, 0xFF));
+
+  region3->DrawPrimitive(TileEngine::Position(0, 50), text);
 
   rendererPtr->SetScene(scene);
 

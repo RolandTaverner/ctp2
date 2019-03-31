@@ -10,6 +10,7 @@
 #include "D3dTiles/RendererBase.h"
 
 #include "D3dTiles/D3d/DXGIFactory.h"
+#include "D3dTiles/D3d/D3dFontManager.h"
 #include "D3dTiles/D3d/D3dInterfaces.h"
 #include "D3dTiles/D3d/D3dTextureCache.h"
 #include "D3dTiles/D3d/TextureShader.h"
@@ -30,9 +31,11 @@ public:
 
   void EnumerateAdapters(const AdapterReceiver &e);
   void CreateDevice(HWND hWnd, IDXGIAdapter1Ptr adapter, const std::wstring &shaderPath);
+  void LoadFont(const std::string &file, const std::string &fontFace, FontStyle style);
   void Render();
 
   // RendererBase
+  FontManager::Ptr GetFontManager() override;
   void RenderBitmap(unsigned level, const Rect &absRect, Bitmap::Ptr s) override;
   void RenderColoredRectangle(unsigned level, const Position &position, ColoredRectangle::Ptr p) override;
   void RenderTexturedRectangle(unsigned level, const Position &position, TexturedRectangle::Ptr p) override;
@@ -79,6 +82,8 @@ private:
   TextureCache m_texCache;
   TextureCache m_oneFrameTexCache;
   TextureShader m_textureShader;
+  
+  D3dFontManager::Ptr m_fontManager;
 };
 
 typedef std::shared_ptr<Renderer> RendererPtr;

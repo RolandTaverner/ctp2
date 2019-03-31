@@ -300,7 +300,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)D3dTiles\include;$(SolutionDir)libs\freetype\lib;$(SolutionDir)libs\freetype\utils;$(SolutionDir)libs\freetype\win32;$(SolutionDir)libs\freetype;$(SolutionDir)libs\tiff;$(SolutionDir)libs\anet\h;$(SolutionDir)mm;$(SolutionDir)libs\miles;$(SolutionDir)libs\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ENABLE_EXTENDED_ALIGNED_STORAGE;_PLAYTEST;_DEBUG;_AI_BACKDOOR;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;__GW_USE_IMPORT;__GWCIV_USE_IMPORT;_DEBUGTOOLS;_DEBUG_MEMORY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_ENABLE_EXTENDED_ALIGNED_STORAGE;_PLAYTEST;_DEBUG;_AI_BACKDOOR;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;__GW_USE_IMPORT;__GWCIV_USE_IMPORT;_DEBUGTOOLS;_DEBUG_MEMORY;_ITERATOR_DEBUG_LEVEL=2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug\civctp.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>Use</PrecompiledHeader>

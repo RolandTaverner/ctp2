@@ -5,11 +5,25 @@
 
 #include <directxcolors.h>
 
+#include <d3d11.h>
+#include <DirectXTK/SimpleMath.h>
+#include <DirectXTK/SpriteBatch.h>
+
+#include "D3dTiles/Color.h"
 #include "D3dTiles/D3d/D3dBitmap.h"
 #include "D3dTiles/D3d/D3dCreateTexture.h"
 #include "D3dTiles/D3d/Renderer.h"
 
 namespace TileEngine::D3d {
+
+DirectX::XMVECTORF32 ColorToDXColor(Color c) {
+  const DirectX::XMVECTORF32 dxColor = { { { 
+      GetComponent<Red>(c)   / 255.0f, 
+      GetComponent<Green>(c) / 255.0f,
+      GetComponent<Blue>(c)  / 255.0f,
+      GetComponent<Alpha>(c) / 255.0f } } };
+  return dxColor;
+}
 
 Renderer::Renderer() :
   m_screenWidth(0), m_screenHeight(0), m_levelsCount(0) {}
@@ -111,6 +125,12 @@ void Renderer::CreateDevice(HWND hWnd, IDXGIAdapter1Ptr adapter, const std::wstr
   m_viewMatrix = DirectX::XMMatrixLookAtLH(Eye, At, Up);
 
   m_textureShader.Initialize(m_device, shaderPath);
+
+  m_fontManager = std::make_shared<D3dFontManager>(m_device);
+}
+
+void Renderer::LoadFont(const std::string &file, const std::string &fontFace, FontStyle style) {
+  m_fontManager->LoadFont(file, fontFace, style);
 }
 
 void Renderer::InitDepthStencilBuffer(const UINT &width, const UINT &height) {
@@ -223,6 +243,10 @@ void Renderer::Render() {
   m_oneFrameTexCache.Clear();
 }
 
+FontManager::Ptr Renderer::GetFontManager() {
+  return m_fontManager;
+}
+
 void Renderer::RenderBitmap(unsigned level, const Rect &absRect, Bitmap::Ptr b) {
   const float zLevel = (float)level / (float)LevelsCount();
 
@@ -292,9 +316,26 @@ void Renderer::RenderTexturedRectangle(unsigned level, const Position &position,
   // TODO
 }
 
-void Renderer::RenderText(unsigned level, const Position &position, Text::Ptr p) {
+void Renderer::RenderText(unsigned level, const Position &position, Text::Ptr text) {
   const float zLevel = (float)level / (float)LevelsCount();
+  
+  D3dFont::Ptr font = m_fontManager->GetD3dFont(text->GetFontFace(), text->GetFontStyle());
+  
+  const DirectX::SimpleMath::Vector2 fontPos(position.get<0>(), position.get<1>());
+  std::unique_ptr<DirectX::SpriteBatch> spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_deviceContext.GetInterfacePtr());
 
+  spriteBatch->Begin();
+
+  font->GetSpriteFont().DrawString(spriteBatch.get(), text->GetText().c_str(),
+    fontPos, 
+    ColorToDXColor(text->GetTextColor()), 
+    0.f,                     // rotation
+    DirectX::XMFLOAT2(0, 0), // origin
+    1,                       // scale
+    DirectX::SpriteEffects_None, 
+    zLevel);
+
+  spriteBatch->End();
 }
 
 

@@ -96,6 +96,12 @@
     <ClInclude Include="include\D3dTiles\FontManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\D3dTiles\D3d\D3dFontManager.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3dTiles\D3d\D3dFont.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -151,6 +157,12 @@
     </ClCompile>
     <ClCompile Include="src\FontManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3d\D3dFontManager.cpp">
+      <Filter>Source Files\D3d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3d\D3dFont.cpp">
+      <Filter>Source Files\D3d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

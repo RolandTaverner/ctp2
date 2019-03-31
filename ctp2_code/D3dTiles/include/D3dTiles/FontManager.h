@@ -19,16 +19,7 @@ public:
   virtual ~FontManager();
 
   virtual Font::Ptr LoadFont(const std::string &file, const std::string &fontFace, FontStyle style) = 0;
-  Font::Ptr GetFont(const std::string &fontFace, FontStyle style);
-
-protected:
-  void AddFont(const std::string &fontFace, Font::Ptr font);
-
-private:
-  typedef std::map<FontStyle, Font::Ptr> FontStyleMap;
-  typedef std::map<std::string, FontStyleMap> FontMap;
-
-  FontMap m_fonts;
+  virtual Font::Ptr GetFont(const std::string &fontFace, FontStyle style) = 0;
 };
 
 } // name
