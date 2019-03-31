@@ -41,6 +41,7 @@ public:
   FontStyle GetFontStyle() const;
   const std::string GetText() const;
   Color GetTextColor() const;
+  float GetScale() const;
 
   // Primitive
   unsigned Width() const override;

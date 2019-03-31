@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <string>
-#include <utility>
+#include <tuple>
 
 #include <boost/geometry/arithmetic/arithmetic.hpp>
 
@@ -15,16 +15,17 @@ enum FontStyle : std::uint32_t {
   FONTSTYLE_BOLD = 0x1,
 };
 
-typedef std::pair<std::string, FontStyle> FontDesc;
+typedef std::tuple<std::string, unsigned, FontStyle> FontDesc;
 
 class Font {
 public:
   typedef std::shared_ptr<Font> Ptr;
   
-  Font(const std::string &fontFace, FontStyle style);
+  Font(const std::string &fontFace, unsigned fontSize, FontStyle style);
   virtual ~Font();
 
   const std::string &GetFontFace() const;
+  unsigned GetFontSize() const;
   FontStyle GetStyle() const;
 
   virtual Rect GetTextRect(const std::string &text) const = 0; // textutils_GetBounds
@@ -35,6 +36,7 @@ public:
 
 private:
   std::string m_fontFace;
+  unsigned m_fontSize;
   FontStyle m_style;
 };
 

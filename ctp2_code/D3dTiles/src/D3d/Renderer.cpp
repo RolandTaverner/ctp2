@@ -331,7 +331,7 @@ void Renderer::RenderText(unsigned level, const Position &position, Text::Ptr te
     ColorToDXColor(text->GetTextColor()), 
     0.f,                     // rotation
     DirectX::XMFLOAT2(0, 0), // origin
-    1,                       // scale
+    text->GetScale(),                       // scale
     DirectX::SpriteEffects_None, 
     zLevel);
 

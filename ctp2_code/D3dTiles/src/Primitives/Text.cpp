@@ -38,14 +38,18 @@ Color Text::GetTextColor() const {
   return m_textColor;
 }
 
+float Text::GetScale() const {
+  return m_scale;
+}
+
 unsigned Text::Width() const {
   Font::Ptr font = m_fontManager->GetFont(m_font.first, m_font.second);
-  return font->GetTextWidth(m_text);
+  return font->GetTextWidth(m_text)*m_scale;
 }
 
 unsigned Text::Height() const {
   Font::Ptr font = m_fontManager->GetFont(m_font.first, m_font.second);
-  return font->GetTextHeight(m_text);
+  return font->GetTextHeight(m_text)*m_scale;
 }
 
 Text::~Text() {}
