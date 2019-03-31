@@ -14,7 +14,7 @@ class D3dFont : public TileEngine::Font {
 public:
   typedef std::shared_ptr<D3dFont> Ptr;
 
-  D3dFont(SpriteFontPtr spriteFont, const std::string &fontFace, FontStyle style);
+  D3dFont(SpriteFontPtr spriteFont, const std::string &fontFace, unsigned fontSize, FontStyle style);
   virtual ~D3dFont();
 
   Rect GetTextRect(const std::string &text) const override;

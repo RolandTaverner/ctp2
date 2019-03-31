@@ -31,7 +31,7 @@ public:
 
   void EnumerateAdapters(const AdapterReceiver &e);
   void CreateDevice(HWND hWnd, IDXGIAdapter1Ptr adapter, const std::wstring &shaderPath);
-  void LoadFont(const std::string &file, const std::string &fontFace, FontStyle style);
+  void LoadFont(const std::string &file, const std::string &fontFace, unsigned size, FontStyle style);
   void Render();
 
   // RendererBase

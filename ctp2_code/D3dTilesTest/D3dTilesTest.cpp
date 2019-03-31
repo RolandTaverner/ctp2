@@ -68,7 +68,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     break;
   }
 
-  rendererPtr->LoadFont("arial.spritefont", "Arial", TileEngine::FONTSTYLE_REGULAR);
+  rendererPtr->LoadFont("arial.spritefont", "Arial", 32, TileEngine::FONTSTYLE_REGULAR);
 
   RECT rc;
   GetClientRect(g_hWnd, &rc);
@@ -125,7 +125,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
   TileEngine::Text::Ptr text = std::make_shared<TileEngine::Text>(
     rendererPtr->GetFontManager(),
-    TileEngine::FontDesc("Arial", TileEngine::FONTSTYLE_REGULAR), 
+    TileEngine::FontDesc("Arial", 32, TileEngine::FONTSTYLE_REGULAR), 
     "Test text", TileEngine::MakeColor(255, 100, 0, 0xFF));
   region3->DrawPrimitive(TileEngine::Position(0, 50), text);
 
@@ -134,7 +134,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
   TileEngine::Text::Ptr text1 = std::make_shared<TileEngine::Text>(
     rendererPtr->GetFontManager(),
-    TileEngine::FontDesc("Arial", TileEngine::FONTSTYLE_REGULAR),
+    TileEngine::FontDesc("Arial", 32, TileEngine::FONTSTYLE_REGULAR),
     "Test text with text area", TileEngine::MakeColor(0, 255, 0, 0xFF));
   region5->DrawPrimitive(TileEngine::Position(0, 100), text1);
 
@@ -143,13 +143,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
   TileEngine::Text::Ptr text2 = std::make_shared<TileEngine::Text>(
     rendererPtr->GetFontManager(),
-    TileEngine::FontDesc("Arial", TileEngine::FONTSTYLE_REGULAR),
+    TileEngine::FontDesc("Arial", 32, TileEngine::FONTSTYLE_REGULAR),
     "Scaled text scale=0.5", TileEngine::MakeColor(0, 0, 0, 0xFF), 0.5f);
   region5->DrawPrimitive(TileEngine::Position(0, 150), text2);
 
   TileEngine::Text::Ptr text3 = std::make_shared<TileEngine::Text>(
     rendererPtr->GetFontManager(),
-    TileEngine::FontDesc("Arial", TileEngine::FONTSTYLE_REGULAR),
+    TileEngine::FontDesc("Arial", 32, TileEngine::FONTSTYLE_REGULAR),
     "Scaled text scale=0.3", TileEngine::MakeColor(0, 0, 0, 0xFF), 0.3f);
   region5->DrawPrimitive(TileEngine::Position(0, 180), text3);
 

@@ -18,8 +18,8 @@ public:
 
   virtual ~FontManager();
 
-  virtual Font::Ptr LoadFont(const std::string &file, const std::string &fontFace, FontStyle style) = 0;
-  virtual Font::Ptr GetFont(const std::string &fontFace, FontStyle style) = 0;
+  virtual Font::Ptr LoadFont(const std::string &file, const std::string &fontFace, unsigned fontSize, FontStyle style) = 0;
+  virtual Font::Ptr GetFont(const std::string &fontFace, unsigned fontSize, FontStyle style) = 0;
 };
 
 } // name

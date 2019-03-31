@@ -129,8 +129,8 @@ void Renderer::CreateDevice(HWND hWnd, IDXGIAdapter1Ptr adapter, const std::wstr
   m_fontManager = std::make_shared<D3dFontManager>(m_device);
 }
 
-void Renderer::LoadFont(const std::string &file, const std::string &fontFace, FontStyle style) {
-  m_fontManager->LoadFont(file, fontFace, style);
+void Renderer::LoadFont(const std::string &file, const std::string &fontFace, unsigned size, FontStyle style) {
+  m_fontManager->LoadFont(file, fontFace, size, style);
 }
 
 void Renderer::InitDepthStencilBuffer(const UINT &width, const UINT &height) {
@@ -319,7 +319,7 @@ void Renderer::RenderTexturedRectangle(unsigned level, const Position &position,
 void Renderer::RenderText(unsigned level, const Position &position, Text::Ptr text) {
   const float zLevel = (float)level / (float)LevelsCount();
   
-  D3dFont::Ptr font = m_fontManager->GetD3dFont(text->GetFontFace(), text->GetFontStyle());
+  D3dFont::Ptr font = m_fontManager->GetD3dFont(text->GetFontFace(), text->GetFontSize(), text->GetFontStyle());
   
   const DirectX::SimpleMath::Vector2 fontPos(position.get<0>(), position.get<1>());
   std::unique_ptr<DirectX::SpriteBatch> spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_deviceContext.GetInterfacePtr());

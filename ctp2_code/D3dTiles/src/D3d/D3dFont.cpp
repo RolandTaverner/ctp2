@@ -7,8 +7,8 @@
 
 namespace TileEngine::D3d {
 
-D3dFont::D3dFont(SpriteFontPtr spriteFont, const std::string &fontFace, FontStyle style) :
-  TileEngine::Font(fontFace, style), m_spriteFont(std::move(spriteFont)) {}
+D3dFont::D3dFont(SpriteFontPtr spriteFont, const std::string &fontFace, unsigned fontSize, FontStyle style) :
+  TileEngine::Font(fontFace, fontSize, style), m_spriteFont(std::move(spriteFont)) {}
 
 D3dFont::~D3dFont() {}
 

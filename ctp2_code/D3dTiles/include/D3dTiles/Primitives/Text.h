@@ -38,6 +38,7 @@ public:
     const Rect &bounds, float scale = 1.0f); // Bounded
 
   const std::string GetFontFace() const;
+  unsigned GetFontSize() const;
   FontStyle GetFontStyle() const;
   const std::string GetText() const;
   Color GetTextColor() const;
