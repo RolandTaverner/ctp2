@@ -130,6 +130,7 @@ public:
   void StopKeyboardScrolling(sint32 key);
 
   void Render();
+  ui::d3d::D3dUI::D3dUIPtr UI();
 
 private:
   void CleanupAppUI(void);

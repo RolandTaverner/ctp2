@@ -96,9 +96,9 @@ template <class T> void DAPriorityQueue<T>::ShiftDown(const sint32 start_idx)
 {
     Assert(0 < start_idx);
 
-    register sint32 current_idx = start_idx;
-    register sint32 right_idx;
-    register sint32 swap_me;
+    sint32 current_idx = start_idx;
+    sint32 right_idx;
+    sint32 swap_me;
 
     T* swap_me_ptr=NULL;
     T* right_ptr=NULL;

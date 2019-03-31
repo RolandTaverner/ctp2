@@ -46,6 +46,12 @@ void D3dUI::Initialize(HINSTANCE hinst, int cmdshow,
   std::vector<IDXGIAdapter1Ptr> adapters;
   m_renderer->EnumerateAdapters([&adapters](IDXGIAdapter1Ptr a) { adapters.push_back(a); });
 
+  CHAR  filepath[MAX_PATH];
+  DWORD filepathLength = GetModuleFileNameA(NULL, filepath, MAX_PATH);
+
+  std::basic_string<TCHAR> exeFile(filepath, filepathLength);
+  const std::filesystem::path shaderPath = std::filesystem::path(exeFile).parent_path() / "Shader";
+
   for (IDXGIAdapter1Ptr adapter : adapters) {
     DXGI_ADAPTER_DESC1 desc;
     memset(&desc, 0, sizeof(desc));
@@ -54,15 +60,15 @@ void D3dUI::Initialize(HINSTANCE hinst, int cmdshow,
     if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
       continue;
 
-    CHAR  filepath[MAX_PATH];
-    DWORD filepathLength = GetModuleFileNameA(NULL, filepath, MAX_PATH);
-
-    std::basic_string<TCHAR> exeFile(filepath, filepathLength);
-    const std::filesystem::path shaderPath = std::filesystem::path(exeFile).parent_path() / "Shader";
-
     m_renderer->CreateDevice(Wnd(), adapter, shaderPath.wstring());
     break;
   }
+
+  const std::filesystem::path fontsPath = std::filesystem::path(exeFile).parent_path() / "Fonts";
+
+  m_renderer->GetFontManager()->LoadFont((fontsPath / "arial_6.spritefont").string(), "Arial", 6, TileEngine::FONTSTYLE_REGULAR);
+  m_renderer->GetFontManager()->LoadFont((fontsPath / "arial_8.spritefont").string(), "Arial", 8, TileEngine::FONTSTYLE_REGULAR);
+  m_renderer->GetFontManager()->LoadFont((fontsPath / "arial_10.spritefont").string(), "Arial", 10, TileEngine::FONTSTYLE_REGULAR);
 
   SetFocus(Wnd());
   ShowWindow(Wnd(), cmdshow);
@@ -80,12 +86,12 @@ void D3dUI::Initialize(HINSTANCE hinst, int cmdshow,
 
   m_desktopLayer->DrawPrimitive(TileEngine::Position(),
     std::make_shared<TileEngine::ColoredRectangle>(m_desktopLayer->Width(), m_desktopLayer->Height(),
-      TileEngine::MakeColor(255, 150, 150, 200)));
+      TileEngine::MakeColor(60, 60, 60, 255)));
   
   m_splashLayer = m_scene->Root()->AddLayer(0xFFFFu);
   m_mouseLayer = m_scene->Root()->AddLayer(0xFFFFu + 1);
 
-  m_splash = std::make_shared<Splash>(m_splashLayer);
+  m_splash = std::make_shared<Splash>(m_splashLayer, m_renderer->GetFontManager(), TileEngine::FontDesc("Arial", 8, TileEngine::FONTSTYLE_REGULAR));
 }
 
 unsigned D3dUI::Width() {

@@ -173,6 +173,10 @@ namespace TileEngine {
     m_graphics.push_back(GraphicElementPosition{ position, GraphicElement(p) });
   }
 
+  void Region::ClearPrimitives() {
+    m_graphics.clear();
+  }
+
   void Region::Clear(bool children) {
     m_graphics.clear();
     if (children) {

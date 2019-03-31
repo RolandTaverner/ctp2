@@ -1325,10 +1325,6 @@ void main_InitializeLogs(void)
 	Debug_Open();
 #endif
 
-#if defined(_DEBUG)
-    g_splash_old = GetTickCount();
-#endif
-
 	char		timebuf[100];
 	strftime(timebuf, 100, "Log started at %I:%M%p %m/%d/%Y", now);
 

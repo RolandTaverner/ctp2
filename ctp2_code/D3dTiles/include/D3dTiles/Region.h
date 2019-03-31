@@ -57,6 +57,7 @@ namespace TileEngine {
     void DrawPrimitive(const Position &position, ColoredRectangle::Ptr p);
     void DrawPrimitive(const Position &position, TexturedRectangle::Ptr p);
     void DrawPrimitive(const Position &position, Text::Ptr p);
+    void ClearPrimitives();
 
     void Clear(bool children);
 

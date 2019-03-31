@@ -1265,7 +1265,7 @@ sint32 CivApp::InitializeApp(HINSTANCE hInstance, int iCmdShow)
   m_UI = std::make_shared<ui::d3d::D3dUI>();
   m_UI->Initialize(hInstance, iCmdShow, 1024, 768); // TODO: use config
 
-	Splash::Initialize();
+  SPLASH_STRING("UI initialized.");
 
 	CivPaths_InitCivPaths();
 
@@ -1274,6 +1274,7 @@ sint32 CivApp::InitializeApp(HINSTANCE hInstance, int iCmdShow)
 		c3errors_FatalDialog("CivApp", "Unable to init the ProfileDB.");
 		return -1;
 	}
+  SPLASH_STRING("ProfileDB initialized.");
 
 	g_logCrashes = g_theProfileDB->GetEnableLogs();
 
@@ -1522,7 +1523,6 @@ void CivApp::CleanupApp(void)
 	{
 		g_network.Cleanup();
 		GreatLibrary::Shutdown_Great_Library_Data();
-		Splash::Cleanup();
 		messagewin_Cleanup();
 
 		allocated::clear(g_slicEngine);
@@ -1578,9 +1578,6 @@ sint32 CivApp::InitializeGameUI(void)
 	g_theProgressWindow->StartCountingTo(10, g_theStringDB->GetNameStr("LOADING"));
 
 	SPLASH_STRING("Creating Main Windows...");
-#if defined(_DEBUG)
-	g_splash_old = Os::GetTicks();
-#endif
 
 	SPLASH_STRING("Creating Status Window...");
 	sint32 errcode = c3windows_MakeStatusWindow(TRUE);
@@ -1836,8 +1833,6 @@ sint32 CivApp::InitializeGame(CivArchive &archive)
 
 	g_theProgressWindow->StartCountingTo( 680 );
 
-	Splash::Cleanup();
-
 	g_theProgressWindow->StartCountingTo( 690 );
 
 	m_gameLoaded = TRUE;
@@ -1979,9 +1974,6 @@ sint32 InitializeSpriteEditorUI(void)
 	g_theProgressWindow->StartCountingTo(10, g_theStringDB->GetNameStr("LOADING"));
 
 	SPLASH_STRING("Creating Main Windows...");
-#if defined(_DEBUG)
-	g_splash_old = Os::GetTicks();
-#endif
 
 	g_theProgressWindow->StartCountingTo( 20 );
 
@@ -2148,8 +2140,6 @@ sint32 CivApp::InitializeSpriteEditor(CivArchive &archive)
 	radar_Initialize();
 
 	g_theProgressWindow->StartCountingTo( 770 );
-
-	Splash::Cleanup();
 
 	g_theProgressWindow->StartCountingTo( 780 );
 
@@ -3056,6 +3046,10 @@ void CivApp::Render() {
   if (m_UI) {
     m_UI->Render();
  }
+}
+
+ui::d3d::D3dUI::D3dUIPtr CivApp::UI() {
+  return m_UI;
 }
 
 void StartGameAction::Execute(aui_Control *control, uint32 action, uint32 data )

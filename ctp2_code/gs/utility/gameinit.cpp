@@ -160,7 +160,6 @@ extern MBCHAR g_slic_filename[_MAX_PATH];
 extern MBCHAR g_tutorial_filename[_MAX_PATH];
 extern HWND               gHwnd;
 extern void               verifyYwrap();
-extern Splash             *g_splash;
 extern ControlPanelWindow *g_controlPanel;
 extern BOOL               g_aPlayerIsDead;
 extern sint32             g_numGoods; // To fix games with altered ressource database
@@ -207,10 +206,6 @@ MapPoint g_player_start_list[k_MAX_PLAYERS];
 sint32 g_player_start_score[k_MAX_PLAYERS];
 
 sint32 g_abort_parse  = FALSE;
-
-sint32 g_splash_cur;
-sint32 g_splash_old;
-MBCHAR g_splash_buf[100];
 
 MBCHAR g_improve_filename[_MAX_PATH];
 MBCHAR g_pollution_filename[_MAX_PATH];

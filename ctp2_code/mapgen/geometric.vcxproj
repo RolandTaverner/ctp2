@@ -437,7 +437,7 @@
       <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;GEOMETRIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;GEOMETRIC;_CRT_SECURE_NO_WARNINGS;_ITERATOR_DEBUG_LEVEL=2;_HAS_ITERATOR_DEBUGGING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\geometr0\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\geometr0\geometric.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\geometr0\</ObjectFileName>
