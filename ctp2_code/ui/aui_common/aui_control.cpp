@@ -984,7 +984,7 @@ AUI_ERRCODE	aui_Control::Resize(sint32 width, sint32 height)
 	AUI_ERRCODE errorCode = aui_Region::Resize(width, height);
 
 	if(m_numberOfLayers) {
-		MBCHAR *ldlBlock = (MBCHAR *)GetLdlBlock();
+		const MBCHAR *ldlBlock = GetLdlBlock();
 		if(!ldlBlock)
 
 			ldlBlock = aui_Ldl::GetBlock(this);

@@ -161,10 +161,6 @@ public:
   AUI_ERRCODE	ShowChildren(void);
   AUI_ERRCODE	HideChildren(void);
 
-
-
-
-
   AUI_ERRCODE Reset(void);
   virtual AUI_ERRCODE ResetThis(void);
 

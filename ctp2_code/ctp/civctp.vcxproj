@@ -1179,7 +1179,9 @@ rem                                                 if                          
     <ClInclude Include="..\ui\d3d_ui\D3dUI.h" />
     <ClInclude Include="..\ui\d3d_ui\interface\D3dSplash.h" />
     <ClInclude Include="..\ui\d3d_ui\Mouse\Mouse.h" />
+    <ClInclude Include="..\ui\d3d_ui\UIDimensioner.h" />
     <ClInclude Include="..\ui\d3d_ui\UIRegion.h" />
+    <ClInclude Include="..\ui\d3d_ui\UIRegionFwd.h" />
     <ClInclude Include="..\ui\d3d_ui\UIWindow.h" />
     <ClInclude Include="..\ui\freetype\freetype.h" />
     <ClInclude Include="..\ui\freetype\fterrid.h" />
@@ -2683,6 +2685,7 @@ rem                                                 if                          
     <ClCompile Include="..\ui\d3d_ui\D3dUI.cpp" />
     <ClCompile Include="..\ui\d3d_ui\interface\D3dSplash.cpp" />
     <ClCompile Include="..\ui\d3d_ui\Mouse\Mouse.cpp" />
+    <ClCompile Include="..\ui\d3d_ui\UIDimensioner.cpp" />
     <ClCompile Include="..\ui\d3d_ui\UIRegion.cpp" />
     <ClCompile Include="..\ui\d3d_ui\UIWindow.cpp" />
     <ClCompile Include="..\ui\interface\agesscreen.cpp" />

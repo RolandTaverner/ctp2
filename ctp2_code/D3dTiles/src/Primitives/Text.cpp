@@ -48,12 +48,12 @@ float Text::GetScale() const {
 
 unsigned Text::Width() const {
   Font::Ptr font = m_fontManager->GetFont(GetFontFace(), GetFontSize(), GetFontStyle());
-  return font->GetTextWidth(m_text);
+  return font->GetTextWidth(m_text)*m_scale + 0.5f;
 }
 
 unsigned Text::Height() const {
   Font::Ptr font = m_fontManager->GetFont(GetFontFace(), GetFontSize(), GetFontStyle());
-  return font->GetTextHeight(m_text)*m_scale;
+  return font->GetTextHeight(m_text)*m_scale + 0.5f;
 }
 
 Text::~Text() {}

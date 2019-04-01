@@ -31,6 +31,12 @@
 #ifndef __AUI_LDL_H__
 #define __AUI_LDL_H__
 
+#include <string>
+
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/member.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+
 #include "ui/aui_common/aui_base.h"
 #include "ui/aui_common/aui_control.h"
 
@@ -42,12 +48,12 @@ template <class T> class AvlTree;
 
 struct aui_LdlObject {
   void *object;
-  MBCHAR *ldlBlock;
-  uint32 hash;
-  aui_LdlObject *prev;
-  aui_LdlObject *next;
+  std::string ldlBlock;
+  struct ByObject {};
+  struct ByLdlBlock {};
 };
 
+typedef std::list<aui_LdlObject> LDLObjectList;
 
 #define k_AUI_LDL_MAXBLOCK 1024
 
@@ -65,23 +71,23 @@ struct aui_LdlObject {
 #define k_AUI_LDL_VABSSIZE "heightpix"
 #define k_AUI_LDL_VRELSIZE "heightpct"
 
-
-
-
 #define k_AUI_LDL_OBJECTTYPE "objecttype"
-
-
-
-
-
 #define k_AUI_LDL_ATOMIC "atomic"
-
-
-
-
-
-
 #define k_AUI_LDL_DETACH "detach"
+
+typedef boost::multi_index_container<
+  aui_LdlObject,
+  boost::multi_index::indexed_by<
+    boost::multi_index::ordered_unique<
+      boost::multi_index::tag<aui_LdlObject::ByObject>,
+      boost::multi_index::member<aui_LdlObject, void*, &aui_LdlObject::object>
+    >,
+    boost::multi_index::ordered_unique<
+      boost::multi_index::tag<aui_LdlObject::ByLdlBlock>, 
+      boost::multi_index::member<aui_LdlObject, std::string, &aui_LdlObject::ldlBlock>
+    >
+  >
+> LdlObjectRegistry;
 
 class aui_Ldl : public aui_Base {
 public:
@@ -93,19 +99,19 @@ public:
   virtual ~aui_Ldl();
 
 public:
-  static bool IsValid(MBCHAR const * ldlBlock);
-  static ldl * GetLdl(void) { return s_ldl; }
+  static bool IsValid(MBCHAR const *ldlBlock);
+  static ldl *GetLdl(void) { return s_ldl; }
 
-  static AUI_ERRCODE Associate(void *object, MBCHAR const * ldlBlock);
+  static AUI_ERRCODE Associate(void *object, const MBCHAR *ldlBlock);
   static AUI_ERRCODE Remove(void *object);
   static AUI_ERRCODE Remove(MBCHAR const * ldlBlock);
-  static MBCHAR *GetBlock(void *object);
+  static const MBCHAR *GetBlock(void *object);
   static void *GetObject(const MBCHAR *ldlBlock);
   static void *GetObject(const MBCHAR *parentBlock, const MBCHAR *regionBlock);
 
-  static AUI_ERRCODE SetupHeirarchyFromRoot(MBCHAR const * rootBlock);
-  static AUI_ERRCODE SetupHeirarchyFromLeaf(MBCHAR * leafBlock, aui_Region *object);
-  static aui_Region * BuildHierarchyFromRoot(MBCHAR const * rootBlock);
+  static AUI_ERRCODE SetupHeirarchyFromRoot(const MBCHAR *rootBlock);
+  static AUI_ERRCODE SetupHeirarchyFromLeaf(const MBCHAR *leafBlock, aui_Region *object);
+  static aui_Region * BuildHierarchyFromRoot(const MBCHAR *rootBlock);
   static AUI_ERRCODE BuildHierarchyFromLeaf(ldl_datablock *dataBlock, aui_Region *region);
   static AUI_ERRCODE BuildObjectFromType(MBCHAR *typeString, MBCHAR *ldlName,
     aui_Region **theObject);
@@ -135,21 +141,12 @@ public:
   static ldl_datablock * FindDataBlock(MBCHAR const * ldlBlock);
 
 protected:
-  static void DeleteLdlObject(aui_LdlObject *ldlObject);
-
   static AUI_ERRCODE MakeSureBlockExists(MBCHAR const * ldlBlock);
   static AUI_ERRCODE MakeSureDefaultTemplateExists(void);
 
-  static AUI_ERRCODE AppendLdlObject(aui_LdlObject *object);
-  static AUI_ERRCODE RemoveLdlObject(aui_LdlObject *object);
-
   static ldl *s_ldl;
 
-  static aui_LdlObject *s_objectList;
-  static aui_LdlObject *s_objectListTail;
-
-  static AvlTree<aui_LdlObject *> *s_objectListByObject;
-  static AvlTree<aui_LdlObject *> *s_objectListByString;
+  static LdlObjectRegistry s_ldlObjectRegistry;
 
   static sint32 s_ldlRefCount;
 

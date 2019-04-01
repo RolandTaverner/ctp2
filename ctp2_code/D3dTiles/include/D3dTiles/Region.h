@@ -39,19 +39,30 @@ namespace TileEngine {
 
   public:
     Region();
-    Region(WeakPtr parent, RegionID id, const Position &position, unsigned width, unsigned height);
+    Region(WeakPtr parent, RegionID id, 
+      const Position &position, unsigned width, unsigned height, 
+      bool isVisible = true, bool strictArea = true);
+    Region(const Region &) = delete;
+    Region &operator=(const Region &) = delete;
     virtual ~Region();
 
     RegionID ID() const;
     const Position &Pos() const;
     unsigned Width() const;
     unsigned Height() const;
+    bool IsVisible() const;
+    void SetVisible(bool isVisible);
     Rect GetRect() const;
     unsigned GetLevelsCount() const;
-    Ptr AddChild(const Position &position, unsigned width, unsigned height);
-    Ptr AddLayer(unsigned level);
-    Ptr AddLayer();
+    Ptr CreateChild(const Position &position, unsigned width, unsigned height, 
+      bool isVisible = true, bool strictArea = true);
+    Ptr CreateLayer(unsigned level);
+    Ptr CreateLayer();
     void Render(unsigned level, const Position &parentPosition, RendererBasePtr renderer);
+
+    void MoveTo(unsigned x, unsigned y);
+    void MoveBy(int dx, int dy);
+    void Resize(unsigned width, unsigned height);
 
     void DrawImage(const Position &position, Bitmap::Ptr bitmap);
     void DrawPrimitive(const Position &position, ColoredRectangle::Ptr p);
@@ -69,6 +80,8 @@ namespace TileEngine {
     RegionID m_ID;
     Position m_position;
     unsigned m_width, m_height;
+    bool m_isVisible;
+    bool m_strictArea;
     RegionsMap m_children;
     LayersMap m_layers;
     GraphicElements m_graphics;

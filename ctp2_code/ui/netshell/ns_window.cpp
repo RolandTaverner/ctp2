@@ -164,7 +164,7 @@ BOOL ns_Window::SetRetired( BOOL retired )
 	if ( m_retired = retired && !wasRetired )
 	{
 
-		MBCHAR *blockIdentifier = aui_Ldl::GetBlock( this );
+    const MBCHAR *blockIdentifier = aui_Ldl::GetBlock( this );
 		Assert( blockIdentifier != NULL );
 		if ( !blockIdentifier ) return wasRetired;
 

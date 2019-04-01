@@ -919,6 +919,7 @@ AUI_ERRCODE aui_Region::ExpandRect(RECT *rect) {
   }
   return AUI_ERRCODE_OK;
 }
+#pragma region Mouse events
 
 void aui_Region::MouseLGrabInsideEdit(aui_MouseEvent *mouseData) {
   MouseLGrabEditMode(mouseData);
@@ -1153,7 +1154,7 @@ void aui_Region::MouseLDropEditMode(aui_MouseEvent *mouseData) {
 
     aui_Ldl *theLdl = g_ui->GetLdl();
     if (theLdl) {
-      MBCHAR	*ldlBlock = theLdl->GetBlock(this);
+      const MBCHAR	*ldlBlock = theLdl->GetBlock(this);
 
       if (m_editGrabPointAttributes & k_REGION_GRAB_INSIDE) {
         m_dim->SetHorizontalPosition(X());
@@ -1171,6 +1172,8 @@ void aui_Region::MouseLDropEditMode(aui_MouseEvent *mouseData) {
     }
   }
 }
+
+#pragma endregion
 
 void aui_Region::EditModeModifyRegion(RECT rect) {
   aui_Region *region = g_ui->TheEditRegion();
@@ -1198,7 +1201,7 @@ void aui_Region::EditModeModifyRegion(RECT rect) {
       region->GetParent()->ShouldDraw();
 
       if (aui_Ldl *theLdl = g_ui->GetLdl()) {
-        if (MBCHAR	*ldlBlock = theLdl->GetBlock(region)) {
+        if (const MBCHAR	*ldlBlock = theLdl->GetBlock(region)) {
           theLdl->ModifyAttributes(ldlBlock, dim);
         }
       }

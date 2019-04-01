@@ -18,7 +18,7 @@ Splash::Splash(te::Region::Ptr region,
   TileEngine::FontManager::Ptr fontManager,
   TileEngine::FontDesc fontDesc) :
   m_layer(region), m_fontManager(fontManager), m_fontDesc(fontDesc), m_currentY(0) {
-  m_textArea = m_layer->AddChild(
+  m_textArea = m_layer->CreateChild(
     te::Position(s_splashMargin, s_splashMargin),
     m_layer->Width() - 2 * s_splashMargin, m_layer->Height() - 2 * s_splashMargin);
 }

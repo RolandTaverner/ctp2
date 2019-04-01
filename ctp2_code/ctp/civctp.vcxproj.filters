@@ -2623,6 +2623,12 @@
     <ClInclude Include="..\ui\d3d_ui\interface\D3dSplash.h">
       <Filter>ui\d3d_ui\interface</Filter>
     </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\UIDimensioner.h">
+      <Filter>ui\d3d_ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\UIRegionFwd.h">
+      <Filter>ui\d3d_ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctp2_utils\appstrings.cpp">
@@ -4892,6 +4898,9 @@
     </ClCompile>
     <ClCompile Include="..\ui\d3d_ui\interface\D3dSplash.cpp">
       <Filter>ui\d3d_ui\interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\UIDimensioner.cpp">
+      <Filter>ui\d3d_ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

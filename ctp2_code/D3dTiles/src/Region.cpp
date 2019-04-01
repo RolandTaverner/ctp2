@@ -8,11 +8,15 @@
 
 namespace TileEngine {
 
-  Region::Region() : Region(WeakPtr(), 0, Position(0, 0), 0, 0) {
+  Region::Region() : Region(WeakPtr(), 0, Position(0, 0), 0, 0, true, true) {
   }
 
-  Region::Region(WeakPtr parent, RegionID id, const Position &position, unsigned width, unsigned height) :
-    m_parent(parent), m_ID(id), m_position(position), m_width(width), m_height(height) {
+  Region::Region(WeakPtr parent, RegionID id, 
+    const Position &position, unsigned width, unsigned height, 
+    bool isVisible, bool strictArea) :
+    m_parent(parent), m_ID(id), 
+    m_position(position), m_width(width), m_height(height), 
+    m_isVisible(isVisible), m_strictArea(strictArea) {
   }
 
   Region::~Region() {}
@@ -31,6 +35,30 @@ namespace TileEngine {
 
   unsigned Region::Height() const {
     return m_height;
+  }
+  
+  bool Region::IsVisible() const {
+    return m_isVisible;
+  }
+
+  void Region::SetVisible(bool isVisible) {
+    m_isVisible = isVisible;
+  }
+
+  void Region::MoveTo(unsigned x, unsigned y) {
+    // TODO: check bounds
+    m_position = Position(x, y);
+  }
+  
+  void Region::MoveBy(int dx, int dy) {
+    // TODO: check bounds
+    boost::geometry::add_point(m_position, Position(dx, dy));
+  }
+  
+  void Region::Resize(unsigned width, unsigned height) {
+    // TODO: check bounds
+    m_width = width;
+    m_height = height;
   }
 
   Rect Region::GetRect() const {
@@ -54,32 +82,35 @@ namespace TileEngine {
     return childLevels + 1 + layersLevels;
   }
 
-  Region::Ptr Region::AddChild(const Position &position, unsigned width, unsigned height) {
+  Region::Ptr Region::CreateChild(const Position &position, unsigned width, unsigned height, 
+    bool isVisible, bool strictArea) {
     const Rect thisRect(Position(0, 0), Position(Width(), Height()));
     
-    const Position newMin(position);
-    Position newMax(position);
-    boost::geometry::add_point(newMax, Position(width, height));
-    const Rect newRect(newMin, newMax);
+    if (m_strictArea) {
+      const Position newMin(position);
+      Position newMax(position);
+      boost::geometry::add_point(newMax, Position(width, height));
+      const Rect newRect(newMin, newMax);
 
-    if (!boost::geometry::within(newRect, thisRect)) {
-      throw std::invalid_argument("New child region outside parent's bounds");
-    }
+      if (!boost::geometry::within(newRect, thisRect)) {
+        throw std::invalid_argument("New child region outside parent's bounds");
+      }
 
-    for (auto i : m_children) {
-      const Rect curRect(i.second->GetRect());
-      if (boost::geometry::overlaps(curRect, newRect)) {
-        throw std::invalid_argument("New child region overlaps with existing");
+      for (auto i : m_children) {
+        const Rect curRect(i.second->GetRect());
+        if (boost::geometry::overlaps(curRect, newRect)) {
+          throw std::invalid_argument("New child region overlaps with existing");
+        }
       }
     }
 
     const RegionID newID = m_children.empty() ? 0 : (m_children.rbegin()->first + 1);
-    Ptr newRegion(std::make_shared<Region>(shared_from_this(), newID, position, width, height));
+    Ptr newRegion(std::make_shared<Region>(shared_from_this(), newID, position, width, height, isVisible, strictArea));
     m_children[newID] = newRegion;
     return newRegion;
   }
 
-  Region::Ptr Region::AddLayer(unsigned level) {
+  Region::Ptr Region::CreateLayer(unsigned level) {
     LayersMap::const_iterator i = m_layers.find(level);
     if (i != m_layers.end()) {
       throw std::invalid_argument("layer already exists");
@@ -90,12 +121,12 @@ namespace TileEngine {
     return newLevel;
   }
 
-  Region::Ptr Region::AddLayer() {
+  Region::Ptr Region::CreateLayer() {
     if (m_layers.empty()) {
-      return AddLayer(0);
+      return CreateLayer(0);
     }
     const unsigned maxLayer = m_layers.rbegin()->first;
-    return AddLayer(maxLayer + 1);
+    return CreateLayer(maxLayer + 1);
   }
 
   void Region::Render(unsigned ownLevel, const Position &parentPosition, Region::RendererBasePtr renderer) {

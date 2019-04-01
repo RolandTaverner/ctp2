@@ -82,14 +82,14 @@ void D3dUI::Initialize(HINSTANCE hinst, int cmdshow,
   m_scene = std::make_shared<TileEngine::Scene>(screenWidth, screenHeight);
   m_renderer->SetScene(m_scene);
 
-  m_desktopLayer = m_scene->Root()->AddLayer(0);
+  m_desktopLayer = m_scene->Root()->CreateLayer(0);
 
   m_desktopLayer->DrawPrimitive(TileEngine::Position(),
     std::make_shared<TileEngine::ColoredRectangle>(m_desktopLayer->Width(), m_desktopLayer->Height(),
       TileEngine::MakeColor(60, 60, 60, 255)));
   
-  m_splashLayer = m_scene->Root()->AddLayer(0xFFFFu);
-  m_mouseLayer = m_scene->Root()->AddLayer(0xFFFFu + 1);
+  m_splashLayer = m_scene->Root()->CreateLayer(0xFFFFu);
+  m_mouseLayer = m_scene->Root()->CreateLayer(0xFFFFu + 1);
 
   m_splash = std::make_shared<Splash>(m_splashLayer, m_renderer->GetFontManager(), TileEngine::FontDesc("Arial", 8, TileEngine::FONTSTYLE_REGULAR));
 }

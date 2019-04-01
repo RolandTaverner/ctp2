@@ -108,17 +108,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
   }
 
   TileEngine::Scene::Ptr scene(std::make_shared<TileEngine::Scene>(screenWidth, screenHeight));
-  auto layer = scene->Root()->AddLayer(0);
+  auto layer = scene->Root()->CreateLayer(0);
   layer->DrawPrimitive(TileEngine::Position(20, 20),
     std::make_shared<TileEngine::ColoredRectangle>(screenWidth - 40, screenHeight - 40, TileEngine::MakeColor(0, 200, 200, 100)));
 
-  auto region = layer->AddChild(TileEngine::Position(0, 0), screenWidth, screenHeight);
+  auto region = layer->CreateChild(TileEngine::Position(0, 0), screenWidth, screenHeight);
   region->DrawImage(TileEngine::Position(0, 0), b1);
-  auto region1 = region->AddLayer(1);
+  auto region1 = region->CreateLayer(1);
   region1->DrawImage(TileEngine::Position(20, 20), b2);
 
-  auto layer2 = scene->Root()->AddLayer(1);
-  auto region3 = layer2->AddChild(TileEngine::Position(30, 30), screenWidth - 60, screenHeight - 60);
+  auto layer2 = scene->Root()->CreateLayer(1);
+  auto region3 = layer2->CreateChild(TileEngine::Position(30, 30), screenWidth - 60, screenHeight - 60);
 
   region3->DrawPrimitive(TileEngine::Position(0, 0),
     std::make_shared<TileEngine::ColoredRectangle>(region3->Width(), region3->Height(), TileEngine::MakeColor(0, 200, 200, 100)));
@@ -129,8 +129,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     "Test text", TileEngine::MakeColor(255, 100, 0, 0xFF));
   region3->DrawPrimitive(TileEngine::Position(0, 50), text);
 
-  auto region4 = region3->AddLayer();
-  auto region5 = region3->AddLayer();
+  auto region4 = region3->CreateLayer();
+  auto region5 = region3->CreateLayer();
 
   TileEngine::Text::Ptr text1 = std::make_shared<TileEngine::Text>(
     rendererPtr->GetFontManager(),
