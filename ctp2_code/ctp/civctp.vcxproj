@@ -1310,6 +1310,7 @@ rem                                                 if                          
     <ClInclude Include="..\ui\ldl\ldl_attr.hpp" />
     <ClInclude Include="..\ui\ldl\ldl_data.hpp" />
     <ClInclude Include="..\ui\ldl\ldl_file.hpp" />
+    <ClInclude Include="..\ui\ldl\ldl_list.h" />
     <ClInclude Include="..\ui\ldl\ldl_memmap.h" />
     <ClInclude Include="..\ui\netshell\allinonewindow.h" />
     <ClInclude Include="..\ui\netshell\connectionselectwindow.h" />
@@ -2881,6 +2882,7 @@ rem                                                 if                          
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug Browse|Win32'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\ui\ldl\ldl_list.cpp" />
     <ClCompile Include="..\ui\ldl\ldl_memmap.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final with Logging|Win32'">
       </PrecompiledHeader>

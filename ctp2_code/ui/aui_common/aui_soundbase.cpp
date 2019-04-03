@@ -41,24 +41,36 @@ AUI_ERRCODE aui_SoundBase::InitCommonLdl( MBCHAR *ldlBlock )
 	Assert( block != NULL );
 	if ( !block ) return AUI_ERRCODE_LDLFINDDATABLOCKFAILED;
 
-	MBCHAR *soundNames[ AUI_SOUNDBASE_SOUND_LAST ];
-	for ( sint32 i = 0; i < AUI_SOUNDBASE_SOUND_LAST; i++ )
-		soundNames[ i ] = block->GetString( m_soundLdlKeywords[ i ] );
+  std::vector<std::string> soundNames;
+  for (sint32 i = 0; i < AUI_SOUNDBASE_SOUND_LAST; i++) {
+    soundNames.push_back(block->GetString(m_soundLdlKeywords[i]));
+  }
 
 	AUI_ERRCODE errcode = InitCommon( soundNames );
 	Assert( AUI_SUCCESS(errcode) );
 	return errcode;
 }
 
+AUI_ERRCODE aui_SoundBase::InitCommon(const std::vector<std::string> &soundNames) {
+  memset(m_sounds, 0, sizeof(m_sounds));
+  const bool empty = soundNames.empty();
+
+  for (sint32 i = 0; i < AUI_SOUNDBASE_SOUND_LAST; i++)
+    SetSound((AUI_SOUNDBASE_SOUND)i, (!empty ? soundNames[i].c_str() : NULL));
+
+  return AUI_ERRCODE_OK;
+}
 
 AUI_ERRCODE aui_SoundBase::InitCommon( MBCHAR **soundNames )
 {
-	memset( m_sounds, 0, sizeof( m_sounds ) );
+  std::vector<std::string> soundNamesVec;
+  if (soundNames) {
+    for (sint32 i = 0; i < AUI_SOUNDBASE_SOUND_LAST; i++) {
+      soundNamesVec.push_back(std::string(soundNames[i]));
+    }
+  }
 
-	for ( sint32 i = 0; i < AUI_SOUNDBASE_SOUND_LAST; i++ )
-		SetSound( (AUI_SOUNDBASE_SOUND)i, soundNames ? soundNames[ i ] : NULL );
-
-	return AUI_ERRCODE_OK;
+  return InitCommon(soundNamesVec);
 }
 
 
@@ -86,11 +98,11 @@ aui_Sound *aui_SoundBase::GetSound( AUI_SOUNDBASE_SOUND sound ) const
 
 aui_Sound *aui_SoundBase::SetSound(
 	AUI_SOUNDBASE_SOUND sound,
-	MBCHAR *soundName )
+	const MBCHAR *soundName )
 {
 	aui_Sound *prevSound = GetSound( sound );
 
-	if ( soundName && g_ui->TheAudioManager()->UsingAudio() )
+	if ( soundName && strlen(soundName) != 0 && g_ui->TheAudioManager()->UsingAudio() )
 	{
 		m_sounds[ sound ] = g_ui->LoadSound( soundName );
 		Assert( m_sounds[ sound ] != NULL );

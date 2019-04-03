@@ -395,6 +395,9 @@ void StringDB::AssignIndex(StringRecord * & ptr)
 
 
 
+bool StringDB::GetStringID(const std::string &str_id, StringId & index) const {
+  return GetStringID(str_id.c_str(), index);
+}
 
 bool StringDB::GetStringID(MBCHAR const * str_id, StringId & index) const
 {
@@ -459,6 +462,9 @@ MBCHAR const * StringDB::GetNameStr(StringId const & n) const
 
 
 
+MBCHAR const * StringDB::GetNameStr(const std::string &s) const {
+  return GetNameStr(s.c_str());
+}
 
 MBCHAR const * StringDB::GetNameStr(MBCHAR const * s) const
 {

@@ -64,12 +64,12 @@ AUI_ERRCODE StaticPicture::InitCommon( MBCHAR *ldlBlock, MBCHAR *picture )
 	Assert( block != NULL );
 	if ( !block ) return AUI_ERRCODE_LDLFINDDATABLOCKFAILED;
 
-	MBCHAR *name =
+  const std::string name =
 		block->GetString( picture ? picture : k_AUI_STATICIMAGE_LDL_IMAGE );
-	Assert( name != NULL );
-	if ( name )
+	Assert( !name.empty());
+	if ( !name.empty() )
 	{
-		AUI_ERRCODE errcode = InitCommon( name );
+		AUI_ERRCODE errcode = InitCommon( name.c_str() );
 		Assert( AUI_SUCCESS(errcode) );
 		return errcode;
 	}
@@ -78,7 +78,7 @@ AUI_ERRCODE StaticPicture::InitCommon( MBCHAR *ldlBlock, MBCHAR *picture )
 }
 
 
-AUI_ERRCODE StaticPicture::InitCommon( MBCHAR *picture )
+AUI_ERRCODE StaticPicture::InitCommon( const MBCHAR *picture )
 {
 	MBCHAR filename[_MAX_PATH];
 

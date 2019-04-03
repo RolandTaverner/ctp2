@@ -59,7 +59,7 @@ IconButton::IconButton(
 
 AUI_ERRCODE IconButton::InitCommon( MBCHAR *ldlBlock, BOOL isLDL)
 {
-	MBCHAR		*name;
+  std::string name;
 
 	if (isLDL) {
 		ldl_datablock * block = aui_Ldl::FindDataBlock(ldlBlock);
@@ -68,14 +68,14 @@ AUI_ERRCODE IconButton::InitCommon( MBCHAR *ldlBlock, BOOL isLDL)
 
 
 		name = block->GetString( "icon" );
-		Assert( name != NULL );
+		Assert( !name.empty() );
 	} else {
 		name = ldlBlock;
 	}
 
 	m_filename = new MBCHAR[_MAX_PATH];
 
-	if (g_civPaths->FindFile(C3DIR_ICONS, name, m_filename)) {
+	if (g_civPaths->FindFile(C3DIR_ICONS, name.c_str(), m_filename)) {
 		m_icon = g_c3ui->LoadIcon(m_filename);
 	} else {
 		m_icon = NULL;

@@ -122,37 +122,28 @@ void c3_ColorIconButton::ResizePictureRect(void)
 	}
 }
 
-void c3_ColorIconButton::SetIcon(MBCHAR *name)
+void c3_ColorIconButton::SetIcon(const std::string &name)
 {
-	if (name == NULL) return;
+	if (name.empty()) return;
 
 	if (m_filename) delete[] m_filename;
 
 	m_filename = new MBCHAR[_MAX_PATH];
 
 
-	strcpy(m_filename, name);
+	strcpy(m_filename, name.c_str());
 
 	if (strcmp(m_filename, ""))
 		SetImage(m_filename, 0);
 	else
 		SetImage(NULL, 0);
 
-
-
-
-
-
-
-
-
-
 	ResizePictureRect();
 }
 
 AUI_ERRCODE c3_ColorIconButton::InitCommon( MBCHAR *ldlBlock, BOOL isLDL)
 {
-	MBCHAR		*name;
+  std::string name;
 
 	if (isLDL) {
         ldl_datablock * block = aui_Ldl::FindDataBlock(ldlBlock);
@@ -160,7 +151,7 @@ AUI_ERRCODE c3_ColorIconButton::InitCommon( MBCHAR *ldlBlock, BOOL isLDL)
 		if ( !block ) return AUI_ERRCODE_LDLFINDDATABLOCKFAILED;
 
 		name = block->GetString( "picture" );
-		Assert( name != NULL );
+		Assert( !name.empty() );
 	} else {
 		name = ldlBlock;
 	}

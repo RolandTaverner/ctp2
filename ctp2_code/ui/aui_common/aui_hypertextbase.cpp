@@ -73,7 +73,7 @@ AUI_ERRCODE aui_HyperTextBase::InitCommonLdl( MBCHAR *ldlBlock )
 
 
 AUI_ERRCODE aui_HyperTextBase::InitCommon(
-	MBCHAR *hyperText,
+  const std::string &hyperText,
 	uint32 hyperMaxLen )
 {
 	m_hyperText = NULL,
@@ -82,9 +82,9 @@ AUI_ERRCODE aui_HyperTextBase::InitCommon(
 		k_AUI_HYPERTEXTBASE_DEFAULT_MAXLEN,
 	m_hyperCurLen = 0;
 
-	if ( hyperText )
+	if ( !hyperText.empty() )
 	{
-		m_hyperCurLen = strlen( hyperText );
+		m_hyperCurLen = hyperText.length();
 
 		if ( m_hyperCurLen > m_hyperMaxLen )
 			m_hyperCurLen = m_hyperMaxLen;
@@ -95,7 +95,7 @@ AUI_ERRCODE aui_HyperTextBase::InitCommon(
 
 		memset( m_hyperText, '\0', m_hyperMaxLen + 1 );
 
-		strncpy( m_hyperText, hyperText, m_hyperMaxLen );
+		strncpy( m_hyperText, hyperText.c_str(), m_hyperMaxLen );
 	}
 	else
 	{

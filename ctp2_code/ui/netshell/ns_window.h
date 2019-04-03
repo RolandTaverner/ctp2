@@ -28,12 +28,12 @@ protected:
 
 	ns_Window() : c3_PopupWindow() {}
 	AUI_ERRCODE InitCommonLdl( MBCHAR *ldlBlock );
-	AUI_ERRCODE InitCommon( MBCHAR *tile, BOOL retired );
+	AUI_ERRCODE InitCommon( const MBCHAR *tile, BOOL retired );
 
 public:
 	aui_Control	*FindControl( uint32 index );
 
-	aui_Image	*SetTile( MBCHAR *tile );
+	aui_Image	*SetTile( const MBCHAR *tile );
 	aui_Image	*GetTile( void ) const { return m_tile; }
 
 	BOOL		IsRetired( void ) const { return m_retired; }

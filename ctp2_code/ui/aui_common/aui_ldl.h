@@ -106,6 +106,7 @@ public:
   static AUI_ERRCODE Remove(void *object);
   static AUI_ERRCODE Remove(MBCHAR const * ldlBlock);
   static const MBCHAR *GetBlock(void *object);
+  static void *GetObject(const std::string &ldlBlock);
   static void *GetObject(const MBCHAR *ldlBlock);
   static void *GetObject(const MBCHAR *parentBlock, const MBCHAR *regionBlock);
 
@@ -113,7 +114,7 @@ public:
   static AUI_ERRCODE SetupHeirarchyFromLeaf(const MBCHAR *leafBlock, aui_Region *object);
   static aui_Region * BuildHierarchyFromRoot(const MBCHAR *rootBlock);
   static AUI_ERRCODE BuildHierarchyFromLeaf(ldl_datablock *dataBlock, aui_Region *region);
-  static AUI_ERRCODE BuildObjectFromType(MBCHAR *typeString, MBCHAR *ldlName,
+  static AUI_ERRCODE BuildObjectFromType(const MBCHAR *typeString, const MBCHAR *ldlName,
     aui_Region **theObject);
   static AUI_ERRCODE DeleteHierarchyFromRoot(MBCHAR const * rootBlock);
   static AUI_ERRCODE DeleteHierarchyFromLeaf(ldl_datablock *dataBlock);
@@ -138,6 +139,7 @@ public:
   static void ModifyAttributes(MBCHAR const *ldlBlock, aui_Dimension * dimension);
 
   static sint32 GetIntDependent(MBCHAR const * strPtr);
+  static sint32 GetIntDependent(const std::string &str);
   static ldl_datablock * FindDataBlock(MBCHAR const * ldlBlock);
 
 protected:

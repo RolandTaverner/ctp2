@@ -1,6 +1,8 @@
 #ifndef __AUI_HYPERTEXTBASE_H__
 #define __AUI_HYPERTEXTBASE_H__
 
+#include <string>
+
 #include "ui/aui_common/tech_wllist.h"
 
 class aui_Static;
@@ -33,7 +35,7 @@ protected:
 	aui_HyperTextBase() {}
 	AUI_ERRCODE InitCommonLdl( MBCHAR *ldlBlock );
 	AUI_ERRCODE InitCommon(
-		MBCHAR *hyperText,
+    const std::string &hyperText,
 		uint32 hyperMaxLen );
 
 public:

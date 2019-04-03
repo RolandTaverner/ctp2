@@ -76,7 +76,7 @@ public:
 	virtual AUI_ERRCODE Resize(sint32 width, sint32 height);
 	void	ResizePictureRect(void);
 
-	void SetIcon(MBCHAR *name);
+	void SetIcon(const std::string &name);
 	void ShrinkToFit(BOOL fit) { m_shrinkToFit = fit; }
 
 	virtual AUI_ERRCODE DrawThis(

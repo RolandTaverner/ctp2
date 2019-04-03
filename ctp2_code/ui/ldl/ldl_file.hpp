@@ -11,14 +11,10 @@
 #ifndef LDL_FILE_HPP
 #define LDL_FILE_HPP
 
-#define MAX_HASH 10000
-#define MAX_STRING_LENGTH	4096
+#include <memory>
 
-#define LOWER(c)   (((c)>='A'  && (c) <= 'Z') ? ((c)+('a'-'A')) : (c))
-#define UPPER(c)   (((c)>='a'  && (c) <= 'z') ? ((c)+('A'-'a')) : (c) )
-
-class ldl;
 class ldl_datablock;
+typedef std::shared_ptr<ldl_datablock> LDLBlockPtr;
 
 class ldl {
 public:
@@ -29,7 +25,7 @@ public:
 	BOOL ReadData(const char *fname = NULL);
 
 	ldl_datablock *FindDataBlock(const char *szName, ldl_datablock *dbParent = NULL );
-
+  LDLBlockPtr FindDataBlockPtr(const char *szName, ldl_datablock *dbParent);
 	BOOL WriteData();
 };
 

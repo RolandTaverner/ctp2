@@ -17,18 +17,18 @@ ns_String::ns_String( char *ldlBlock )
 	Assert( block != NULL );
 	if ( !block ) return;
 
-	const char *string;
+	std::string string;
 
-	if ( block->GetBool(k_NS_STRING_LDL_NODATABASE) || (!block->GetString("text"))) {
+	if ( block->GetBool(k_NS_STRING_LDL_NODATABASE) || block->GetString("text").empty()) {
 
 		string = block->GetString( "text" );
 	}
 	else {
-		string = g_theStringDB->GetNameStr( block->GetString("text") );
+		string = g_theStringDB->GetNameStr( block->GetString("text").c_str() );
 	}
 
-	m_string = new char[strlen(string) + 1];
-    strcpy(m_string, string);
+	m_string = new char[string.length() + 1];
+    strcpy(m_string, string.c_str());
 }
 
 ns_String::~ns_String( void )

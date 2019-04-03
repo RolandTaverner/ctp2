@@ -89,13 +89,11 @@ public:
 	(
 		StringId const &		index
 	) const;
-	MBCHAR const *			GetNameStr(StringId const & n) const;
-	MBCHAR const *			GetNameStr(MBCHAR const * s) const;
-	bool					GetStringID
-	(
-		MBCHAR const *			str_id,
-		StringId &				index
-	) const;
+	MBCHAR const *GetNameStr(StringId const & n) const;
+  MBCHAR const *GetNameStr(const std::string &s) const;
+  MBCHAR const *GetNameStr(MBCHAR const * s) const;
+  bool GetStringID(const std::string &str_id, StringId &index) const;
+  bool GetStringID(MBCHAR const *str_id, StringId &index) const;
 	bool					GetText
 	(
 		MBCHAR const *			get_id,

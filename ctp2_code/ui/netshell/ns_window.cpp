@@ -65,14 +65,14 @@ AUI_ERRCODE ns_Window::InitCommonLdl( MBCHAR *ldlBlock )
 	Assert( block != NULL );
 	if ( !block ) return AUI_ERRCODE_LDLFINDDATABLOCKFAILED;
 
-	MBCHAR *tile = block->GetString( k_NS_WINDOW_TILE_LDL_NAME );
+  const std::string tile = block->GetString( k_NS_WINDOW_TILE_LDL_NAME );
 	BOOL retired = block->GetBool( k_NS_WINDOW_RETIRED_LDL_NAME );
 
-	return InitCommon(tile, retired);
+	return InitCommon(tile.c_str(), retired);
 }
 
 
-AUI_ERRCODE ns_Window::InitCommon( MBCHAR *tile, BOOL retired )
+AUI_ERRCODE ns_Window::InitCommon(const MBCHAR *tile, BOOL retired )
 {
 	m_numControls = 0;
 	m_controls = NULL;
@@ -134,11 +134,11 @@ aui_Control *ns_Window::FindControl( uint32 index )
 }
 
 
-aui_Image *ns_Window::SetTile( MBCHAR *tile )
+aui_Image *ns_Window::SetTile(const MBCHAR *tile )
 {
 	aui_Image *prevTile = m_tile;
 
-	if ( tile )
+	if ( tile && strlen(tile) != 0 )
 	{
 		m_tile = g_ui->LoadImage( tile );
 		Assert( m_tile != NULL );

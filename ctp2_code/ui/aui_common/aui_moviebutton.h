@@ -77,7 +77,7 @@ protected:
 	{}
 
 	AUI_ERRCODE InitCommonLdl( MBCHAR *ldlBlock );
-	AUI_ERRCODE InitCommon( MBCHAR *movie );
+	AUI_ERRCODE InitCommon( const MBCHAR *movie );
 
 public:
 	aui_Movie *SetMovie( const MBCHAR *movie );

@@ -10,13 +10,15 @@
 
 namespace ui::d3d {
 
-UIRegion::UIRegion(unsigned id,
+UIRegion::UIRegion(UIRegionPtr parent, unsigned id,
   const TileEngine::Position &pos, unsigned width, unsigned height) :
   m_id(id),
-  m_region(std::make_shared<TileEngine::Region>(TileEngine::Region::Ptr(), id, pos, width, height, true, true)) {}
+  m_region(std::make_shared<TileEngine::Region>(parent ? parent->Region() : TileEngine::Region::Ptr(), id, pos, width, height, true, true)),
+  m_dim(parent) {
+}
 
-UIRegion::UIRegion(unsigned id, const std::string &ldlBlockName) :
-  m_id(id), m_ldlBlockName(ldlBlockName) {
+UIRegion::UIRegion(UIRegionPtr parent, unsigned id, const std::string &ldlBlockName) :
+  m_id(id), m_ldlBlockName(ldlBlockName), m_dim(parent) {
   InitFromLDL();
 }
 
@@ -132,6 +134,10 @@ unsigned UIRegion::ID() const {
   return m_id;
 }
 
+const std::string &UIRegion::GetLDLBlockName() const {
+  return m_ldlBlockName;
+}
+
 unsigned UIRegion::Width() const {
   return m_region ? m_region->Width() : 0;
 }
@@ -156,11 +162,11 @@ TileEngine::Rect UIRegion::GetRect() const {
   return m_region ? m_region->GetRect() : TileEngine::Rect();
 }
 
-UIRegion::UIRegionPtr UIRegion::CreateChild(unsigned id,
+UIRegionPtr UIRegion::CreateChild(unsigned id,
   const TileEngine::Position &pos, unsigned width, unsigned height) {
   //UIRegion::UIRegionPtr child(std::make_shared<UIRegion>(shared_from_this(), id, pos, width, height));
   //m_children.push_back(child);
-  return UIRegion::UIRegionPtr();
+  return UIRegionPtr();
 }
 
 } // namespace ui::d3d

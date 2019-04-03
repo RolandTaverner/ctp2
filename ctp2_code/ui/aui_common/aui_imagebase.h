@@ -34,6 +34,8 @@
 #ifndef AUI_IMAGEBASE_H__
 #define AUI_IMAGEBASE_H__
 
+#include <string>
+
 class aui_ImageBase;
 
 #define k_AUI_IMAGEBASE_LDL_BLTTYPE				"imageblttype"
@@ -129,11 +131,10 @@ public:
 
 	AUI_IMAGEBASE_BLTTYPE SetImageBltType( AUI_IMAGEBASE_BLTTYPE imageblttype );
 	AUI_IMAGEBASE_BLTFLAG SetImageBltFlag( AUI_IMAGEBASE_BLTFLAG imagebltflag );
-	aui_Image * SetImage
-    (
-		MBCHAR const *          image,
-		sint32                  state       = 0,
-		AUI_IMAGEBASE_SUBSTATE  substate    = AUI_IMAGEBASE_SUBSTATE_STATE
+  aui_Image *SetImage(const std::string & image, sint32 state = 0, 
+    AUI_IMAGEBASE_SUBSTATE substate = AUI_IMAGEBASE_SUBSTATE_STATE);
+  aui_Image *SetImage(MBCHAR const *image, sint32 state = 0, 
+    AUI_IMAGEBASE_SUBSTATE substate = AUI_IMAGEBASE_SUBSTATE_STATE
     );
 
 	bool IsLoadOnDemand() const { return m_loadOnDemand; }

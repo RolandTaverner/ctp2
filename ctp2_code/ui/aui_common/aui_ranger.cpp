@@ -81,14 +81,14 @@ AUI_ERRCODE aui_Ranger::InitCommonLdl( MBCHAR *ldlBlock )
 	if ( !block ) return AUI_ERRCODE_LDLFINDDATABLOCKFAILED;
 
 	AUI_RANGER_TYPE type;
-	MBCHAR *keyword = block->GetString( k_AUI_RANGER_LDL_TYPE );
-	if ( !keyword )
+  std::string keyword = block->GetString( k_AUI_RANGER_LDL_TYPE );
+	if ( keyword.empty() )
 		type = AUI_RANGER_TYPE_SCROLLER;
 	else
 	{
-		if ( stricmp( keyword, k_AUI_RANGER_LDL_SLIDER ) == 0 )
+		if ( stricmp( keyword.c_str(), k_AUI_RANGER_LDL_SLIDER ) == 0 )
 			type = AUI_RANGER_TYPE_SLIDER;
-		else if ( stricmp( keyword, k_AUI_RANGER_LDL_SPINNER ) == 0 )
+		else if ( stricmp( keyword.c_str(), k_AUI_RANGER_LDL_SPINNER ) == 0 )
 			type = AUI_RANGER_TYPE_SPINNER;
 		else
 			type = AUI_RANGER_TYPE_SCROLLER;
@@ -96,13 +96,13 @@ AUI_ERRCODE aui_Ranger::InitCommonLdl( MBCHAR *ldlBlock )
 
 	AUI_RANGER_ORIENTATION orientation;
 	keyword = block->GetString( k_AUI_RANGER_LDL_ORIENTATION );
-	if ( !keyword )
+	if ( keyword.empty())
 		orientation = AUI_RANGER_ORIENTATION_BIDIRECTIONAL;
 	else
 	{
-		if ( stricmp( keyword, k_AUI_RANGER_LDL_VERTICAL ) == 0 )
+		if ( stricmp( keyword.c_str(), k_AUI_RANGER_LDL_VERTICAL ) == 0 )
 			orientation = AUI_RANGER_ORIENTATION_VERTICAL;
-		else if ( stricmp( keyword, k_AUI_RANGER_LDL_HORIZONTAL ) == 0 )
+		else if ( stricmp( keyword.c_str(), k_AUI_RANGER_LDL_HORIZONTAL ) == 0 )
 			orientation = AUI_RANGER_ORIENTATION_HORIZONTAL;
 		else
 			orientation = AUI_RANGER_ORIENTATION_BIDIRECTIONAL;

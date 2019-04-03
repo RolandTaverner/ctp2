@@ -1289,9 +1289,13 @@ sint32 CivApp::InitializeApp(HINSTANCE hInstance, int iCmdShow)
 #endif
 
 	init_keymap();
+
+  (void)ui_Initialize();
+
   return 0;
-	//(void) ui_Initialize();
-	SoundManager::Initialize();
+  //(void)ui_Initialize();
+
+  SoundManager::Initialize();
 
 	CursorManager::Initialize();
 

@@ -8,20 +8,20 @@
 #include "D3dTiles/Region.h"
 
 #include "ui/d3d_ui/UIDimensioner.h"
+#include "ui/d3d_ui/UIRegionFwd.h"
 
 namespace ui::d3d {
 
 class UIRegion : public std::enable_shared_from_this<UIRegion> {
 public:
-  typedef std::shared_ptr<UIRegion> UIRegionPtr;
-  typedef std::weak_ptr<UIRegion> UIRegionWPtr;
   typedef std::vector<UIRegionPtr> ChildList;
 
-  UIRegion(unsigned id, const TileEngine::Position &pos, unsigned width, unsigned height);
-  UIRegion(unsigned id, const std::string &ldlBlockName);
+  UIRegion(UIRegionPtr parent, unsigned id, const TileEngine::Position &pos, unsigned width, unsigned height);
+  UIRegion(UIRegionPtr parent, unsigned id, const std::string &ldlBlockName);
   virtual ~UIRegion();
 
   unsigned ID() const;
+  const std::string &GetLDLBlockName() const;
   unsigned Width() const;
   unsigned Height() const;
   TileEngine::Rect GetRect() const;

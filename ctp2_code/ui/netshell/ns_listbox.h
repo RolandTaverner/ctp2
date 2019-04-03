@@ -32,6 +32,8 @@
 #ifndef __NS_LISTBOX_H__
 #define __NS_LISTBOX_H__
 
+#include <string>
+
 #include "ui/aui_common/aui.h"
 #include "ui/netshell/ns_civlistbox.h"
 #include "ui/aui_common/aui_ranger.h"
@@ -215,9 +217,9 @@ AUI_ERRCODE ns_ListBox<T,NetShellT>::InitCommonLdl( MBCHAR *ldlBlock )
 	m_artXOffset = block->GetInt( "xoffset" );
 	m_artYOffset = block->GetInt( "yoffset" );
 
-	char *image = block->GetString( "selectimage" );
-	if(image)
-		m_itemsSelectImage = g_ui->LoadImage( image );
+  const std::string image = block->GetString( "selectimage" );
+	if(!image.empty())
+		m_itemsSelectImage = g_ui->LoadImage( image.c_str() );
 
 	return AUI_ERRCODE_OK;
 }

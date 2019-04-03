@@ -51,7 +51,7 @@ PictureButton::PictureButton(
 AUI_ERRCODE PictureButton::InitCommon(MBCHAR *upPicture, MBCHAR *downPicture, BOOL isLDL)
 {
 	MBCHAR		*ldlBlock;
-	MBCHAR		*upName, *downName;
+  std::string upName, downName;
 	MBCHAR		path[_MAX_PATH];
 
 	if (isLDL)
@@ -64,9 +64,9 @@ AUI_ERRCODE PictureButton::InitCommon(MBCHAR *upPicture, MBCHAR *downPicture, BO
 
 
 		upName = block->GetString( "uppicture" );
-		Assert( upName != NULL );
+		Assert( !upName.empty() );
 		downName = block->GetString( "downpicture");
-		Assert( downName != NULL );
+		Assert( !downName.empty() );
 	} else {
 		upName = upPicture;
 		downName = downPicture;
@@ -75,7 +75,7 @@ AUI_ERRCODE PictureButton::InitCommon(MBCHAR *upPicture, MBCHAR *downPicture, BO
 	AUI_ERRCODE retval = AUI_ERRCODE_OK;
 
 	delete m_upPicture;
-	if (g_civPaths->FindFile(C3DIR_PICTURES, upName, path)) {
+	if (g_civPaths->FindFile(C3DIR_PICTURES, upName.c_str(), path)) {
 		m_upPicture = new aui_Picture(&retval, path);
 		Assert(retval == AUI_ERRCODE_OK);
 	} else {
@@ -83,7 +83,7 @@ AUI_ERRCODE PictureButton::InitCommon(MBCHAR *upPicture, MBCHAR *downPicture, BO
 	}
 
 	delete m_downPicture;
-	if (g_civPaths->FindFile(C3DIR_PICTURES, downName, path)) {
+	if (g_civPaths->FindFile(C3DIR_PICTURES, downName.c_str(), path)) {
 		m_downPicture = new aui_Picture(&retval, path);
 		Assert(retval == AUI_ERRCODE_OK);
 	} else {

@@ -149,7 +149,7 @@ AUI_ERRCODE c3_HyperTextBox::InitCommonLdl( MBCHAR *ldlBlock )
 	Assert( AUI_SUCCESS(errcode) );
 	if ( !AUI_SUCCESS(errcode) ) return errcode;
 
-	if(block->GetAttribute(k_CTP2_LISTBOX_LDL_BEVELWIDTH)) {
+	if(!block->GetAttribute(k_CTP2_LISTBOX_LDL_BEVELWIDTH).IsEmpty()) {
 		m_bevelWidth = block->GetInt(k_CTP2_LISTBOX_LDL_BEVELWIDTH);
 	} else {
 		m_bevelWidth = k_C3_HYPERTEXTBOX_BEVELWIDTH;

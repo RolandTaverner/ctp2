@@ -205,21 +205,23 @@ AUI_ERRCODE aui_Region::InitCommonLdl(MBCHAR const * ldlBlock) {
   if (block->GetAttributeType(k_AUI_REGION_LDL_BLINDNESS))
     m_blind = block->GetBool(k_AUI_REGION_LDL_BLINDNESS);
 
-  if (MBCHAR * horizontalAnchor = block->GetString(k_AUI_LDL_HANCHOR)) {
-    if (stricmp(horizontalAnchor, "right") == 0) {
+  const std::string horizontalAnchor = block->GetString(k_AUI_LDL_HANCHOR);
+  if (!horizontalAnchor.empty()) {
+    if (stricmp(horizontalAnchor.c_str(), "right") == 0) {
       m_dim->AnchorRight();
-    } else if (stricmp(horizontalAnchor, "center") == 0) {
+    } else if (stricmp(horizontalAnchor.c_str(), "center") == 0) {
       m_dim->AnchorHorizontalCenter();
     } else {
       m_dim->AnchorLeft();
     }
   } else
     m_dim->AnchorLeft();
-
-  if (MBCHAR * verticalAnchor = block->GetString(k_AUI_LDL_VANCHOR)) {
-    if (stricmp(verticalAnchor, "bottom") == 0) {
+  
+  const std::string verticalAnchor = block->GetString(k_AUI_LDL_VANCHOR);
+  if (!verticalAnchor.empty()) {
+    if (stricmp(verticalAnchor.c_str(), "bottom") == 0) {
       m_dim->AnchorBottom();
-    } else if (stricmp(verticalAnchor, "center") == 0) {
+    } else if (stricmp(verticalAnchor.c_str(), "center") == 0) {
       m_dim->AnchorVerticalCenter();
     } else {
       m_dim->AnchorTop();

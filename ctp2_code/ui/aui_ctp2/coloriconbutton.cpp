@@ -123,16 +123,16 @@ void ColorIconButton::ResizePictureRect(void)
 	}
 }
 
-void ColorIconButton::SetIcon(MBCHAR *name)
+void ColorIconButton::SetIcon(const std::string &name)
 {
-	if (name == NULL) return;
+	if (name.empty()) return;
 
 	if (m_filename) delete[] m_filename;
 
 	m_filename = new MBCHAR[_MAX_PATH];
 
 
-	strcpy(m_filename, name);
+	strcpy(m_filename, name.c_str());
 
 	if (strcmp(m_filename, ""))
 		SetImage(m_filename, 0);
@@ -153,7 +153,7 @@ void ColorIconButton::SetIcon(MBCHAR *name)
 
 AUI_ERRCODE ColorIconButton::InitCommon( MBCHAR *ldlBlock, BOOL isLDL)
 {
-	MBCHAR		*name;
+  std::string name;
 
 	if (isLDL) {
 		ldl_datablock * block = aui_Ldl::FindDataBlock(ldlBlock);
@@ -161,7 +161,7 @@ AUI_ERRCODE ColorIconButton::InitCommon( MBCHAR *ldlBlock, BOOL isLDL)
 		if ( !block ) return AUI_ERRCODE_LDLFINDDATABLOCKFAILED;
 
 		name = block->GetString( "picture" );
-		Assert( name != NULL );
+		Assert( !name.empty() );
 	} else {
 		name = ldlBlock;
 	}

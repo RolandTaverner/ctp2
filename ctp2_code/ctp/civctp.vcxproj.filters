@@ -2629,6 +2629,9 @@
     <ClInclude Include="..\ui\d3d_ui\UIRegionFwd.h">
       <Filter>ui\d3d_ui</Filter>
     </ClInclude>
+    <ClInclude Include="..\ui\ldl\ldl_list.h">
+      <Filter>ui\ldl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctp2_utils\appstrings.cpp">
@@ -4901,6 +4904,9 @@
     </ClCompile>
     <ClCompile Include="..\ui\d3d_ui\UIDimensioner.cpp">
       <Filter>ui\d3d_ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\ldl\ldl_list.cpp">
+      <Filter>ui\ldl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -82,11 +82,12 @@ AUI_ERRCODE ns_HeaderSwitch::InitCommonLdl( MBCHAR *ldlBlock )
 	Assert( block != NULL );
 	if ( !block ) return AUI_ERRCODE_LDLFINDDATABLOCKFAILED;
 
-	return InitCommon(block->GetString(k_NS_HEADERSWITCH_LDL_ICON));
+  std::string ldl_icon = block->GetString(k_NS_HEADERSWITCH_LDL_ICON);
+  return InitCommon(ldl_icon.c_str());
 }
 
 
-AUI_ERRCODE ns_HeaderSwitch::InitCommon( MBCHAR *icon )
+AUI_ERRCODE ns_HeaderSwitch::InitCommon( const MBCHAR *icon )
 {
 	m_icon = NULL;
 
@@ -108,7 +109,7 @@ ns_HeaderSwitch::~ns_HeaderSwitch()
 }
 
 
-AUI_ERRCODE ns_HeaderSwitch::SetIcon( MBCHAR *icon )
+AUI_ERRCODE ns_HeaderSwitch::SetIcon(const MBCHAR *icon )
 {
 	Assert( icon != NULL );
 	if ( !icon ) return AUI_ERRCODE_INVALIDPARAM;

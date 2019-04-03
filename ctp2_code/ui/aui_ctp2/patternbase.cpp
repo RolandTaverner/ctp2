@@ -36,7 +36,7 @@ AUI_ERRCODE PatternBase::InitCommonLdl( MBCHAR const *ldlBlock, MBCHAR const *pa
 	Assert( block != NULL );
 	if ( !block ) return AUI_ERRCODE_LDLFINDDATABLOCKFAILED;
 
-	MBCHAR *name = block->GetString( pattern ? pattern : "pattern" );
+  const std::string name = block->GetString( pattern ? pattern : "pattern" );
 
 	if (block->GetAttributeType( k_PATTERNBASE_LDL_SRCXPIX ) == ATTRIBUTE_TYPE_INT) {
 		m_srcX = block->GetInt( k_PATTERNBASE_LDL_SRCXPIX );
@@ -62,7 +62,7 @@ AUI_ERRCODE PatternBase::InitCommonLdl( MBCHAR const *ldlBlock, MBCHAR const *pa
 		m_srcHeightPix = 0;
 	}
 
-	InitCommon( name );
+	InitCommon( name.c_str() );
 
 	return AUI_ERRCODE_OK;
 }
@@ -70,7 +70,7 @@ AUI_ERRCODE PatternBase::InitCommonLdl( MBCHAR const *ldlBlock, MBCHAR const *pa
 
 AUI_ERRCODE PatternBase::InitCommon( MBCHAR const *pattern )
 {
-	if (pattern != NULL) {
+	if (pattern != NULL && strlen(pattern) != 0) {
 		m_pattern = g_c3ui->LoadPattern( pattern );
 		Assert( m_pattern != NULL );
 	} else {

@@ -261,7 +261,7 @@ template<class T>
 T *aui_Resource<T>::Load( const MBCHAR *resName, C3DIR dir, uint32 size)
 {
 	Assert(resName);
-	if (!resName) return NULL;
+	if (!resName || strlen(resName) == 0) return NULL;
 
 	const MBCHAR *name;
 	MBCHAR tempName[MAX_PATH + 1];

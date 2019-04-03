@@ -156,8 +156,8 @@ AUI_ERRCODE aui_Control::InitCommonLdl(
 	Assert( AUI_SUCCESS(errcode) );
 	if ( !AUI_SUCCESS(errcode) ) return errcode;
 
-	MBCHAR *tip = block->GetString(k_AUI_CONTROL_LDL_TIPWINDOW);
-	if (tip) {
+	std::string tip = block->GetString(k_AUI_CONTROL_LDL_TIPWINDOW);
+	if (!tip.empty()) {
 		m_tip = new aui_TipWindow(&errcode, aui_UniqueId(), "DefaultTipWindow");
 		Assert( AUI_NEWOK(m_tip,errcode) );
 		if ( !AUI_NEWOK(m_tip,errcode) ) return errcode;
@@ -175,9 +175,9 @@ AUI_ERRCODE aui_Control::InitCommonLdl(
 		SetTipWindow( m_tip );
 	}
 
-	MBCHAR *shortcut = block->GetString(k_AUI_CONTROL_SHORTCUT);
+	std::string shortcut = block->GetString(k_AUI_CONTROL_SHORTCUT);
 	m_keyboardAction = 0;
-	if(shortcut) {
+	if(!shortcut.empty()) {
 		if(shortcut[0] == '^') {
 			if(shortcut[1] >= '@' && shortcut[1] <= '[')
 				m_actionKey = shortcut[0] - '@';
@@ -185,7 +185,7 @@ AUI_ERRCODE aui_Control::InitCommonLdl(
 				m_actionKey = shortcut[1] - 'a' + 1;
 			else
 				m_actionKey = '^';
-		} else if(stricmp(shortcut, "ESC") == 0) {
+		} else if(stricmp(shortcut.c_str(), "ESC") == 0) {
 #ifdef WIN32
 			m_actionKey = VK_ESCAPE;
 #else
@@ -198,7 +198,7 @@ AUI_ERRCODE aui_Control::InitCommonLdl(
 
 	m_statusText = block->GetString(k_AUI_CONTROL_LDL_STATUS_TEXT);
 	StringId statusTextID = 0;
-	if(m_statusText && g_theStringDB->GetStringID(m_statusText, statusTextID)) {
+	if(!m_statusText.empty() && g_theStringDB->GetStringID(m_statusText, statusTextID)) {
 		m_statusText = g_theStringDB->GetNameStr(statusTextID);
 	}
 
@@ -265,8 +265,6 @@ aui_Control::~aui_Control()
 
 	delete m_imageLayerList;
 	delete [] m_layerRenderFlags;
-	// m_statusText: reference only
-	delete m_statusTextCopy;
 }
 
 
@@ -819,13 +817,13 @@ void aui_Control::MouseMoveOver( aui_MouseEvent *mouseData )
 
 			PlaySound( AUI_SOUNDBASE_SOUND_ACTIVATE );
 
-			if(m_statusText)
+			if(!m_statusText.empty())
 			{
-				StatusBar::SetText(m_statusText, this);
+				StatusBar::SetText(m_statusText.c_str(), this);
 			}
-			else if(m_statusTextCopy)
+			else if(!m_statusTextCopy.empty())
 			{
-				StatusBar::SetText(m_statusTextCopy, this);
+				StatusBar::SetText(m_statusTextCopy.c_str(), this);
 			}
 
 			if ( m_mouseCode == AUI_ERRCODE_UNHANDLED )
@@ -860,7 +858,7 @@ void aui_Control::MouseMoveAway( aui_MouseEvent *mouseData )
 	if(IsActive()) {
 		PlaySound( AUI_SOUNDBASE_SOUND_DEACTIVATE );
 
-		if(m_statusText && StatusBar::GetOwner() == this) {
+		if(!m_statusText.empty() && StatusBar::GetOwner() == this) {
 			StatusBar::SetText("", NULL);
 		}
 
@@ -1134,45 +1132,26 @@ void aui_Control::LoadLayerImages(ldl_datablock *theBlock,
 {
 
 	for(int imageIndex = 0; imageIndex < m_imagesPerLayer; imageIndex++) {
-
-
-
-
-
 		char imageAttributeString[k_MAX_NAME_LEN];
 		sprintf(imageAttributeString, "%s%d%d", k_AUI_CONTROL_LDL_IMAGE, layerIndex, imageIndex);
 
-		const char *imageName = theBlock->GetString(imageAttributeString);
-
-
+		std::string imageName = theBlock->GetString(imageAttributeString);
 		RECT imageRectangle = { 0, 0, -1, -1 };
-
-
-
-
 
 		char imageBltTypeStringName[k_MAX_NAME_LEN];
 		sprintf(imageBltTypeStringName, "%s%d%d", k_AUI_IMAGEBASE_LDL_BLTTYPE, layerIndex, imageIndex);
-		const char *imageBltTypeString = theBlock->GetString(imageBltTypeStringName);
+		const std::string imageBltTypeString = theBlock->GetString(imageBltTypeStringName);
 
 		AUI_IMAGEBASE_BLTTYPE imageBltType = AUI_IMAGEBASE_BLTTYPE_COPY;
-		if(imageBltTypeString) {
-			if(stricmp(imageBltTypeString, k_AUI_IMAGEBASE_LDL_COPY) == 0) {
+		if(!imageBltTypeString.empty()) {
+			if(stricmp(imageBltTypeString.c_str(), k_AUI_IMAGEBASE_LDL_COPY) == 0) {
 				imageBltType = AUI_IMAGEBASE_BLTTYPE_COPY;
-			} else 	if(stricmp(imageBltTypeString, k_AUI_IMAGEBASE_LDL_STRETCH) == 0) {
+			} else 	if(stricmp(imageBltTypeString.c_str(), k_AUI_IMAGEBASE_LDL_STRETCH) == 0) {
 				imageBltType = AUI_IMAGEBASE_BLTTYPE_STRETCH;
-			} else if(stricmp(imageBltTypeString, k_AUI_IMAGEBASE_LDL_TILE) == 0) {
+			} else if(stricmp(imageBltTypeString.c_str(), k_AUI_IMAGEBASE_LDL_TILE) == 0) {
 				imageBltType = AUI_IMAGEBASE_BLTTYPE_TILE;
 			}
 		} else {
-
-
-
-
-
-
-
-
 			char stretchXAttributeString[k_MAX_NAME_LEN];
 			char stretchYAttributeString[k_MAX_NAME_LEN];
 			sprintf(stretchXAttributeString, "%s%d%d", k_AUI_CONTROL_IMAGE_STRETCH_X, layerIndex, imageIndex);
@@ -1184,21 +1163,17 @@ void aui_Control::LoadLayerImages(ldl_datablock *theBlock,
 			}
 		}
 
-
-
-
-
 		char imageBltFlagStringName[k_MAX_NAME_LEN];
 		sprintf(imageBltFlagStringName, "%s%d%d", k_AUI_IMAGEBASE_LDL_BLTFLAG, layerIndex, imageIndex);
-		const char *imageBltFlagString = theBlock->GetString(imageBltFlagStringName);
+		const std::string imageBltFlagString = theBlock->GetString(imageBltFlagStringName);
 
 		AUI_IMAGEBASE_BLTFLAG imageBltFlag = GetImageBltFlag();
-		if(imageBltFlagString) {
-			if(stricmp(imageBltFlagString, k_AUI_IMAGEBASE_LDL_BLTFLAG_COPY) == 0) {
+		if(!imageBltFlagString.empty()) {
+			if(stricmp(imageBltFlagString.c_str(), k_AUI_IMAGEBASE_LDL_BLTFLAG_COPY) == 0) {
 				imageBltFlag = AUI_IMAGEBASE_BLTFLAG_COPY;
-			} else if(stricmp(imageBltFlagString, k_AUI_IMAGEBASE_LDL_BLTFLAG_CHROMAKEY) == 0) {
+			} else if(stricmp(imageBltFlagString.c_str(), k_AUI_IMAGEBASE_LDL_BLTFLAG_CHROMAKEY) == 0) {
 				imageBltFlag = AUI_IMAGEBASE_BLTFLAG_CHROMAKEY;
-			} else if(stricmp(imageBltFlagString, k_AUI_IMAGEBASE_LDL_BLTFLAG_BLEND) == 0) {
+			} else if(stricmp(imageBltFlagString.c_str(), k_AUI_IMAGEBASE_LDL_BLTFLAG_BLEND) == 0) {
 				imageBltFlag = AUI_IMAGEBASE_BLTFLAG_BLEND;
 			}
 		}
@@ -1217,7 +1192,7 @@ void aui_Control::LoadLayerImages(ldl_datablock *theBlock,
 		}
 
 		m_imageLayerList->SetImage(layerIndex, imageIndex, imageBltType,
-			imageBltFlag, &imageRectangle, imageName,
+			imageBltFlag, &imageRectangle, imageName.c_str(),
 			m_chromaRed, m_chromaGreen, m_chromaBlue);
 	}
 }
@@ -1729,23 +1704,20 @@ void aui_Control::SetStatusText(const MBCHAR *text)
 {
 	m_statusText = text;
 
-	if(m_statusTextCopy != NULL)
+	if(!m_statusTextCopy.empty())
 	{
 		StatusBar::SetText("", NULL);
-		delete m_statusTextCopy;
-		m_statusTextCopy = NULL;
+		m_statusTextCopy.clear();
 	}
 }
 
 void aui_Control::SetStatusTextCopy(const MBCHAR *text)
 {
-	m_statusText = NULL;
+	m_statusText.clear();
 
-	if(m_statusTextCopy != NULL)
+	if(!m_statusTextCopy.empty())
 	{
-		delete m_statusTextCopy;
 		StatusBar::SetText("", NULL);
 	}
-	m_statusTextCopy = new MBCHAR[strlen(text)+1];
-	strcpy(m_statusTextCopy, text);
+	m_statusTextCopy = text;
 }

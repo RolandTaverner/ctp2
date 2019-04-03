@@ -29,6 +29,9 @@
 //----------------------------------------------------------------------------
 
 #include "ctp/c3.h"
+
+#include <string>
+
 #include "ui/aui_ctp2/thronecontrol.h"
 
 #include "ui/aui_common/aui.h"
@@ -57,7 +60,7 @@
 extern C3UI		*g_c3ui;
 extern CivPaths	*g_civPaths;
 
-static MBCHAR *s_throneImage[ k_THRONE_IMAGES + 1 ];
+static std::string s_throneImage[ k_THRONE_IMAGES + 1 ];
 
 static POINT	s_upgradeLoc[k_THRONE_IMAGES] = { 0, 230, 204, 204, 210, 300, 284, 380, 410, 250 };
 
@@ -191,7 +194,7 @@ void ThroneControl::InitCommon(void)
 
 	if (!g_civPaths->GetSpecificPath(C3DIR_PICTURES, s, FALSE)) return;
 	strcat( s, "\\" );
-	strcat( s, s_throneImage[0] );
+	strcat( s, s_throneImage[0].c_str() );
 
 	m_background = new c3_Image( &errcode, s );
 	Assert( AUI_NEWOK(m_background, errcode) );
@@ -202,7 +205,7 @@ void ThroneControl::InitCommon(void)
 	for ( sint32 i = 0;i < k_THRONE_IMAGES;i++ ) {
 		if (!g_civPaths->GetSpecificPath(C3DIR_PICTURES, s, FALSE)) return;
 		strcat( s, "\\" );
-		strcat( s, s_throneImage[i+1] );
+		strcat( s, s_throneImage[i+1].c_str());
 
 		m_upgradeImage[i] = new c3_Image( &errcode, s );
 		Assert( AUI_NEWOK(m_upgradeImage[i], errcode) );

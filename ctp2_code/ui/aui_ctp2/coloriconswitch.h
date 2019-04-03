@@ -4,6 +4,7 @@
 #ifndef __COLORICONSWITCH_H__
 #define __COLORICONSWITCH_H__
 
+#include <string>
 
 #include "ui/aui_ctp2/c3_switch.h"
 
@@ -41,7 +42,7 @@ public:
 	virtual AUI_ERRCODE Resize(sint32 width, sint32 height);
 	void	ResizePictureRect(void);
 
-	void SetIcon(MBCHAR *name);
+	void SetIcon(const std::string &name);
 	void ShrinkToFit(BOOL fit) { m_shrinkToFit = fit; }
 
 	MBCHAR *GetFilename() { return m_filename; }

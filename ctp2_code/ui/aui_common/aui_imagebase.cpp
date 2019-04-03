@@ -119,25 +119,25 @@ AUI_ERRCODE aui_ImageBase::InitCommonLdl(MBCHAR const *ldlBlock)
                                          : AUI_IMAGEBASE_BLTFLAG_COPY;
 
 	AUI_IMAGEBASE_BLTTYPE imageblttype = AUI_IMAGEBASE_BLTTYPE_COPY;
-	MBCHAR *type = block->GetString( k_AUI_IMAGEBASE_LDL_BLTTYPE );
-	if ( type )
+  const std::string type = block->GetString( k_AUI_IMAGEBASE_LDL_BLTTYPE );
+	if ( !type.empty() )
 	{
-		if ( !stricmp( type, k_AUI_IMAGEBASE_LDL_STRETCH ) )
+		if ( !stricmp( type.c_str(), k_AUI_IMAGEBASE_LDL_STRETCH ) )
 			imageblttype = AUI_IMAGEBASE_BLTTYPE_STRETCH;
-		else if ( !stricmp( type, k_AUI_IMAGEBASE_LDL_TILE ) )
+		else if ( !stricmp( type.c_str(), k_AUI_IMAGEBASE_LDL_TILE ) )
 			imageblttype = AUI_IMAGEBASE_BLTTYPE_TILE;
 	}
 
-	MBCHAR *flags = block->GetString(k_AUI_IMAGEBASE_LDL_BLTFLAG);
-	if ((flags)&&(!m_chromaSpecified))
+  const std::string flags = block->GetString(k_AUI_IMAGEBASE_LDL_BLTFLAG);
+	if (!flags.empty() && !m_chromaSpecified)
 	{
-		if (!stricmp(flags, k_AUI_IMAGEBASE_LDL_BLTFLAG_CHROMAKEY))
+		if (!stricmp(flags.c_str(), k_AUI_IMAGEBASE_LDL_BLTFLAG_CHROMAKEY))
 		{
 			imagebltflag = AUI_IMAGEBASE_BLTFLAG_CHROMAKEY;
 			m_chromaSpecified = true;
 		}
 		else
-			if (!stricmp(flags, k_AUI_IMAGEBASE_LDL_BLTFLAG_BLEND)) {
+			if (!stricmp(flags.c_str(), k_AUI_IMAGEBASE_LDL_BLTFLAG_BLEND)) {
 				imagebltflag = AUI_IMAGEBASE_BLTFLAG_BLEND;
 			}
 	}
@@ -188,7 +188,7 @@ sint32 aui_ImageBase::FindNumStateImageGroupsFromLdl( ldl_datablock *block )
 		for ( sint32 j = 0; j < AUI_IMAGEBASE_SUBSTATE_LAST && !found; j++ )
 		{
 			sprintf( temp, "%s%d", m_substateLdlKeywords[ j ], i );
-			if ( block->GetString( temp ) ) found = TRUE;
+			if ( !block->GetString( temp ).empty() ) found = TRUE;
 		}
 	}
 
@@ -302,6 +302,10 @@ AUI_IMAGEBASE_BLTFLAG aui_ImageBase::SetImageBltFlag(
 	return prevtype;
 }
 
+aui_Image *aui_ImageBase::SetImage(const std::string & image, sint32 state,
+  AUI_IMAGEBASE_SUBSTATE substate) {
+  return SetImage(image.c_str(), state, substate);
+}
 
 aui_Image *aui_ImageBase::SetImage
 (
@@ -323,7 +327,7 @@ aui_Image *aui_ImageBase::SetImage
 
 	aui_Image *prevImage = GetImage( state, substate );
 
-	if (image)
+	if (image && strlen(image) != 0)
 	{
 		if (m_loadOnDemand)
         {

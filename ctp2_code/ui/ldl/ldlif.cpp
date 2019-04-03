@@ -1,8 +1,16 @@
 #include "ctp/c3.h"
 
+#include <map>
+#include <list>
+#include <stack>
+#include <unordered_map>
+
 #include <inttypes.h>
 
 #include "ui/ldl/ldlif.h"
+#include "ui/ldl/ldl_data.hpp"
+#include "ui/ldl/ldl_attr.hpp"
+
 #include "gs/fileio/CivPaths.h"
 #include "ctp/ctp2_utils/c3errors.h"
 
@@ -12,251 +20,173 @@
 
 #include "ui/aui_common/aui_ui.h"
 
-#include "ui/ldl/ldl_data.hpp"
-#include "ldl_attr.hpp"
 #include "ctp/ctp2_utils/c3errors.h"
 
 class LDLString {
-	char *m_name;
-  public:
-	LDLString(const char *text) {
-		m_name = new char[strlen(text) + 1];
-		strcpy(m_name, text);
-	}
-	~LDLString() {
-		delete [] m_name;
-	}
+  char *m_name;
+public:
+  explicit LDLString(const char *text) {
+    m_name = new char[strlen(text) + 1];
+    strcpy(m_name, text);
+  }
+  ~LDLString() {
+    delete[] m_name;
+  }
 
-	char * GetName() const { return m_name; }
+  char * GetName() const { return m_name; }
 };
 
-StringHash<LDLString> *s_ldlStringHash = NULL;
+std::unordered_map<std::string, LDLString> s_ldlStringHash;
 
-PointerList<ldl_datablock> *s_blockStack = NULL;
-AvlTree<ldl_datablock *> *s_blockTree = NULL;
-PointerList<ldl_datablock> *s_topLevelList = NULL;
+std::stack<LDLBlockPtr> s_blockStack;
+std::map<std::string, LDLBlockPtr> s_blockTree;
 
-extern "C" { void ldlif_report_error(char *text); }
+extern "C" { void ldlif_report_error(const char *text); }
 
-void ldlif_report_error(char *text)
-{
-	c3errors_ErrorDialog("LDL", text);
+void ldlif_report_error(const char *text) {
+  c3errors_ErrorDialog("LDL", text);
 }
 
-ldl_datablock *ldlif_find_block(char const * name)
-{
-	Comparable<ldl_datablock *> *myKey;
-	ldl_datablock dummy(aui_UI::CalculateHash(name));
-	myKey = s_blockTree->Search(&dummy);
-	if(myKey) {
-		return myKey->Key();
-	}
-	return NULL;
+LDLBlockPtr ldlif_find_block(char const * name) {
+  auto it = s_blockTree.find(std::string(name));
+  if (it != s_blockTree.end()) {
+    return it->second;
+  }
+  return LDLBlockPtr();
 }
 
-int ldlif_find_file(const char *filename, char *fullpath)
-{
-	if(!g_civPaths->FindFile(C3DIR_LAYOUT, filename, fullpath))
-		return 0;
-	return 1;
+int ldlif_find_file(const char *filename, char *fullpath) {
+  if (!g_civPaths->FindFile(C3DIR_LAYOUT, filename, fullpath))
+    return 0;
+  return 1;
 }
 
-char *ldlif_getnameptr(const char *name)
-{
-	const LDLString *str = s_ldlStringHash->Get(name);
-	if(str) {
-		return str->GetName();
-	}
-
-	LDLString *newstr = new LDLString(name);
-	s_ldlStringHash->Add(newstr);
-	return newstr->GetName();
+char *ldlif_getnameptr(const char *name) {
+  auto itExisting = s_ldlStringHash.find(name);
+  if (itExisting != s_ldlStringHash.end()) {
+    return itExisting->second.GetName();
+  }
+  auto [itNew, ok] = s_ldlStringHash.emplace(std::make_pair<>(std::string(name), LDLString(name)));
+  return itNew->second.GetName();
 }
 
-char *ldlif_getstringptr(const char *text)
-{
-	return ldlif_getnameptr(text);
+char *ldlif_getstringptr(const char *text) {
+  return ldlif_getnameptr(text);
 }
 
-void ldlif_add_name(void **newnames, char *name, void *oldnames)
-{
-	PointerList<char> *namelist = (PointerList<char> *)oldnames;
-	if(!namelist) {
-		namelist = new PointerList<char>;
-	}
-	namelist->AddHead(name);
-	*newnames = (void *)namelist;
+void ldlif_add_name(void **newnames, char *name, void *oldnames) {
+  PointerList<char> *namelist = (PointerList<char> *)oldnames;
+  if (!namelist) {
+    namelist = new PointerList<char>;
+  }
+  namelist->AddHead(name);
+  *newnames = (void *)namelist;
 }
 
-void ldlif_init_log()
-{
+void ldlif_init_log() {
 #ifdef _DEBUG
-	FILE *f = fopen("ldlparselog.txt", "w");
-	if(f) {
-		fprintf(f, "%" PRId64 "\n", time(0));
-		fclose(f);
-	}
+  FILE *f = fopen("ldlparselog.txt", "w");
+  if (f) {
+    fprintf(f, "%" PRId64 "\n", time(0));
+    fclose(f);
+  }
 #endif
 }
-void ldlif_log(char *format, ...)
-{
+void ldlif_log(char *format, ...) {
 #ifdef _DEBUG
-	va_list list;
-	va_start(list, format);
+  va_list list;
+  va_start(list, format);
 
-	FILE *f = fopen("ldlparselog.txt", "a");
-	vfprintf(f, format, list);
-	fclose(f);
-	va_end(list);
+  FILE *f = fopen("ldlparselog.txt", "a");
+  vfprintf(f, format, list);
+  fclose(f);
+  va_end(list);
 #endif
 }
 
-void ldlif_indent_log(int indent)
-{
+void ldlif_indent_log(int indent) {
 #ifdef _DEBUG
-	int i;
-	for(i = 0; i < indent; i++) {
-		ldlif_log("    ");
-	}
+  int i;
+  for (i = 0; i < indent; i++) {
+    ldlif_log("    ");
+  }
 #endif
 }
 
-void ldlif_start_block(void *names)
-{
-	PointerList<char> *namelist = (PointerList<char> *)names;
-	Assert(namelist);
+void ldlif_start_block(void *names) {
+  PointerList<char> *namelist = (PointerList<char> *)names;
+  Assert(namelist);
 
-	ldl_datablock *block = new ldl_datablock(namelist);
+  LDLBlockPtr block = std::make_shared<ldl_datablock>(namelist);
 
-	if(s_blockStack->GetTail()) {
-		s_blockStack->GetTail()->AddChild(block);
-	}
-	s_blockStack->AddTail(block);
-	ldlif_add_block_to_tree(block);
+  if (!s_blockStack.empty()) {
+    s_blockStack.top()->AddChild(block);
+  }
+  s_blockStack.push(block);
+
+  ldlif_add_block_to_tree(block);
 }
 
-static cmp_t ldlif_compare_blocks(ldl_datablock *b1, ldl_datablock *b2)
-{
-	if(b1->GetHash() < b2->GetHash()) return MIN_CMP;
-	if(b1->GetHash() > b2->GetHash()) return MAX_CMP;
-	return EQ_CMP;
+void ldlif_add_block_to_tree(LDLBlockPtr block) {
+  const std::string fullName = block->GetFullName();
+  auto[it, ok] = s_blockTree.emplace(fullName, block);
+  ldlif_log("Added: %s\n", fullName.c_str());
+
+  if (!ok) {
+    const std::string msg = "Duplicate block " + fullName + "\n";
+    ldlif_report_error(msg.c_str());
+  }
+
+  for (LDLBlockPtr &c : block->GetChildList()) {
+    ldlif_add_block_to_tree(c);
+  }
 }
 
-void ldlif_add_block_to_tree(ldl_datablock *block)
-{
-	char fullname[256];
-	block->GetFullName(fullname);
-
-	ldlif_log("Added: %s\n", fullname);
-
-	block->SetHash(aui_UI::CalculateHash(fullname));
-	Comparable<ldl_datablock *> *cmp = new Comparable<ldl_datablock *>(block, ldlif_compare_blocks);
-	if(s_blockTree->Insert(cmp)) {
-		char buf[300];
-		sprintf(buf, "Duplicate block %s\n", fullname);
-		ldlif_report_error(buf);
-		delete cmp;
-	}
-
-	PointerList<ldl_datablock> *childList = block->GetChildList();
-	PointerList<ldl_datablock>::Walker walk(childList);
-	while(walk.IsValid()) {
-		ldlif_add_block_to_tree(walk.GetObj());
-		walk.Next();
-	}
+void ldlif_remove_block_from_tree(LDLBlockPtr block) {
+  s_blockTree.erase(block->GetFullName());
 }
 
-void ldlif_remove_block_from_tree(ldl_datablock *block)
-{
-	Comparable<ldl_datablock *> *myKey;
-	char fullname[256];
-	block->GetFullName(fullname);
-	ldl_datablock dummy(aui_UI::CalculateHash(fullname));
-	myKey = s_blockTree->Delete(&dummy);
-	if(myKey) {
-		delete myKey;
-	}
+void *ldlif_end_block(void *names) {
+  PointerList<char> *namelist = (PointerList<char> *)names;
+  Assert(namelist);
+
+  LDLBlockPtr block = s_blockStack.top();
+  s_blockStack.pop();
+
+  block->AddTemplateChildren();
+
+  delete namelist;
+  return block.get(); // TODO: remove
 }
 
-void *ldlif_end_block(void *names)
-{
-	PointerList<char> *namelist = (PointerList<char> *)names;
-	Assert(namelist);
-
-	ldl_datablock *block = s_blockStack->RemoveTail();
-
-	block->AddTemplateChildren();
-
-
-
-
-
-
-
-
-
-
-	if(!s_blockStack->GetTail()) {
-		s_topLevelList->AddTail(block);
-
-	}
-
-	delete namelist;
-	return block;
-
+void *ldlif_add_empty_block(void *names) {
+  ldlif_start_block(names);
+  return ldlif_end_block(names);
 }
 
-void *ldlif_add_empty_block(void *names)
-{
-	ldlif_start_block(names);
-	return ldlif_end_block(names);
+void ldlif_add_bool_attribute(char *name, int val) {
+  s_blockStack.top()->AddAttribute(ldl_attribute(name, ATTRIBUTE_TYPE_BOOL, val != 0));
 }
 
-void ldlif_add_bool_attribute(char *name, int val)
-{
-	ldl_attributeValue<bool> *attr = new ldl_attributeValue<bool>(name, ATTRIBUTE_TYPE_BOOL, val != 0);
-	s_blockStack->GetTail()->AddAttribute(attr);
+void ldlif_add_int_attribute(char *name, int val) {
+  s_blockStack.top()->AddAttribute(ldl_attribute(name, ATTRIBUTE_TYPE_INT, val));
 }
 
-void ldlif_add_int_attribute(char *name, int val)
-{
-	ldl_attributeValue<int> *attr = new ldl_attributeValue<int>(name, ATTRIBUTE_TYPE_INT, val);
-	s_blockStack->GetTail()->AddAttribute(attr);
+void ldlif_add_float_attribute(char *name, double val) {
+  s_blockStack.top()->AddAttribute(ldl_attribute(name, ATTRIBUTE_TYPE_DOUBLE, val));
 }
 
-void ldlif_add_float_attribute(char *name, double val)
-{
-	ldl_attributeValue<double> *attr = new ldl_attributeValue<double>(name, ATTRIBUTE_TYPE_DOUBLE, val);
-	s_blockStack->GetTail()->AddAttribute(attr);
+void ldlif_add_string_attribute(char *name, char *val) {
+  s_blockStack.top()->AddAttribute(ldl_attribute(name, ATTRIBUTE_TYPE_STRING, std::string(val)));
 }
 
-void ldlif_add_string_attribute(char *name, char *val)
-{
-	ldl_attributeValue<char *> *attr = new ldl_attributeValue<char *>(name, ATTRIBUTE_TYPE_STRING, val);
-	s_blockStack->GetTail()->AddAttribute(attr);
+void ldlif_allocate_stuff() {
 }
 
-void ldlif_allocate_stuff()
-{
-	s_ldlStringHash = new StringHash<LDLString>(1024);
-	s_blockStack = new PointerList<ldl_datablock>;
-	s_blockTree = new AvlTree<ldl_datablock *>;
-	s_topLevelList = new PointerList<ldl_datablock>;
-}
+void ldlif_deallocate_stuff() {
+  s_blockStack.swap(std::stack<LDLBlockPtr>());
 
-void ldlif_deallocate_stuff()
-{
-	delete s_blockStack;
-	s_blockStack = NULL;
+  s_ldlStringHash.clear();
 
-	s_topLevelList->DeleteAll();
-	delete s_topLevelList;
-	s_topLevelList = NULL;
-
-	delete s_ldlStringHash;
-	s_ldlStringHash = NULL;
-
-	delete s_blockTree;
-	s_blockTree = NULL;
-
+  s_blockTree.clear();
 }

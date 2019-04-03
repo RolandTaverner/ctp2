@@ -1,76 +1,53 @@
 /*******************************************************************************
 
-	$Workfile:: ldl_attr.hpp                                                   $
-	  $Author$
-	    $Date$
-	$Rev$
-	 $Archive:: /LDL/test/ldl_attr.hpp                                         $
+  $Workfile:: ldl_attr.hpp                                                   $
+    $Author$
+      $Date$
+  $Rev$
+   $Archive:: /LDL/test/ldl_attr.hpp                                         $
 
 *******************************************************************************/
 
 #ifndef LDL_ATTR_HPP
 #define LDL_ATTR_HPP
 
+#include <string>
+#include <variant>
+
 enum ATTRIBUTE_TYPE {
-	ATTRIBUTE_TYPE_UNKNOWN,
-	ATTRIBUTE_TYPE_INT,
-	ATTRIBUTE_TYPE_DOUBLE,
-	ATTRIBUTE_TYPE_STRING,
-	ATTRIBUTE_TYPE_BOOL,
+  ATTRIBUTE_TYPE_UNKNOWN,
+  ATTRIBUTE_TYPE_INT,
+  ATTRIBUTE_TYPE_DOUBLE,
+  ATTRIBUTE_TYPE_STRING,
+  ATTRIBUTE_TYPE_BOOL,
 };
 
-#define k_MAX_ATTRIBUTE_LEN		32
-
-class ldl;
+typedef std::variant<bool, int, double, std::string> ldl_attribute_value;
 
 class ldl_attribute {
-  protected:
-	char *m_name;
-	ATTRIBUTE_TYPE m_type;
-	ldl_attribute *m_next;
-	friend class ldl_attributelist;
+public:
+  ldl_attribute() : m_type(ATTRIBUTE_TYPE_UNKNOWN) {}
+  ldl_attribute(const std::string &name, ATTRIBUTE_TYPE type, const ldl_attribute_value &value) :
+    m_name(name), m_type(type), m_value(value) {}
+  ~ldl_attribute() {}
 
-  public:
-	ldl_attribute(char *name, ATTRIBUTE_TYPE type) { m_name = name; m_type = type; m_next = NULL; }
+  bool IsEmpty() const { return m_type == ATTRIBUTE_TYPE_UNKNOWN; }
+  ATTRIBUTE_TYPE GetType() const { return m_type; }
+  const std::string &GetName() const { return m_name; }
 
-	ldl_attribute *GetCopy();
+  std::string GetTypeName() const;
+  void SetValueInt(int value);
 
-	ATTRIBUTE_TYPE GetType() { return m_type; }
-	char *GetName() { return m_name; }
-	const char *GetTypeName() {
-		switch(m_type) {
-			case ATTRIBUTE_TYPE_BOOL: return "bool";
-			case ATTRIBUTE_TYPE_INT:  return "int";
-			case ATTRIBUTE_TYPE_DOUBLE: return "double";
-			case ATTRIBUTE_TYPE_STRING: return "string";
-			default: return "BADTYPE";
-		}
-	}
+  bool GetBoolValue() const;
+  int GetIntValue() const;
+  double GetFloatValue() const;
+  std::string GetStringValue() const;
+  std::string GetValueText() const;
 
-	bool GetBoolValue();
-	int GetIntValue();
-	double GetFloatValue();
-	char *GetStringValue();
-
-	char *GetValueText();
-};
-
-template <class Type> class ldl_attributeValue : public ldl_attribute {
-  private:
-	Type m_value;
-
-  public:
-	ldl_attributeValue(char *name, ATTRIBUTE_TYPE t, Type value) : ldl_attribute(name, t)
-	{
-		m_value = value;
-	}
-
-	ldl_attributeValue(ldl_attribute *copy) : ldl_attribute(copy->GetName(), copy->GetType()) {
-		m_value = ((ldl_attributeValue<Type> *)copy)->m_value;
-	}
-
-	Type GetValue() { return m_value; }
-	void SetValue(Type val) { m_value = val; }
+private:
+  std::string m_name;
+  ATTRIBUTE_TYPE m_type;
+  ldl_attribute_value m_value;
 };
 
 #endif //LDL_ATTR_HPP

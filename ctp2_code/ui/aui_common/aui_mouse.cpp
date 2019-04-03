@@ -174,10 +174,10 @@ AUI_ERRCODE aui_Mouse::InitCommonLdl( MBCHAR *ldlBlock )
 
 				sprintf( temp, k_MOUSE_LDL_CURSOR "%d", i );
 
-				MBCHAR *filename = block->GetString( temp );
-				if ( filename )
+        std::string filename = block->GetString( temp );
+				if ( !filename.empty() )
 				{
-					cursor = g_ui->LoadCursor( filename );
+					cursor = g_ui->LoadCursor( filename.c_str() );
 					Assert( cursor != NULL );
 					if ( !cursor ) return AUI_ERRCODE_LOADFAILED;
 
@@ -242,7 +242,7 @@ sint32 aui_Mouse::FindNumCursorsFromLdl( ldl_datablock *block )
 	{
 		found = FALSE;
 		sprintf( temp, k_MOUSE_LDL_CURSOR "%d", ++i );
-		if ( block->GetString( temp ) ) found = TRUE;
+		if ( !block->GetString( temp ).empty() ) found = TRUE;
 	}
 
 	return i;

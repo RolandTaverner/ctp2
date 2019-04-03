@@ -5,6 +5,7 @@
 #ifndef __AUI_STRINGTABLE_H__
 #define __AUI_STRINGTABLE_H__
 
+#include <string>
 #include <vector>           // std::vector
 
 class aui_StringTable;
@@ -38,6 +39,7 @@ public:
 
 	MBCHAR *    GetString(sint32 index) const;
 	AUI_ERRCODE	SetString(const MBCHAR * text, sint32 index);
+  AUI_ERRCODE	SetString(const std::string &text, sint32 index);
 
 private:
 	size_t		FindNumStringsFromLdl(ldl_datablock * block);

@@ -76,7 +76,7 @@ AUI_ERRCODE aui_TextField::InitCommonLdl( MBCHAR *ldlBlock )
 	Assert( block != NULL );
 	if ( !block ) return AUI_ERRCODE_LDLFINDDATABLOCKFAILED;
 
-	MBCHAR *text = block->GetString( k_AUI_TEXTFIELD_LDL_TEXT );
+	std::string text = block->GetString( k_AUI_TEXTFIELD_LDL_TEXT );
 	BOOL multiLine = block->GetBool( k_AUI_TEXTFIELD_LDL_MULTILINE );
 	BOOL autovscroll =
 		block->GetAttributeType( k_AUI_TEXTFIELD_LDL_AUTOVSCROLL ) == ATTRIBUTE_TYPE_BOOL ?
@@ -88,7 +88,7 @@ AUI_ERRCODE aui_TextField::InitCommonLdl( MBCHAR *ldlBlock )
 		TRUE;
 	BOOL isfilename = block->GetBool( k_AUI_TEXTFIELD_LDL_ISFILENAME );
 	BOOL passwordReady = block->GetBool( k_AUI_TEXTFIELD_LDL_PASSWORD );
-	MBCHAR *font = block->GetString( k_AUI_TEXTFIELD_LDL_FONT );
+  std::string font = block->GetString( k_AUI_TEXTFIELD_LDL_FONT );
 	sint32 fontheight = block->GetInt( k_AUI_TEXTFIELD_LDL_FONT );
 
 	sint32 maxFieldLen =
@@ -97,7 +97,7 @@ AUI_ERRCODE aui_TextField::InitCommonLdl( MBCHAR *ldlBlock )
 		1024;
 
 	AUI_ERRCODE errcode = InitCommon(
-		text, font, fontheight,
+		text.c_str(), font.c_str(), fontheight,
 		multiLine,
 		autovscroll,
 		autohscroll,

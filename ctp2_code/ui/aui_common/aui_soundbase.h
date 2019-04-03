@@ -1,6 +1,9 @@
 #ifndef __AUI_SOUNDBASE_H__
 #define __AUI_SOUNDBASE_H__
 
+#include <string>
+#include <vector>
+
 class aui_Sound;
 
 
@@ -29,10 +32,11 @@ protected:
 	aui_SoundBase() {}
 	AUI_ERRCODE InitCommonLdl( MBCHAR *ldlBlock );
 	AUI_ERRCODE InitCommon( MBCHAR **soundNames );
+  AUI_ERRCODE InitCommon(const std::vector<std::string> &soundNames);
 
 public:
 	aui_Sound	*GetSound( AUI_SOUNDBASE_SOUND sound ) const;
-	aui_Sound	*SetSound( AUI_SOUNDBASE_SOUND sound, MBCHAR *soundName );
+	aui_Sound	*SetSound( AUI_SOUNDBASE_SOUND sound, const MBCHAR *soundName );
 
 	AUI_ERRCODE	PlaySound( AUI_SOUNDBASE_SOUND sound );
 

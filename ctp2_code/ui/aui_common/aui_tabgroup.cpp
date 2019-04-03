@@ -85,14 +85,14 @@ AUI_ERRCODE aui_TabGroup::InitCommonLdl( MBCHAR *ldlBlock )
 	if ( !block ) return AUI_ERRCODE_LDLFINDDATABLOCKFAILED;
 
 	AUI_TABGROUP_ALIGNMENT alignment = AUI_TABGROUP_ALIGNMENT_TOP;
-	MBCHAR *alignmentString = block->GetString( k_AUI_TABGROUP_LDL_ALIGNMENT );
-	if ( alignmentString )
+  const std::string alignmentString = block->GetString( k_AUI_TABGROUP_LDL_ALIGNMENT );
+	if ( !alignmentString.empty() )
 	{
-		if ( !stricmp( alignmentString, k_AUI_TABGROUP_LDL_LEFT ) )
+		if ( !stricmp( alignmentString.c_str(), k_AUI_TABGROUP_LDL_LEFT ) )
 			alignment = AUI_TABGROUP_ALIGNMENT_LEFT;
-		else if ( !stricmp( alignmentString, k_AUI_TABGROUP_LDL_RIGHT ) )
+		else if ( !stricmp( alignmentString.c_str(), k_AUI_TABGROUP_LDL_RIGHT ) )
 			alignment = AUI_TABGROUP_ALIGNMENT_RIGHT;
-		else if ( !stricmp( alignmentString, k_AUI_TABGROUP_LDL_BOTTOM ) )
+		else if ( !stricmp( alignmentString.c_str(), k_AUI_TABGROUP_LDL_BOTTOM ) )
 			alignment = AUI_TABGROUP_ALIGNMENT_BOTTOM;
 	}
 

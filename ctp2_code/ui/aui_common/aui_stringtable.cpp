@@ -129,7 +129,7 @@ size_t aui_StringTable::FindNumStringsFromLdl(ldl_datablock * block)
         while (!isAtEnd)
         {
 		    sprintf(temp, "%s%d", k_AUI_STRINGTABLE_LDL_STRING, stringCount);
-            if (block->GetString(temp))
+            if (!block->GetString(temp).empty())
             {
                 ++stringCount;
             }
@@ -156,6 +156,9 @@ MBCHAR * aui_StringTable::GetString( sint32 index ) const
 	return m_Strings[index];
 }
 
+AUI_ERRCODE	aui_StringTable::SetString(const std::string &text, sint32 index) {
+  return SetString(text.c_str(), index);
+}
 
 AUI_ERRCODE aui_StringTable::SetString(const MBCHAR *text, sint32 index)
 {
@@ -163,7 +166,7 @@ AUI_ERRCODE aui_StringTable::SetString(const MBCHAR *text, sint32 index)
 	if (index < 0 || static_cast<size_t>(index) >= m_Strings.size())
         return AUI_ERRCODE_INVALIDPARAM;
 
-	if (text)
+	if (text && strlen(text) != 0)
 	{
 		size_t const oldSize = m_Strings[index] ? 1 + strlen(m_Strings[index]) : 0;
 		size_t const newSize = 1 + strlen(text);

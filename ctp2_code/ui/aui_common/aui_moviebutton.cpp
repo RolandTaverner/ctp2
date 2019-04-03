@@ -1,4 +1,7 @@
 #include "ctp/c3.h"
+
+#include <string>
+
 #include "ui/aui_common/aui_moviebutton.h"
 
 #include "ui/aui_common/aui_ui.h"
@@ -70,14 +73,14 @@ AUI_ERRCODE aui_MovieButton::InitCommonLdl( MBCHAR *ldlBlock )
 	Assert( block != NULL );
 	if ( !block ) return AUI_ERRCODE_LDLFINDDATABLOCKFAILED;
 
-	AUI_ERRCODE errcode = InitCommon(
-		block->GetString( k_AUI_MOVIEBUTTON_LDL_MOVIE ) );
+  const std::string movie = block->GetString(k_AUI_MOVIEBUTTON_LDL_MOVIE);
+	AUI_ERRCODE errcode = InitCommon(movie.c_str());
 	Assert( AUI_SUCCESS(errcode) );
 	return errcode;
 }
 
 
-AUI_ERRCODE aui_MovieButton::InitCommon( MBCHAR *movie )
+AUI_ERRCODE aui_MovieButton::InitCommon(const MBCHAR *movie )
 {
 	m_movie = NULL;
 
@@ -104,7 +107,7 @@ aui_Movie *aui_MovieButton::SetMovie( const MBCHAR *movie )
 {
 	aui_Movie *prevMovie = m_movie;
 
-	if ( movie )
+	if ( movie && strlen(movie) != 0 )
 	{
 		m_movie = g_ui->LoadMovie(movie);
 		Assert( m_movie != NULL );

@@ -116,25 +116,25 @@ AUI_ERRCODE aui_TextBase::InitCommonLdl(MBCHAR const * ldlBlock, MBCHAR const * 
 		shadowcolor = RGB( red, green, blue );
 	}
 
-	MBCHAR * fontname = block->GetString( k_AUI_TEXTBASE_LDL_FONTNAME );
-	if ( !fontname )
+  std::string fontname = block->GetString( k_AUI_TEXTBASE_LDL_FONTNAME );
+	if ( fontname.empty() )
 		fontname = k_AUI_TEXTBASE_DEFAULT_FONTNAME;
 
 	uint32 flags = k_AUI_BITMAPFONT_DRAWFLAG_JUSTCENTER |
 		k_AUI_BITMAPFONT_DRAWFLAG_VERTCENTER;
-	MBCHAR *type = block->GetString( k_AUI_TEXTBASE_LDL_BLTTYPE );
-	if ( type )
+  std::string type = block->GetString( k_AUI_TEXTBASE_LDL_BLTTYPE );
+	if ( !type.empty() )
 	{
-		if ( !stricmp( type, k_AUI_TEXTBASE_LDL_FILL ) )
+		if ( !stricmp( type.c_str(), k_AUI_TEXTBASE_LDL_FILL ) )
 			flags = k_AUI_BITMAPFONT_DRAWFLAG_JUSTLEFT |
 				k_AUI_BITMAPFONT_DRAWFLAG_WORDWRAP;
-		else if ( !stricmp( type, k_AUI_TEXTBASE_LDL_LEFT ) )
+		else if ( !stricmp( type.c_str(), k_AUI_TEXTBASE_LDL_LEFT ) )
 			flags = k_AUI_BITMAPFONT_DRAWFLAG_JUSTLEFT |
 				k_AUI_BITMAPFONT_DRAWFLAG_WORDWRAP;
-		else if ( !stricmp( type, k_AUI_TEXTBASE_LDL_CENTER ) )
+		else if ( !stricmp( type.c_str(), k_AUI_TEXTBASE_LDL_CENTER ) )
 			flags = k_AUI_BITMAPFONT_DRAWFLAG_JUSTCENTER |
 				k_AUI_BITMAPFONT_DRAWFLAG_WORDWRAP;
-		else if ( !stricmp( type, k_AUI_TEXTBASE_LDL_RIGHT ) )
+		else if ( !stricmp( type.c_str(), k_AUI_TEXTBASE_LDL_RIGHT ) )
 			flags = k_AUI_BITMAPFONT_DRAWFLAG_JUSTRIGHT |
 				k_AUI_BITMAPFONT_DRAWFLAG_WORDWRAP;
 		else
@@ -145,20 +145,20 @@ AUI_ERRCODE aui_TextBase::InitCommonLdl(MBCHAR const * ldlBlock, MBCHAR const * 
 	type = block->GetString( k_AUI_TEXTBASE_LDL_JUST );
 	BOOL vertcenter = block->GetBool( k_AUI_TEXTBASE_LDL_VERTCENTER );
 	BOOL wordwrap = block->GetBool( k_AUI_TEXTBASE_LDL_WORDWRAP );
-	if ( type || vertcenter || wordwrap )
+	if ( !type.empty() || vertcenter || wordwrap )
 	{
 
 		flags = 0;
 
-		if ( type )
+		if ( !type.empty() )
 		{
-			if ( !stricmp( type, k_AUI_TEXTBASE_LDL_JUSTRIGHT ) )
+			if ( !stricmp( type.c_str(), k_AUI_TEXTBASE_LDL_JUSTRIGHT ) )
 				flags |= k_AUI_BITMAPFONT_DRAWFLAG_JUSTRIGHT;
-			else if ( !stricmp( type, k_AUI_TEXTBASE_LDL_JUSTCENTER ) )
+			else if ( !stricmp( type.c_str(), k_AUI_TEXTBASE_LDL_JUSTCENTER ) )
 				flags |= k_AUI_BITMAPFONT_DRAWFLAG_JUSTCENTER;
-			else if ( !stricmp( type, k_AUI_TEXTBASE_LDL_JUSTFULL ) )
+			else if ( !stricmp( type.c_str(), k_AUI_TEXTBASE_LDL_JUSTFULL ) )
 				flags |= k_AUI_BITMAPFONT_DRAWFLAG_JUSTFULL;
-			else if ( !stricmp( type, k_AUI_TEXTBASE_LDL_JUSTALL ) )
+			else if ( !stricmp( type.c_str(), k_AUI_TEXTBASE_LDL_JUSTALL ) )
 				flags |= k_AUI_BITMAPFONT_DRAWFLAG_JUSTALL;
 			else
 				flags |= k_AUI_BITMAPFONT_DRAWFLAG_JUSTLEFT;
@@ -171,7 +171,7 @@ AUI_ERRCODE aui_TextBase::InitCommonLdl(MBCHAR const * ldlBlock, MBCHAR const * 
 			flags |= k_AUI_BITMAPFONT_DRAWFLAG_WORDWRAP;
 	}
 
-	if ( block->GetBool(k_AUI_TEXTBASE_LDL_NODATABASE) || !block->GetString(k_AUI_TEXTBASE_LDL_TEXT) ) {
+	if ( block->GetBool(k_AUI_TEXTBASE_LDL_NODATABASE) || block->GetString(k_AUI_TEXTBASE_LDL_TEXT).empty() ) {
 		InitCommon(
 			block->GetString( text ? text : k_AUI_TEXTBASE_LDL_TEXT ),
 			block->GetInt( k_AUI_TEXTBASE_LDL_MAXLENGTH ),
@@ -205,9 +205,9 @@ AUI_ERRCODE aui_TextBase::InitCommonLdl(MBCHAR const * ldlBlock, MBCHAR const * 
 
 
 AUI_ERRCODE aui_TextBase::InitCommon(
-	const MBCHAR *text,
+	const std::string &text,
 	uint32 maxLength,
-	MBCHAR *fontname,
+  const std::string &fontname,
 	sint32 fontsize,
 	COLORREF color,
 	COLORREF shadowcolor,
@@ -232,14 +232,14 @@ AUI_ERRCODE aui_TextBase::InitCommon(
 
 	m_textreload = TRUE;
 	memset( m_textttffile, 0, sizeof( m_textttffile ) );
-	strncpy( m_textttffile, fontname, MAX_PATH );
+	strncpy( m_textttffile, fontname.c_str(), MAX_PATH );
 	m_textpointsize = fontsize;
 	m_textbold = bold;
 	m_textitalic = italic;
 
-	if ( text )
+	if ( !text.empty() )
 	{
-		m_curLength = strlen( text );
+		m_curLength = text.length();
 
 		if ( m_curLength > m_maxLength )
 			m_curLength = m_maxLength;
@@ -250,7 +250,7 @@ AUI_ERRCODE aui_TextBase::InitCommon(
 
 		memset( m_text, '\0', m_maxLength + 1 );
 
-		strncpy( m_text, text, m_maxLength );
+		strncpy( m_text, text.c_str(), m_maxLength );
 	}
 	else
 	{

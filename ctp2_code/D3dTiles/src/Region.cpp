@@ -8,10 +8,10 @@
 
 namespace TileEngine {
 
-  Region::Region() : Region(WeakPtr(), 0, Position(0, 0), 0, 0, true, true) {
+  Region::Region() : Region(Region::Ptr(), 0, Position(0, 0), 0, 0, true, true) {
   }
 
-  Region::Region(WeakPtr parent, RegionID id, 
+  Region::Region(Region::Ptr parent, RegionID id,
     const Position &position, unsigned width, unsigned height, 
     bool isVisible, bool strictArea) :
     m_parent(parent), m_ID(id), 

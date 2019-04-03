@@ -4,6 +4,8 @@
 #ifndef __ICONBUTTON_H__
 #define __ICONBUTTON_H__
 
+#include <string>
+
 #include "ui/aui_common/aui_button.h"
 #include "ui/aui_ctp2/patternbase.h"
 

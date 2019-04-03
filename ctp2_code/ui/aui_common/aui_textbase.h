@@ -35,6 +35,8 @@
 #ifndef AUI_TEXTBASE_H__
 #define AUI_TEXTBASE_H__
 
+#include <string>
+
 class aui_TextBase;
 
 #define k_AUI_TEXTBASE_DEFAULTMAXLENGTH			256
@@ -109,9 +111,9 @@ protected:
 		MBCHAR const *  text
     );
 	AUI_ERRCODE InitCommon(
-		const MBCHAR *text,
+    const std::string &text,
 		uint32 maxLength,
-		MBCHAR *fontname,
+    const std::string &fontname,
 		sint32 fontsize,
 		COLORREF color,
 		COLORREF shadowcolor,

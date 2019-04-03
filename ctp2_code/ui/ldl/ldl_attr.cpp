@@ -30,61 +30,61 @@
 
 #include "ctp/c3.h"
 
-#include "ui/ldl/ldl_file.hpp"
+#include <sstream>
+
 #include "ldl_attr.hpp"
 
-ldl_attribute *ldl_attribute::GetCopy()
-{
-	ldl_attribute *newattr = NULL;
-	switch(m_type) {
-		case ATTRIBUTE_TYPE_BOOL: newattr = new ldl_attributeValue<bool>(this); break;
-		case ATTRIBUTE_TYPE_INT:  newattr = new ldl_attributeValue<int>(this); break;
-		case ATTRIBUTE_TYPE_DOUBLE: newattr = new ldl_attributeValue<double>(this); break;
-		case ATTRIBUTE_TYPE_STRING: newattr = new ldl_attributeValue<char *>(this); break;
-	}
-	return newattr;
+std::string ldl_attribute::GetTypeName() const {
+  switch (m_type) {
+    case ATTRIBUTE_TYPE_BOOL: return "bool";
+    case ATTRIBUTE_TYPE_INT:  return "int";
+    case ATTRIBUTE_TYPE_DOUBLE: return "double";
+    case ATTRIBUTE_TYPE_STRING: return "string";
+    default: return "BADTYPE";
+  }
 }
 
-bool ldl_attribute::GetBoolValue()
-{
-	Assert(m_type == ATTRIBUTE_TYPE_BOOL);
-	return ((ldl_attributeValue<bool> *)this)->GetValue();
+void ldl_attribute::SetValueInt(int value) {
+  m_value = value; m_type = ATTRIBUTE_TYPE_INT;
 }
 
-int ldl_attribute::GetIntValue()
-{
-	Assert(m_type == ATTRIBUTE_TYPE_INT);
-	return ((ldl_attributeValue<int> *)this)->GetValue();
+bool ldl_attribute::GetBoolValue() const {
+  Assert(m_type == ATTRIBUTE_TYPE_BOOL);
+  return std::get<bool>(m_value);
 }
 
-double ldl_attribute::GetFloatValue()
-{
-	Assert(m_type == ATTRIBUTE_TYPE_DOUBLE);
-	return ((ldl_attributeValue<double> *)this)->GetValue();
+int ldl_attribute::GetIntValue() const {
+  Assert(m_type == ATTRIBUTE_TYPE_INT);
+  return std::get<int>(m_value);
 }
 
-char *ldl_attribute::GetStringValue()
-{
-	Assert(m_type == ATTRIBUTE_TYPE_STRING);
-	return ((ldl_attributeValue<char *> *)this)->GetValue();
+double ldl_attribute::GetFloatValue() const {
+  Assert(m_type == ATTRIBUTE_TYPE_DOUBLE);
+  return std::get<double>(m_value);
 }
 
-char *ldl_attribute::GetValueText()
-{
-	static char buf[1024];
-	switch(m_type) {
-		case ATTRIBUTE_TYPE_BOOL:
-			sprintf(buf, "%s", GetBoolValue() ? "true" : "false");
-			break;
-		case ATTRIBUTE_TYPE_INT:
-			sprintf(buf, "%d", GetIntValue());
-			break;
-		case ATTRIBUTE_TYPE_DOUBLE:
-			sprintf(buf, "%lf", GetFloatValue());
-			break;
-		case ATTRIBUTE_TYPE_STRING:
-			sprintf(buf, "%s", GetStringValue());
-			break;
-	}
-	return buf;
+std::string ldl_attribute::GetStringValue() const {
+  Assert(m_type == ATTRIBUTE_TYPE_STRING);
+  return std::get<std::string>(m_value);
+}
+
+std::string ldl_attribute::GetValueText() const {
+  std::ostringstream str;
+
+  switch (m_type) {
+    case ATTRIBUTE_TYPE_BOOL:
+      str << (GetBoolValue() ? "true" : "false");
+      break;
+    case ATTRIBUTE_TYPE_INT:
+      str << GetIntValue();
+      break;
+    case ATTRIBUTE_TYPE_DOUBLE:
+      str << GetFloatValue();
+      break;
+    case ATTRIBUTE_TYPE_STRING:
+      str << GetStringValue();
+      break;
+  }
+
+  return str.str();
 }

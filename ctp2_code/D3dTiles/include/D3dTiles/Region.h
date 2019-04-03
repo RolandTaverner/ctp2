@@ -39,7 +39,7 @@ namespace TileEngine {
 
   public:
     Region();
-    Region(WeakPtr parent, RegionID id, 
+    Region(Ptr parent, RegionID id,
       const Position &position, unsigned width, unsigned height, 
       bool isVisible = true, bool strictArea = true);
     Region(const Region &) = delete;

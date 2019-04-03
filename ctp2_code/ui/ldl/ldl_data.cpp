@@ -2,270 +2,180 @@
 
 #include "ui/ldl/ldl_file.hpp"
 #include "ui/ldl/ldl_data.hpp"
-#include "ldl_attr.hpp"
 
 #include "ui/ldl/ldlif.h"
 
-ldl_datablock::ldl_datablock(PointerList<char> *templateNames)
-:
-	m_templates     (),
-    m_children      (),
-    m_attributes    (),
-    m_parent        (NULL),
-    m_name          (NULL),
-    m_hash          (0)
-{
-	PointerList<char>::Walker walk(templateNames);
+ldl_datablock::ldl_datablock(PointerList<char> *templateNames) :
+  m_attributes() {
+  PointerList<char>::Walker walk(templateNames);
 
-	Assert(walk.IsValid());
-	m_name = walk.GetObj();
-	walk.Next();
+  Assert(walk.IsValid());
+  m_name = walk.GetObj();
+  walk.Next();
 
-	while(walk.IsValid()) {
-		ldl_datablock *temp = ldlif_find_block(walk.GetObj());
-		if(temp) {
-			m_templates.AddTail(temp);
-		} else {
-			ldlif_log("Unknown template %s\n", walk.GetObj());
-		}
-		walk.Next();
-	}
+  while (walk.IsValid()) {
+    LDLBlockPtr temp = ldlif_find_block(walk.GetObj());
+    if (temp) {
+      m_templates.push_back(temp);
+    } else {
+      ldlif_log("Unknown template %s\n", walk.GetObj());
+    }
+    walk.Next();
+  }
 }
 
-ldl_datablock::ldl_datablock(ldl_datablock *copy)
-:
-	m_templates     (),
-    m_children      (),
-    m_attributes    (),
-    m_parent        (NULL),
-    m_name          (copy->m_name),
-    m_hash          (0)
-{
-	for
-    (
-        ldl_attribute * attr = copy->m_attributes.GetHead();
-        attr;
-        attr = copy->m_attributes.GetNext(attr)
-    )
-    {
-		m_attributes.AddTail(attr->GetCopy());
-	}
-
-	PointerList<ldl_datablock>::Walker bwalk(&copy->m_children);
-	for(; bwalk.IsValid(); bwalk.Next()) {
-		AddChild(new ldl_datablock(bwalk.GetObj()));
-	}
-
-	for(bwalk.SetList(&copy->m_templates); bwalk.IsValid(); bwalk.Next()) {
-		m_templates.AddTail(bwalk.GetObj());
-	}
+ldl_datablock::ldl_datablock(const ldl_datablock &rhs) :
+  m_name(rhs.m_name) {
+  for (const ldl_attribute &attr : rhs.GetAttributes()) {
+    m_attributes.push_back(attr);
+  }
+  for (const LDLBlockPtr &c : rhs.m_children) {
+    AddChild(std::make_shared<ldl_datablock>(*c));
+  }
+  for (const LDLBlockPtr &t : rhs.m_templates) {
+    m_templates.push_back(std::make_shared<ldl_datablock>(*t));
+  }
 }
 
-ldl_datablock::ldl_datablock(sint32 hash)
-:
-	m_templates     (),
-    m_children      (),
-    m_attributes    (),
-    m_parent        (NULL),
-    m_name          (NULL),
-    m_hash          (hash)
-{ }
+ldl_datablock::ldl_datablock(sint32 hash) :
+  m_attributes() {}
 
-ldl_datablock::ldl_datablock(ldl *theLdl, char const * name)
-:
-	m_templates     (),
-    m_children      (),
-    m_attributes    (),
-    m_parent        (NULL),
-    m_name          (ldlif_getnameptr(name)),
-    m_hash          (0)
-{
-	ldlif_add_block_to_tree(this);
+ldl_datablock::ldl_datablock(ldl *theLdl, char const * name) :
+  m_attributes(),
+  m_name(ldlif_getnameptr(name)) {
+  ldlif_add_block_to_tree(shared_from_this());
 }
 
-ldl_datablock::~ldl_datablock()
-{
-	m_children.DeleteAll();
-	if(GetName())
-		ldlif_remove_block_from_tree(this);
+ldl_datablock::~ldl_datablock() {
+  m_children.clear();
+  m_templates.clear();
+
+  if (!GetName().empty())
+    ldlif_remove_block_from_tree(shared_from_this());
 }
 
-char *ldl_datablock::GetFullName(char *output)
-{
-	if (m_parent)
-    {
-		m_parent->GetFullName(output);
-		strcat(output, ".");
-		strcat(output, m_name);
-	}
-    else
-    {
-		strcpy(output, m_name);
-	}
+std::string ldl_datablock::GetFullName() const {
+  std::string output;
+  if (!m_parent.expired()) {
+    auto parent = m_parent.lock();
+    output = parent->GetFullName();
+    output += ".";
+    output += m_name;
+  } else {
+    output = m_name;
+  }
 
-	return output;
+  return output;
 }
 
-bool ldl_datablock::ContstructFullName(
-		char *szName,
-		ldl_datablock *dbParent,
-		char *result )
-{
-	GetFullName(result);
-
-	return true;
+const ldl_attribute ldl_datablock::GetAttribute(const char *szName) const {
+  return LDLAttrListFindAttribute(m_attributes, szName).first;
 }
 
-ldl_attribute *ldl_datablock::GetLastAttribute( void )
-{
-	return m_attributes.GetTail();
-}
+int ldl_datablock::GetAttributeType(const char *szName) const {
+  auto[attr, ok] = LDLAttrListFindAttribute(m_attributes, szName);
+  if (ok) {
+    return attr.GetType();
+  }
 
-ldl_attribute *ldl_datablock::GetAttribute( const char *szName )
-{
-	char * strPtr = ldlif_getnameptr(szName);
-
-	for
-    (
-        ldl_attribute * atr = m_attributes.GetHead();
-        atr;
-        atr = m_attributes.GetNext(atr)
-    )
-    {
-		if (atr->GetName() == strPtr)
-        {
-			return atr;
-		}
-	}
-
-	return NULL;
-}
-
-int ldl_datablock::GetAttributeType(const char *szName)
-{
-	ldl_attribute *atr;
-
-	char *strPtr = ldlif_getnameptr(szName);
-
-	for (atr = m_attributes.GetHead(); atr; atr = m_attributes.GetNext(atr)) {
-		if (strPtr == atr->GetName()) {
-			return atr->GetType();
-		}
-	}
-
-	return 0;
+  return ATTRIBUTE_TYPE_UNKNOWN;
 }
 
 void ldl_datablock::Dump(sint32 indent) {
 
-	PointerList<ldl_datablock>::Walker bwalk;
-	ldlif_indent_log(indent);
+  PointerList<ldl_datablock>::Walker bwalk;
+  ldlif_indent_log(indent);
 
-	ldlif_log("%s", m_name);
+  ldlif_log("%s", m_name.c_str());
 
-	for(bwalk.SetList(&m_templates); bwalk.IsValid(); bwalk.Next()) {
-		ldlif_log(":%s", bwalk.GetObj()->GetName());
-	}
-	ldlif_log(" {\n");
+  for (const LDLBlockPtr &b : m_templates) {
+    ldlif_log(":%s", b->GetName().c_str());
+  }
+  ldlif_log(" {\n");
 
-	ldl_attribute *attr = m_attributes.GetHead();
-	for(; attr ; attr = m_attributes.GetNext(attr)) {
-		ldlif_indent_log(indent);
-		ldlif_log("    %s %s %s\n", attr->GetTypeName(),
-				  attr->GetName(),
-				  attr->GetValueText());
-	}
+  for (const ldl_attribute &attr : m_attributes) {
+    ldlif_indent_log(indent);
+    ldlif_log("    %s %s %s\n", attr.GetTypeName().c_str(),
+      attr.GetName().c_str(),
+      attr.GetValueText().c_str());
+  }
 
-	for(bwalk.SetList(&m_children); bwalk.IsValid(); bwalk.Next()) {
-		bwalk.GetObj()->Dump(indent + 1);
-	}
+  for (LDLBlockPtr &b : m_templates) {
+    b->Dump(indent + 1);
+  }
 
-	ldlif_indent_log(indent);
-	ldlif_log("}\n");
+  ldlif_indent_log(indent);
+  ldlif_log("}\n");
 }
 
-bool ldl_datablock::AttributeNameTaken(char *szName)
-{
-	return GetAttribute(szName) != NULL;
+bool ldl_datablock::AttributeNameTaken(char *szName) {
+  return !GetAttribute(szName).IsEmpty();
 }
 
-void ldl_datablock::SetValue(char *name, int value)
-{
-	ldl_attribute *atr = GetAttribute(name);
-	if(atr) {
-		Assert(atr->GetType() == ATTRIBUTE_TYPE_INT);
-		((ldl_attributeValue<int> *)atr)->SetValue(value);
-	}
+void ldl_datablock::SetValue(char *name, int value) {
+  ldl_attributelist::iterator it = std::find_if(std::begin(m_attributes),
+    std::end(m_attributes),
+    [&name](const ldl_attribute &v) { return v.GetName() == name; });
+
+  if (it != m_attributes.end()) {
+    Assert(it->GetType() == ATTRIBUTE_TYPE_INT);
+    it->SetValueInt(value);
+  }
 }
 
-void ldl_datablock::AddTemplateChildren()
-{
-	PointerList<ldl_datablock>::Walker bwalk;
-	for(bwalk.SetList(&m_templates); bwalk.IsValid(); bwalk.Next()) {
-		CopyAttributesFrom(bwalk.GetObj());
-		bwalk.GetObj()->AddTemplateChildrenTo(this);
-	}
+void ldl_datablock::AddTemplateChildren() {
+  for (const LDLBlockPtr &b : m_templates) {
+    CopyAttributesFrom(b);
+    b->AddTemplateChildrenTo(shared_from_this());
+  }
 }
 
-void ldl_datablock::AddTemplateChildrenTo(ldl_datablock *block)
-{
+void ldl_datablock::AddTemplateChildrenTo(LDLBlockPtr block) {
+  for (const LDLBlockPtr &child : m_children) {
+    bool alreadyHaveIt = false;
+    for (LDLBlockPtr &childArg : block->m_children) {
+      if (childArg->GetName() == child->GetName()) {
+        childArg->CopyAttributesFrom(child);
+        for (const LDLBlockPtr &templ : child->m_templates) {
+          childArg->m_templates.push_back(templ);
+        }
+        childArg->AddTemplateChildren();
+        alreadyHaveIt = true;
+        break;
+      }
+    }
 
-	PointerList<ldl_datablock>::Walker bwalk;
-	for(bwalk.SetList(&m_children); bwalk.IsValid(); bwalk.Next()) {
-
-		PointerList<ldl_datablock>::Walker chwalk(&block->m_children);
-		bool alreadyHaveIt = false;
-		for(;chwalk.IsValid(); chwalk.Next()) {
-
-			if(chwalk.GetObj()->GetName() == bwalk.GetObj()->GetName()) {
-
-				chwalk.GetObj()->CopyAttributesFrom(bwalk.GetObj());
-
-				PointerList<ldl_datablock>::Walker twalk(&bwalk.GetObj()->m_templates);
-				for(; twalk.IsValid(); twalk.Next()) {
-					chwalk.GetObj()->m_templates.AddTail(twalk.GetObj());
-				}
-
-				chwalk.GetObj()->AddTemplateChildren();
-
-				alreadyHaveIt = true;
-				break;
-			}
-		}
-		if(!alreadyHaveIt) {
-			ldl_datablock *newblock = new ldl_datablock(bwalk.GetObj());
-			block->AddChild(newblock);
-			newblock->AddTemplateChildren();
-			ldlif_add_block_to_tree(newblock);
-		}
-	}
+    if (!alreadyHaveIt) {
+      LDLBlockPtr newblock = std::make_shared<ldl_datablock>(*child);
+      block->AddChild(newblock);
+      newblock->AddTemplateChildren();
+      ldlif_add_block_to_tree(newblock);
+    }
+  }
 }
 
-void ldl_datablock::CopyAttributesFrom(ldl_datablock *templ)
-{
-	ldl_attribute *attr = templ->m_attributes.GetHead();
-	for(; attr; attr = templ->m_attributes.GetNext(attr)) {
-		if(!m_attributes.FindAttribute(attr->GetName())) {
-			m_attributes.AddTail(attr->GetCopy());
-		}
-	}
+void ldl_datablock::CopyAttributesFrom(LDLBlockPtr templ) {
+  for (const ldl_attribute &attr : templ->GetAttributes()) {
+    auto[existingAttr, ok] = LDLAttrListFindAttribute(m_attributes, attr.GetName());
+    if (!ok) {
+      m_attributes.push_back(attr);
+    }
+  }
 
-	PointerList<ldl_datablock>::Walker tcwalk(&templ->m_children);
-	for(; tcwalk.IsValid(); tcwalk.Next()) {
-		PointerList<ldl_datablock>::Walker cwalk(&m_children);
-		bool foundIt = false;
-		for(; cwalk.IsValid(); cwalk.Next()) {
-			if(cwalk.GetObj()->GetName() == tcwalk.GetObj()->GetName()) {
-				cwalk.GetObj()->CopyAttributesFrom(tcwalk.GetObj());
-				foundIt = true;
-				break;
-			}
-		}
-		if(!foundIt) {
-			ldl_datablock *newblock = new ldl_datablock(tcwalk.GetObj());
-			newblock->CopyAttributesFrom(tcwalk.GetObj());
-			AddChild(newblock);
-			ldlif_add_block_to_tree(newblock);
-		}
-	}
+  for (LDLBlockPtr &templChild : templ->m_children) {
+    bool foundIt = false;
+    for (LDLBlockPtr &child : m_children) {
+      if (child->GetName() == templChild->GetName()) {
+        child->CopyAttributesFrom(templChild);
+        foundIt = true;
+        break;
+      }
+    }
+    if (!foundIt) {
+      LDLBlockPtr newblock = std::make_shared<ldl_datablock>(*templChild);
+      newblock->CopyAttributesFrom(templChild);
+      AddChild(newblock);
+      ldlif_add_block_to_tree(newblock);
+    }
+  }
 }

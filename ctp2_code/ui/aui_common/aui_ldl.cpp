@@ -29,6 +29,9 @@
 //----------------------------------------------------------------------------
 
 #include "ctp/c3.h"
+
+#include <boost/scoped_array.hpp>
+
 #include "ui/aui_common/aui_ldl.h"
 
 #include "ui/aui_common/aui_ui.h"
@@ -131,15 +134,10 @@ AUI_ERRCODE aui_Ldl::MakeSureBlockExists(MBCHAR const *ldlBlock) {
   ldl_datablock *block = s_ldl->FindDataBlock(ldlBlock);
   if (!block) {
 #if 1
-
-    block = new ldl_datablock(s_ldl, ldlBlock);
-    Assert(block != NULL);
-    if (!block) return AUI_ERRCODE_MEMALLOCFAILED;
+    LDLBlockPtr block = std::make_shared<ldl_datablock>(s_ldl, ldlBlock);
 
     block->AddAttribute(k_AUI_LDL_HANCHOR, "left");
-
     block->AddAttribute(k_AUI_LDL_VANCHOR, "top");
-
     block->AddAttribute(k_AUI_LDL_HABSPOSITION, 0);
     block->AddAttribute(k_AUI_LDL_VABSPOSITION, 0);
     block->AddAttribute(k_AUI_LDL_HABSSIZE, 100);
@@ -239,6 +237,9 @@ const MBCHAR *aui_Ldl::GetBlock(void *object) {
   return NULL;
 }
 
+void *aui_Ldl::GetObject(const std::string &ldlBlock) {
+  return aui_Ldl::GetObject(ldlBlock.c_str());
+}
 
 void *aui_Ldl::GetObject(const MBCHAR *ldlBlock) {
   auto const &byLdlBlock = s_ldlObjectRegistry.get<aui_LdlObject::ByLdlBlock>();
@@ -319,16 +320,15 @@ aui_Region *aui_Ldl::BuildHierarchyFromRoot(MBCHAR const * rootBlock) {
   if (!dataBlock)
     return NULL;
 
-  MBCHAR			*objTypeString = dataBlock->GetString(k_AUI_LDL_OBJECTTYPE);
-  if (!objTypeString)
+  const std::string objTypeString = dataBlock->GetString(k_AUI_LDL_OBJECTTYPE);
+  if (objTypeString.empty())
     return NULL;
 
   bool			isAtomic = dataBlock->GetBool(k_AUI_LDL_ATOMIC);
-  char fullname[256];
-  dataBlock->GetFullName(fullname);
+  std::string fullname = dataBlock->GetFullName();
 
   aui_Region *    myRegion = NULL;
-  AUI_ERRCODE		err = BuildObjectFromType(objTypeString, fullname, &myRegion);
+  AUI_ERRCODE		err = BuildObjectFromType(objTypeString.c_str(), fullname.c_str(), &myRegion);
   Assert(err == AUI_ERRCODE_OK);
   if (err != AUI_ERRCODE_OK)
     return NULL;
@@ -355,48 +355,27 @@ aui_Region *aui_Ldl::BuildHierarchyFromRoot(MBCHAR const * rootBlock) {
 }
 
 
-
-
-
-
 AUI_ERRCODE aui_Ldl::BuildHierarchyFromLeaf(ldl_datablock *parent, aui_Region *region) {
-  PointerList<ldl_datablock> *    childList = parent->GetChildList();
-  for
-    (
-      PointerList<ldl_datablock>::Walker walk(childList);
-      walk.IsValid();
-      walk.Next()
-      ) {
-    ldl_datablock * dataBlock = walk.GetObj();
+  for (LDLBlockPtr dataBlock : parent->GetChildList()) {
     Assert(dataBlock);
-    if (dataBlock == NULL)
+    if (!dataBlock)
       return AUI_ERRCODE_INVALIDPARAM;
 
-
-
-
-    MBCHAR			*objTypeString = dataBlock->GetString(k_AUI_LDL_OBJECTTYPE);
-    if (!objTypeString)
+    const std::string objTypeString = dataBlock->GetString(k_AUI_LDL_OBJECTTYPE);
+    if (objTypeString.empty())
       return AUI_ERRCODE_INVALIDPARAM;
-
 
     BOOL			isAtomic = dataBlock->GetBool(k_AUI_LDL_ATOMIC);
-
-
-    char fullname[256];
-    dataBlock->GetFullName(fullname);
+    const std::string fullname = dataBlock->GetFullName();
 
     aui_Region *    myRegion;
-    AUI_ERRCODE		err = BuildObjectFromType(objTypeString, fullname, &myRegion);
+    AUI_ERRCODE		err = BuildObjectFromType(objTypeString.c_str(), fullname.c_str(), &myRegion);
     Assert(err == AUI_ERRCODE_OK);
     if (err != AUI_ERRCODE_OK)
       return AUI_ERRCODE_INVALIDPARAM;
 
-
-
-
     if (!isAtomic) {
-      err = BuildHierarchyFromLeaf(dataBlock, myRegion);
+      err = BuildHierarchyFromLeaf(dataBlock.get(), myRegion); // TODO: replace dataBlock.get()
       Assert(err == AUI_ERRCODE_OK);
       if (err != AUI_ERRCODE_OK)
         return err;
@@ -408,129 +387,83 @@ AUI_ERRCODE aui_Ldl::BuildHierarchyFromLeaf(ldl_datablock *parent, aui_Region *r
   return AUI_ERRCODE_OK;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-AUI_ERRCODE aui_Ldl::BuildObjectFromType(MBCHAR *typeString,
-  MBCHAR *ldlName,
+AUI_ERRCODE aui_Ldl::BuildObjectFromType(const MBCHAR *typeString,
+  const MBCHAR *ldlBlockName,
   aui_Region **theObject) {
+  MBCHAR *ldlName = const_cast<MBCHAR *>(ldlBlockName); // For compatibility TODO: remove
+
   AUI_ERRCODE		retval = AUI_ERRCODE_OK;
   aui_Region		*region = NULL;
 
   if (!stricmp(typeString, "C3Window")) {
     region = (aui_Region *) new C3Window(&retval, aui_UniqueId(), ldlName, 16);
-  } else
-    if (!stricmp(typeString, "ctp2_Window")) {
-      region = (aui_Region *) new ctp2_Window(&retval, aui_UniqueId(), ldlName, 16);
-    } else
-      if (!stricmp(typeString, "C3Slider")) {
-        region = (aui_Region *) new C3Slider(&retval, aui_UniqueId(), ldlName);
-      } else
-        if (!stricmp(typeString, "c3_Button")) {
-          region = (aui_Region *) new c3_Button(&retval, aui_UniqueId(), ldlName);
-        } else
-          if (!stricmp(typeString, "c3_Static")) {
-            region = (aui_Region *) new c3_Static(&retval, aui_UniqueId(), ldlName);
-          } else
-            if (!stricmp(typeString, "ctp2_Static")) {
-              region = (aui_Region *) new ctp2_Static(&retval, aui_UniqueId(), ldlName);
-            } else
-              if (!stricmp(typeString, "ctp2_Button")) {
-                region = (aui_Region *) new ctp2_Button(&retval, aui_UniqueId(), ldlName);
-              } else
-                if (!stricmp(typeString, "ctp2_ListBox")) {
-                  region = (aui_Region *) new ctp2_ListBox(&retval, aui_UniqueId(), ldlName);
-                } else
-                  if (!stricmp(typeString, "ctp2_LineGraph")) {
-                    region = (aui_Region *) new LineGraph(&retval, aui_UniqueId(), ldlName);
-                  } else
-                    if (!stricmp(typeString, "ctp2_ListItem")) {
-                      region = (aui_Region *) new ctp2_ListItem(&retval, ldlName);
-                    } else
-                      if (!stricmp(typeString, "ctp2_DropDown")) {
-                        region = (aui_Region *) new ctp2_DropDown(&retval, aui_UniqueId(), ldlName);
-                      } else
-                        if (!stricmp(typeString, "ctp2_Spinner")) {
-                          region = (aui_Region *) new ctp2_Spinner(&retval, aui_UniqueId(), ldlName);
-                        } else
-                          if (!stricmp(typeString, "ctp2_HyperTextBox")) {
-                            region = (aui_Region *)new ctp2_HyperTextBox(&retval, aui_UniqueId(), ldlName);
-                          } else
-                            if (!stricmp(typeString, "c3_HyperTextBox")) {
-                              region = (aui_Region *)new c3_HyperTextBox(&retval, aui_UniqueId(), ldlName);
-                            } else
-                              if (!stricmp(typeString, "ctp2_MenuBar")) {
-                                region = (aui_Region *) new ctp2_MenuBar(&retval, aui_UniqueId(), ldlName, 16);
-                              } else
-                                if (!stricmp(typeString, "aui_switch")) {
-                                  region = (aui_Region *) new aui_Switch(&retval, aui_UniqueId(), ldlName);
-                                } else
-                                  if (!stricmp(typeString, "ctp2_Switch")) {
-                                    region = (aui_Region *) new ctp2_Switch(&retval, aui_UniqueId(), ldlName);
-                                  } else
-                                    if (!stricmp(typeString, "ctp2_TextField")) {
-                                      region = (aui_Region *) new ctp2_TextField(&retval, aui_UniqueId(), ldlName);
-                                    } else
-                                      if (!stricmp(typeString, "ctp2_MenuButton")) {
-                                        region = (aui_Region *) new ctp2_MenuButton(&retval, aui_UniqueId(), ldlName);
-                                      }
-                                    if (!stricmp(typeString, "ctp2_Tab")) {
-                                      region = (aui_Region *) new ctp2_Tab(&retval, aui_UniqueId(), ldlName);
-                                    }
-                                    if (!stricmp(typeString, "ctp2_TabGroup")) {
-                                      region = (aui_Region *) new ctp2_TabGroup(&retval, aui_UniqueId(), ldlName);
-                                    }
-                                    if (!stricmp(typeString, "ctp2_TabButton")) {
-                                      region = (aui_Region *) new ctp2_TabButton(&retval, aui_UniqueId(), ldlName);
-                                    }
-                                    if (!stricmp(typeString, "RadarMap")) {
-                                      region = (aui_Region *) new RadarMap(&retval, aui_UniqueId(), ldlName);
-                                    }
+  } else if (!stricmp(typeString, "ctp2_Window")) {
+    region = (aui_Region *) new ctp2_Window(&retval, aui_UniqueId(), ldlName, 16);
+  } else if (!stricmp(typeString, "C3Slider")) {
+    region = (aui_Region *) new C3Slider(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "c3_Button")) {
+    region = (aui_Region *) new c3_Button(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "c3_Static")) {
+    region = (aui_Region *) new c3_Static(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "ctp2_Static")) {
+    region = (aui_Region *) new ctp2_Static(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "ctp2_Button")) {
+    region = (aui_Region *) new ctp2_Button(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "ctp2_ListBox")) {
+    region = (aui_Region *) new ctp2_ListBox(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "ctp2_LineGraph")) {
+    region = (aui_Region *) new LineGraph(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "ctp2_ListItem")) {
+    region = (aui_Region *) new ctp2_ListItem(&retval, ldlName);
+  } else if (!stricmp(typeString, "ctp2_DropDown")) {
+    region = (aui_Region *) new ctp2_DropDown(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "ctp2_Spinner")) {
+    region = (aui_Region *) new ctp2_Spinner(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "ctp2_HyperTextBox")) {
+    region = (aui_Region *)new ctp2_HyperTextBox(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "c3_HyperTextBox")) {
+    region = (aui_Region *)new c3_HyperTextBox(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "ctp2_MenuBar")) {
+    region = (aui_Region *) new ctp2_MenuBar(&retval, aui_UniqueId(), ldlName, 16);
+  } else if (!stricmp(typeString, "aui_switch")) {
+    region = (aui_Region *) new aui_Switch(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "ctp2_Switch")) {
+    region = (aui_Region *) new ctp2_Switch(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "ctp2_TextField")) {
+    region = (aui_Region *) new ctp2_TextField(&retval, aui_UniqueId(), ldlName);
+  } else if (!stricmp(typeString, "ctp2_MenuButton")) {
+    region = (aui_Region *) new ctp2_MenuButton(&retval, aui_UniqueId(), ldlName);
+  }
+  if (!stricmp(typeString, "ctp2_Tab")) {
+    region = (aui_Region *) new ctp2_Tab(&retval, aui_UniqueId(), ldlName);
+  }
+  if (!stricmp(typeString, "ctp2_TabGroup")) {
+    region = (aui_Region *) new ctp2_TabGroup(&retval, aui_UniqueId(), ldlName);
+  }
+  if (!stricmp(typeString, "ctp2_TabButton")) {
+    region = (aui_Region *) new ctp2_TabButton(&retval, aui_UniqueId(), ldlName);
+  }
+  if (!stricmp(typeString, "RadarMap")) {
+    region = (aui_Region *) new RadarMap(&retval, aui_UniqueId(), ldlName);
+  }
 
-                                    Assert(region);
-                                    Assert(retval == AUI_ERRCODE_OK);
-                                    if (!region || retval != AUI_ERRCODE_OK) {
+  Assert(region);
+  Assert(retval == AUI_ERRCODE_OK);
+  if (!region || retval != AUI_ERRCODE_OK) {
 
-                                      c3errors_ErrorDialog("aui_Ldl::BuildObjectFromType()",
-                                        "Auto-instantiate of '%s' failed on '%s'",
-                                        typeString,
-                                        ldlName);
+    c3errors_ErrorDialog("aui_Ldl::BuildObjectFromType()",
+      "Auto-instantiate of '%s' failed on '%s'",
+      typeString,
+      ldlName);
 
-                                      *theObject = NULL;
+    *theObject = NULL;
 
-                                      return AUI_ERRCODE_INVALIDPARAM;
-                                    }
+    return AUI_ERRCODE_INVALIDPARAM;
+  }
 
-                                    *theObject = region;
+  *theObject = region;
 
-                                    return AUI_ERRCODE_OK;
+  return AUI_ERRCODE_OK;
 }
 
 
@@ -553,9 +486,8 @@ AUI_ERRCODE aui_Ldl::DeleteHierarchyFromRoot(MBCHAR const * rootBlock) {
   if (errcode != AUI_ERRCODE_OK)
     return errcode;
 
-  char fullname[256];
-  dataBlock->GetFullName(fullname);
-  aui_Region *region = (aui_Region *)GetObject(fullname);
+  const std::string fullname = dataBlock->GetFullName();
+  aui_Region *region = (aui_Region *)GetObject(fullname.c_str());
   Assert(region);
   if (region) {
     delete region;
@@ -570,45 +502,29 @@ AUI_ERRCODE aui_Ldl::DeleteHierarchyFromRoot(MBCHAR const * rootBlock) {
 AUI_ERRCODE aui_Ldl::DeleteHierarchyFromLeaf(ldl_datablock *parent) {
   AUI_ERRCODE		errcode = AUI_ERRCODE_OK;
   aui_Region		*region;
-  ldl_datablock *dataBlock;
-
+  
   if (parent == NULL) return AUI_ERRCODE_OK;
 
-  PointerList<ldl_datablock> *childList = parent->GetChildList();
-  PointerList<ldl_datablock>::Walker walk(childList);
-  while (walk.IsValid()) {
-    dataBlock = walk.GetObj();
-
-
-
-
-    BOOL			isAtomic = dataBlock->GetBool(k_AUI_LDL_ATOMIC);
+  for (LDLBlockPtr dataBlock : parent->GetChildList()) {
+    BOOL isAtomic = dataBlock->GetBool(k_AUI_LDL_ATOMIC);
 
     if (!isAtomic) {
-      errcode = DeleteHierarchyFromLeaf(dataBlock);
+      errcode = DeleteHierarchyFromLeaf(dataBlock.get()); // For compatibility. TODO: replace
       Assert(errcode == AUI_ERRCODE_OK);
       if (errcode != AUI_ERRCODE_OK)
         return errcode;
     }
 
-    char fullname[256];
-    region = (aui_Region *)GetObject(dataBlock->GetFullName(fullname));
+    region = (aui_Region *)GetObject(dataBlock->GetFullName().c_str());
     Assert(region);
     if (!region)
       return AUI_ERRCODE_INVALIDPARAM;
 
     delete region;
-    walk.Next();
   }
 
   return errcode;
 }
-
-
-
-
-
-
 
 
 AUI_ERRCODE aui_Ldl::SetActionFuncAndCookie
@@ -656,6 +572,10 @@ AUI_ERRCODE aui_Ldl::DetachHierarchy(aui_Region *region) {
   }
 
   return AUI_ERRCODE_OK;
+}
+
+sint32 aui_Ldl::GetIntDependent(const std::string &str) {
+  return GetIntDependent(str.c_str());
 }
 
 sint32 aui_Ldl::GetIntDependent(MBCHAR const * strPtr) {

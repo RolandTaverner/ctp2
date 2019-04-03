@@ -31,7 +31,7 @@ public:
 protected:
 	StaticPicture() : aui_Static(), m_picture(NULL) {};
 	AUI_ERRCODE InitCommon( MBCHAR *ldlBlock, MBCHAR *picture );
-	AUI_ERRCODE InitCommon( MBCHAR *picture );
+	AUI_ERRCODE InitCommon(const MBCHAR *picture );
 
 public:
 	virtual AUI_ERRCODE DrawThis(

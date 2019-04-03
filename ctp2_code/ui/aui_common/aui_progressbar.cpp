@@ -90,12 +90,12 @@ AUI_ERRCODE aui_ProgressBar::InitCommonLdl( MBCHAR *ldlBlock )
 	if ( !block ) return AUI_ERRCODE_LDLFINDDATABLOCKFAILED;
 
 	AUI_PROGRESSBAR_ORIENTATION orientation;
-	MBCHAR *keyword = block->GetString( k_AUI_PROGRESSBAR_LDL_ORIENTATION );
-	if ( !keyword )
+  std::string keyword = block->GetString( k_AUI_PROGRESSBAR_LDL_ORIENTATION );
+	if ( keyword.empty() )
 		orientation = AUI_PROGRESSBAR_ORIENTATION_HORIZONTAL;
 	else
 	{
-		if ( stricmp( keyword, k_AUI_PROGRESSBAR_LDL_VERTICAL ) == 0 )
+		if ( stricmp( keyword.c_str(), k_AUI_PROGRESSBAR_LDL_VERTICAL ) == 0 )
 			orientation = AUI_PROGRESSBAR_ORIENTATION_VERTICAL;
 		else
 			orientation = AUI_PROGRESSBAR_ORIENTATION_HORIZONTAL;
@@ -115,13 +115,13 @@ AUI_ERRCODE aui_ProgressBar::InitCommonLdl( MBCHAR *ldlBlock )
 
 	AUI_PROGRESSBAR_TYPE type;
 	keyword = block->GetString( k_AUI_PROGRESSBAR_LDL_TYPE );
-	if ( !keyword )
+	if ( keyword.empty() )
 		type = AUI_PROGRESSBAR_TYPE_STANDARD;
 	else
 	{
-		if ( stricmp( keyword, k_AUI_PROGRESSBAR_LDL_BACKANDFORTH ) == 0 )
+		if ( stricmp( keyword.c_str(), k_AUI_PROGRESSBAR_LDL_BACKANDFORTH ) == 0 )
 			type = AUI_PROGRESSBAR_TYPE_BACKANDFORTH;
-		else if ( stricmp( keyword, k_AUI_PROGRESSBAR_LDL_LOOP ) == 0 )
+		else if ( stricmp( keyword.c_str(), k_AUI_PROGRESSBAR_LDL_LOOP ) == 0 )
 			type = AUI_PROGRESSBAR_TYPE_LOOP;
 		else
 			type = AUI_PROGRESSBAR_TYPE_STANDARD;
@@ -150,7 +150,7 @@ AUI_ERRCODE aui_ProgressBar::InitCommon(
 	AUI_PROGRESSBAR_ORIENTATION orientation,
 	AUI_PROGRESSBAR_TYPE type,
 	sint32 vps,
-	MBCHAR *image,
+  const std::string &image,
 	COLORREF color,
 	sint32 curValue,
 	sint32 maxValue )
@@ -166,7 +166,7 @@ AUI_ERRCODE aui_ProgressBar::InitCommon(
 	m_barImage = NULL;
 	m_barColor = RGB(0,0,0);
 
-	SetBarImage( image );
+	SetBarImage( image.c_str() );
 	SetBarColor( color );
 
 	return AUI_ERRCODE_OK;
@@ -239,7 +239,7 @@ sint32 aui_ProgressBar::SetMaxValue( sint32 value )
 }
 
 
-aui_Image *aui_ProgressBar::SetBarImage( MBCHAR *image )
+aui_Image *aui_ProgressBar::SetBarImage(const MBCHAR *image )
 {
 	aui_Image *prevImage = m_barImage;
 

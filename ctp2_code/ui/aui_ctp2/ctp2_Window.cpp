@@ -1,4 +1,7 @@
 #include "ctp/c3.h"
+
+#include <string>
+
 #include "ui/aui_ctp2/ctp2_Window.h"
 
 #include "ui/aui_common/aui.h"
@@ -162,15 +165,15 @@ AUI_ERRCODE ctp2_Window::DoneInstantiatingThis(const MBCHAR *ldlBlock)
 
 	ldl_datablock * block = aui_Ldl::FindDataBlock((MBCHAR *)ldlBlock);
 	if(block) {
-		MBCHAR *title = block->GetString("title");
-		if(title) {
+    const std::string title = block->GetString("title");
+		if(!title.empty()) {
 			ctp2_Static *titleBar = (ctp2_Static *)aui_Ldl::GetObject((MBCHAR *)ldlBlock, "TitleBar");
 			if(!titleBar) {
 				titleBar = (ctp2_Static *)aui_Ldl::GetObject((MBCHAR *)ldlBlock, "Background.TitleBar");
 			}
 			if(titleBar) {
-				if(g_theStringDB->GetNameStr(title)) {
-					titleBar->SetText((MBCHAR *)g_theStringDB->GetNameStr(title));
+				if(g_theStringDB->GetNameStr(title.c_str())) {
+					titleBar->SetText((MBCHAR *)g_theStringDB->GetNameStr(title.c_str()));
 				}
 				SetDraggable(TRUE);
 				titleBar->Move(0, 0);
