@@ -210,8 +210,8 @@ void CivScenarios::LoadScenarioPackData(ScenarioPack *pack, MBCHAR *packPath)
 
 void CivScenarios::LoadData(void)
 {
-	MBCHAR			    path[_MAX_PATH];
-    MBCHAR              rootPath[_MAX_PATH];
+	MBCHAR			path[_MAX_PATH];
+  std::string rootPath;
 #ifdef WIN32
 	WIN32_FIND_DATA		fileData;
 	HANDLE			    lpFileList;
@@ -222,15 +222,15 @@ void CivScenarios::LoadData(void)
 	 sint32			i;
 
 
-	g_civPaths->GetScenarioRootPath(rootPath);
+   rootPath = g_civPaths->GetScenarioRootPath();
 
 #ifdef WIN32
-	sprintf(path, "%s%s*.*", rootPath, FILE_SEP);
-	lpFileList = FindFirstFile(path,&fileData);
+	sprintf(path, "%s%s*.*", rootPath.c_str(), FILE_SEP);
+	lpFileList = FindFirstFile(path, &fileData);
 
 	if (lpFileList == INVALID_HANDLE_VALUE) return;
 #else
-	DIR *dir = opendir(rootPath);
+	DIR *dir = opendir(rootPath.c_str());
 	if (!dir) return;
 	struct dirent *dent = 0;
 #endif
@@ -243,7 +243,7 @@ void CivScenarios::LoadData(void)
 		dent = readdir(dir);
 		if (!dent)
 			continue;
-		snprintf(path, sizeof(path), "%s%s%s", rootPath, FILE_SEP, dent->d_name);
+		snprintf(path, sizeof(path), "%s%s%s", rootPath.c_str(), FILE_SEP, dent->d_name);
 		if (!stat(path, &tmpstat))
 			continue;
 
@@ -256,7 +256,7 @@ void CivScenarios::LoadData(void)
 			MBCHAR		packListName[_MAX_PATH];
 			int		r;
 
-			sprintf(packListName, "%s%s%s%s%s", rootPath, FILE_SEP, name, FILE_SEP, k_SCENARIO_PACK_LIST_FILENAME);
+			sprintf(packListName, "%s%s%s%s%s", rootPath.c_str(), FILE_SEP, name, FILE_SEP, k_SCENARIO_PACK_LIST_FILENAME);
 #ifdef WIN32
 			r = _stat(packListName, &tmpstat);
 #else
@@ -294,7 +294,7 @@ void CivScenarios::LoadData(void)
 
 		fileListFileName = walker->GetObj();
 
-		sprintf(packPath, "%s%s%s", rootPath, FILE_SEP, walker->GetObj());
+		sprintf(packPath, "%s%s%s", rootPath.c_str(), FILE_SEP, walker->GetObj());
 
 		strcpy(m_scenarioPacks[i].m_path, packPath);
 		m_scenarioPacks[i].m_index = i;
@@ -450,17 +450,17 @@ SaveInfo *CivScenarios::LoadSaveInfo(Scenario *scen)
 
 CIV_SCEN_ERR CivScenarios::MakeNewPack(MBCHAR *dirName, MBCHAR *packName, MBCHAR *packDesc)
 {
-	MBCHAR				path[_MAX_PATH],
-					rootPath[_MAX_PATH];
+  MBCHAR			path[_MAX_PATH];
+	std::string rootPath;
 #ifdef WIN32
 	struct _stat		tmpstat;
 #else
 	struct stat		tmpstat;
 #endif
 
-	g_civPaths->GetScenarioRootPath(rootPath);
+  rootPath = g_civPaths->GetScenarioRootPath();
 
-	sprintf(path, "%s%s%s", rootPath, FILE_SEP, dirName);
+	sprintf(path, "%s%s%s", rootPath.c_str(), FILE_SEP, dirName);
 #ifdef WIN32
 	if(!_stat(path, &tmpstat)) {
 #else

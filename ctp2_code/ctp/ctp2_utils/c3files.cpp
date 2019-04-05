@@ -98,9 +98,9 @@ namespace
 
 FILE* c3files_fopen(C3DIR dirID, MBCHAR const * s1, MBCHAR const * s2, bool checkScenario)
 {
-	MBCHAR  s[_MAX_PATH];
+  const std::string s = g_civPaths->FindFile(dirID, s1, false, true, checkScenario);
 
-	return g_civPaths->FindFile(dirID, s1, s, false, true, checkScenario) ? fopen(s, s2) : NULL;
+	return s.empty() ? NULL : fopen(s.c_str(), s2);
 }
 
 FILE* c3files_freopen(const MBCHAR *s1, const MBCHAR *s2, FILE *file)
@@ -286,15 +286,16 @@ uint8 *c3files_loadbinaryfile(C3DIR dir, MBCHAR const * filename, sint32 *size)
 	return bits;
 }
 
-bool c3files_PathIsValid(MBCHAR *path)
-{
-#if defined(_WIN32)
-	struct _stat tmpstat;
-	return !_stat(path, &tmpstat);
-#else
-	struct stat  tmpstat;
-	return !stat(path, &tmpstat);
-#endif
+bool c3files_PathIsValid(const MBCHAR *path) {
+  return c3files_PathIsValid(std::filesystem::path(path));
+}
+
+bool c3files_PathIsValid(const std::string &path) {
+  return c3files_PathIsValid(std::filesystem::path(path));
+}
+
+bool c3files_PathIsValid(const std::filesystem::path &path) {
+  return std::filesystem::exists(path);
 }
 
 bool c3files_CreateDirectory(MBCHAR *path)

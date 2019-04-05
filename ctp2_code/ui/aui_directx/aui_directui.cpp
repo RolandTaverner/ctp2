@@ -66,7 +66,7 @@ aui_DirectUI::aui_DirectUI
 	sint32 width,
 	sint32 height,
 	sint32 bpp,
-	MBCHAR *ldlFilename,
+  const MBCHAR *ldlFilename,
 	BOOL useExclusiveMode
 )
 :

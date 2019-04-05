@@ -99,23 +99,18 @@ SPRITELISTERR SpriteGroupList::LoadSprite(uint32 index, GROUPTYPE type, LOADTYPE
         // A unit sprite file may have 3 or 2 digits in the name.
         sprintf(inFile, "GU%.3d.SPR", index);
 
-        MBCHAR fullPath[_MAX_PATH];
-        if (!g_civPaths->FindFile(C3DIR_SPRITES, inFile, fullPath, TRUE, FALSE))
-        {
+        if (g_civPaths->FindFile(C3DIR_SPRITES, inFile, true, false).empty()){
             // No 3 digit version found: try the 2 digit version.
             sprintf(inFile, "GU%.2d.SPR", index);
-	    }
+	      }
 	    break;
-
 	case GROUPTYPE_PROJECTILE :
 		 Assert("Projectile Actors Removed From Game - CJI"==NULL);
 		 return SPRITELISTERR_NOTFOUND;
-
 	case GROUPTYPE_EFFECT :
 		 if(newSpriteGroup==NULL)
 		    newSpriteGroup = new EffectSpriteGroup(type);
 		 sprintf(inFile, "GX%.2d.SPR", index);
-
 		 break;
 	case GROUPTYPE_CITY:
 		 if(newSpriteGroup==NULL)

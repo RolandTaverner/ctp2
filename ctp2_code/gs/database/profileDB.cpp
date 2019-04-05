@@ -482,34 +482,23 @@ ProfileDB::~ProfileDB()
 	}
 }
 
-BOOL ProfileDB::Init(BOOL forTutorial)
-{
-	MBCHAR profileName[_MAX_PATH];
-	MBCHAR *profileTxtFile;
+BOOL ProfileDB::Init(BOOL forTutorial) {
+	std::string profileTxtFile;
 
-	if (forTutorial)
-	{
+	if (forTutorial) {
 		m_loadedFromTutorial = TRUE;
-		profileTxtFile = g_civPaths->FindFile(C3DIR_GAMEDATA,
-		                                      "tut_profile.txt", profileName);
-	}
-	else
-	{
-		profileTxtFile = g_civPaths->FindFile(C3DIR_DIRECT, "userprofile.txt",
-		                                      profileName);
-		if (!profileTxtFile || !c3files_PathIsValid(profileTxtFile))
-		{
-			profileTxtFile = g_civPaths->FindFile(C3DIR_GAMEDATA,
-			                                      "profile.txt", profileName);
+		profileTxtFile = g_civPaths->FindFile(C3DIR_GAMEDATA,"tut_profile.txt");
+	} else {
+		profileTxtFile = g_civPaths->FindFile(C3DIR_DIRECT, "userprofile.txt");
+		if (profileTxtFile.empty() || !c3files_PathIsValid(profileTxtFile)) {
+			profileTxtFile = g_civPaths->FindFile(C3DIR_GAMEDATA, "profile.txt");
 		}
 	}
 
-	if (profileTxtFile)
-	{
-		FILE * pro_file = c3files_fopen(C3DIR_DIRECT, profileTxtFile, "r");
+	if (!profileTxtFile.empty()) {
+		FILE * pro_file = c3files_fopen(C3DIR_DIRECT, profileTxtFile.c_str(), "r");
 
-		if (pro_file)
-		{
+		if (pro_file) {
 			sint32 const    saved_width     = m_screenResWidth;
 			sint32 const    saved_height    = m_screenResHeight;
 			BOOL const      res             = Parse(pro_file);

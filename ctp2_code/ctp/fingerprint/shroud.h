@@ -50,7 +50,7 @@ enum
 
 
 
-shroud_t *shroud_readopen( char *filename );
+shroud_t *shroud_readopen(const char *filename);
 
 
 

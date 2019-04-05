@@ -25,10 +25,49 @@
 class LDLString {
   char *m_name;
 public:
+  LDLString() : m_name(nullptr) {
+  }
+
   explicit LDLString(const char *text) {
     m_name = new char[strlen(text) + 1];
     strcpy(m_name, text);
   }
+
+  LDLString(LDLString &&rhs) {
+    m_name = rhs.m_name;
+    rhs.m_name = nullptr;
+  }
+
+  LDLString(const LDLString &rhs) : 
+    m_name(nullptr) {
+    if (rhs.m_name) {
+      m_name = new char[strlen(rhs.m_name) + 1];
+      strcpy(m_name, rhs.m_name);
+    }
+  }
+
+  LDLString &operator=(LDLString &&rhs) {
+    if (this != &rhs) {
+      m_name = rhs.m_name;
+      rhs.m_name = nullptr;
+    }
+    return *this;
+  }
+  
+  LDLString &operator=(const LDLString &rhs) {
+    if (this != &rhs) {
+      if (m_name) {
+        delete[] m_name;
+        m_name = nullptr;
+      }
+      if (rhs.m_name) {
+        m_name = new char[strlen(rhs.m_name) + 1];
+        strcpy(m_name, rhs.m_name);
+      }
+    }
+    return *this;
+  }
+
   ~LDLString() {
     delete[] m_name;
   }
@@ -56,8 +95,10 @@ LDLBlockPtr ldlif_find_block(char const * name) {
 }
 
 int ldlif_find_file(const char *filename, char *fullpath) {
-  if (!g_civPaths->FindFile(C3DIR_LAYOUT, filename, fullpath))
+  const std::string fp = g_civPaths->FindFile(C3DIR_LAYOUT, filename, fullpath);
+  if (fp.empty())
     return 0;
+  strcpy(fullpath, fp.c_str());
   return 1;
 }
 

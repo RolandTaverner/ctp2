@@ -969,9 +969,8 @@ SPRITEFILEERR SpriteFile::Create(SPRITEFILETYPE type,unsigned version,unsigned c
 #if defined(__MAKESPR__) || defined(__SPRITETEST__)
 	strcpy(path, m_filename);
 #else
-	MBCHAR fullPath[_MAX_PATH];
-	g_civPaths->GetSpecificPath(C3DIR_SPRITES, fullPath, FALSE);
-	sprintf(path, "%s%s%s", fullPath, FILE_SEP, m_filename);
+	const std::string fullPath = g_civPaths->GetSpecificPath(C3DIR_SPRITES, FALSE);
+	sprintf(path, "%s%s%s", fullPath.c_str(), FILE_SEP, m_filename);
 #endif
 
     if (m_file)

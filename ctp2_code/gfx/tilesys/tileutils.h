@@ -11,7 +11,7 @@ Pixel32		*tileutils_LowPassFilter(Pixel32 *image, uint32 width, uint32 height);
 char		*tileutils_TIF2mem(char *filename, uint16 *width, uint16 *height);
 char		*tileutils_StripTIF2Mem(char *filename, uint16 *width, uint16 *height);
 
-Pixel16		*tileutils_TGA2mem(char *filename, uint16 *width, uint16 *height);
+Pixel16		*tileutils_TGA2mem(const char *filename, uint16 *width, uint16 *height);
 
 void		tileutils_EncodeCopyRun(Pixel32 **inBuf, int *pos, int width, Pixel16 **outBufPtr);
 void		tileutils_EncodeColorizeRun(Pixel32 **inBuf, int *pos, int width, Pixel16 **outBufPtr);

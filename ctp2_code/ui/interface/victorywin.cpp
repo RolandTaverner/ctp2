@@ -951,13 +951,12 @@ sint32 HighScoreWindowPopup::UpdateData( void )
 sint32 victorywin_GetWonderFilename( sint32 index, MBCHAR *name )
 {
 	MBCHAR filename[80];
-	MBCHAR strbuf[_MAX_PATH];
 
 	if ( index < 0 ) return FALSE;
 
 	strcpy(filename,g_theWonderDB->Get(index)->GetDefaultIcon()->GetIcon());
 
-	if (g_civPaths->FindFile(C3DIR_PICTURES, filename, strbuf))
+	if (!g_civPaths->FindFile(C3DIR_PICTURES, filename).empty())
 	{
 		strcpy(name, filename);
 		return TRUE;

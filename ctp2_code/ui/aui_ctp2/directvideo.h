@@ -26,7 +26,7 @@ public:
 
 	HRESULT		Initialize(aui_DirectUI *ui);
 	HRESULT		Initialize(aui_DirectUI *ui, aui_Window *window, BOOL modal);
-	HRESULT		OpenStream(MBCHAR *name);
+	HRESULT		OpenStream(const MBCHAR *name);
 	HRESULT		PlayAll(void);
 	HRESULT		PlayOne(void);
 	HRESULT		CloseStream(void);

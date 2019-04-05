@@ -190,24 +190,23 @@ void ThroneControl::InitCommonLdl(MBCHAR *ldlBlock)
 void ThroneControl::InitCommon(void)
 {
 	AUI_ERRCODE errcode = AUI_ERRCODE_OK;
-	MBCHAR s[_MAX_PATH];
+  std::string s;
+	if ( (s = g_civPaths->GetSpecificPath(C3DIR_PICTURES, FALSE)).empty()) return;
+	s += "\\";
+	s += s_throneImage[0];
 
-	if (!g_civPaths->GetSpecificPath(C3DIR_PICTURES, s, FALSE)) return;
-	strcat( s, "\\" );
-	strcat( s, s_throneImage[0].c_str() );
-
-	m_background = new c3_Image( &errcode, s );
+	m_background = new c3_Image( &errcode, s.c_str() );
 	Assert( AUI_NEWOK(m_background, errcode) );
 	if ( !AUI_NEWOK(m_background, errcode) ) return;
 
 	m_background->Load();
 
 	for ( sint32 i = 0;i < k_THRONE_IMAGES;i++ ) {
-		if (!g_civPaths->GetSpecificPath(C3DIR_PICTURES, s, FALSE)) return;
-		strcat( s, "\\" );
-		strcat( s, s_throneImage[i+1].c_str());
+		if ((s = g_civPaths->GetSpecificPath(C3DIR_PICTURES, FALSE)).empty()) return;
+    s += "\\";
+    s += s_throneImage[i + 1];
 
-		m_upgradeImage[i] = new c3_Image( &errcode, s );
+		m_upgradeImage[i] = new c3_Image( &errcode, s.c_str() );
 		Assert( AUI_NEWOK(m_upgradeImage[i], errcode) );
 		if ( !AUI_NEWOK(m_upgradeImage[i], errcode) ) return;
 
@@ -308,17 +307,17 @@ aui_Surface *ThroneControl::InitializeNewBG( MBCHAR *filename )
 		if ( !AUI_NEWOK(tempBG, errcode) ) return NULL;
 	}
 
-	MBCHAR s[_MAX_PATH];
-	if (!g_civPaths->GetSpecificPath(C3DIR_PICTURES, s, FALSE)) {
+	std::string s = g_civPaths->GetSpecificPath(C3DIR_PICTURES, FALSE);
+	if (s.empty()) {
 		delete tempBG;
 		return NULL;
 	}
-	strcat( s, "\\" );
-	strcat( s, filename );
+	s += "\\";
+	s += filename;
 
 	m_upgradeImage[ m_selectedImage ]->Unload();
 
-	m_upgradeImage[ m_selectedImage ]->SetFilename( s );
+	m_upgradeImage[ m_selectedImage ]->SetFilename( s.c_str() );
 	m_upgradeImage[ m_selectedImage ]->Load();
 
 	RenderThrone( tempBG );

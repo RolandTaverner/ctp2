@@ -73,10 +73,10 @@ AUI_ERRCODE IconButton::InitCommon( MBCHAR *ldlBlock, BOOL isLDL)
 		name = ldlBlock;
 	}
 
-	m_filename = new MBCHAR[_MAX_PATH];
+	m_filename = g_civPaths->FindFile(C3DIR_ICONS, name);
 
-	if (g_civPaths->FindFile(C3DIR_ICONS, name.c_str(), m_filename)) {
-		m_icon = g_c3ui->LoadIcon(m_filename);
+	if (!m_filename.empty()) {
+		m_icon = g_c3ui->LoadIcon(m_filename.c_str());
 	} else {
 		m_icon = NULL;
 	}
@@ -86,7 +86,6 @@ AUI_ERRCODE IconButton::InitCommon( MBCHAR *ldlBlock, BOOL isLDL)
 
 IconButton::~IconButton()
 {
-	delete [] m_filename;
 }
 
 AUI_ERRCODE IconButton::DrawThis( aui_Surface *surface, sint32 x, sint32 y )

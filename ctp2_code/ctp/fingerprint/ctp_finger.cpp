@@ -9,16 +9,18 @@ extern CivPaths		*g_civPaths;
 BOOL ctpfinger_Check(void)
 {
 	BOOL	success = FALSE;
-	MBCHAR	fingerprintPath[_MAX_PATH];
-	MBCHAR	userListPath[_MAX_PATH];
+	std::string	fingerprintPath;
+  std::string	userListPath;
 
-	if (!g_civPaths->FindFile(k_FINGERPRINT_ASSET_DIR, k_FINGERPRINT_ASSET, fingerprintPath))
+  fingerprintPath = g_civPaths->FindFile(k_FINGERPRINT_ASSET_DIR, k_FINGERPRINT_ASSET);
+	if (fingerprintPath.empty())
 		return FALSE;
 
-	if (!g_civPaths->FindFile(k_USER_LIST_ASSET_DIR, k_USER_LIST_ASSET, userListPath))
+  userListPath = g_civPaths->FindFile(k_USER_LIST_ASSET_DIR, k_USER_LIST_ASSET);
+	if (userListPath.empty())
 		return FALSE;
 
-	if (GetInfoFromFingerprint(fingerprintPath) && IsValidUser(userListPath))
+	if (GetInfoFromFingerprint(fingerprintPath.c_str()) && IsValidUser(userListPath.c_str()))
 		success = TRUE;
 
 	return success;

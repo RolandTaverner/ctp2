@@ -61,9 +61,9 @@ private:
 
 
 public:
+  ldl_datablock();
   ldl_datablock(PointerList<char> *templateNames);
-  ldl_datablock(const ldl_datablock &rhs);
-  ldl_datablock(sint32 hash);
+  ldl_datablock(const ldl_datablock &rhs) = delete;
   ldl_datablock(ldl *theLdl, char const * name);
   virtual ~ldl_datablock();
 
@@ -76,6 +76,8 @@ public:
     m_children.push_back(child);
     child->m_parent = shared_from_this();
   }
+
+  void CopyFrom(const ldl_datablock &rhs);
 
   // Add a single attribute
   void AddAttribute(const ldl_attribute &attr) {

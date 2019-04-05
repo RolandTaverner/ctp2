@@ -43,7 +43,7 @@ static user_t verify_user;
  Returns TRUE if a match is found.
  Returnf FALSE otherwise.
 --------------------------------------------------------------------------*/
-BOOL IsValidUser( char *szListFile )
+BOOL IsValidUser( const char *szListFile )
 {
 	BOOL bFoundUser = FALSE;	// Return value.
 	FILE *file;					// Used to get the BITMAPFILEHEADER.
@@ -89,7 +89,7 @@ BOOL IsValidUser( char *szListFile )
  Returns TRUE on success.
  Returns FALSE otherwise.
 --------------------------------------------------------------------------*/
-BOOL GetInfoFromFingerprint( char *szFingerprintFile )
+BOOL GetInfoFromFingerprint( const char *szFingerprintFile )
 {
 	BOOL bGotFingerprint = FALSE;	// Return value.
 	shroud_t *sfile;				// Used to read the hidden and shrouded data.

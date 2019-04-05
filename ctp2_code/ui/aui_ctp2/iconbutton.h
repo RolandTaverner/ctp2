@@ -50,7 +50,7 @@ public:
 protected:
 	Icon		*m_icon;
 	uint16		m_color;
-	MBCHAR		*m_filename;
+	std::string m_filename;
 };
 
 #endif

@@ -133,7 +133,7 @@ char *tileutils_StripTIF2Mem(char *filename, uint16 *width, uint16 *height)
 	return tileutils_PostProcessImage(image, *width, *height);
 }
 
-Pixel16 *tileutils_TGA2mem(char *filename, uint16 *width, uint16 *height)
+Pixel16 *tileutils_TGA2mem(const char *filename, uint16 *width, uint16 *height)
 {
 
 	int		bpp;

@@ -451,7 +451,7 @@ uint8 TileSet::ReverseDirection(sint32 dir)
 void TileSet::LoadMapIcons(void)
 {
 	MBCHAR		name[_MAX_PATH];
-	MBCHAR		path[_MAX_PATH];
+  std::string path;
 	uint16		width, height;
 	uint32		len;
 	Pixel16		*tga;
@@ -464,22 +464,17 @@ void TileSet::LoadMapIcons(void)
 
 		sprintf(name, g_theMapIconDB->Get(i)->GetValue());
 
-		if (g_civPaths->FindFile(C3DIR_PICTURES, name, path, TRUE, FALSE) == NULL) {
-
-			sprintf(path, "%s", name);
-			char * lastDot = strrchr(path, '.');
-			if (lastDot)
-			{
-				++lastDot;
-				sprintf(lastDot, "rim");
-			}
-			else
-			{
-				sprintf(path, "%s.rim", path);
+		if ((path = g_civPaths->FindFile(C3DIR_PICTURES, name, TRUE, FALSE)).empty()) {
+			path = name;
+			std::size_t lastDot = path.find_last_of('.');
+			if (lastDot != std::string::npos) {
+        path = path.substr(0, lastDot + 1) + "rim";
+			} else {
+				path += ".rim";
 			}
 
 			size_t  testlen = 0;
-			uint8 * buf = reinterpret_cast<uint8 *>(g_ImageMapPF->getData(path, testlen));
+			uint8 * buf = reinterpret_cast<uint8 *>(g_ImageMapPF->getData(path.c_str(), testlen));
 			len = testlen;
 			if (buf == NULL) {
 				c3errors_ErrorDialog("TileSet", "'%s not found in asset tree.", name);
@@ -501,7 +496,7 @@ void TileSet::LoadMapIcons(void)
 			continue;
 		}
 
-		tga = tileutils_TGA2mem(path, &width, &height);
+		tga = tileutils_TGA2mem(path.c_str(), &width, &height);
 		if (tga) {
 			data = (Pixel16 *)tileutils_EncodeTile16(tga, width, height, &len);
 			delete[] tga;

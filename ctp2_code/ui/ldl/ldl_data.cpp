@@ -5,8 +5,9 @@
 
 #include "ui/ldl/ldlif.h"
 
-ldl_datablock::ldl_datablock(PointerList<char> *templateNames) :
-  m_attributes() {
+ldl_datablock::ldl_datablock() {}
+
+ldl_datablock::ldl_datablock(PointerList<char> *templateNames) {
   PointerList<char>::Walker walk(templateNames);
 
   Assert(walk.IsValid());
@@ -24,24 +25,7 @@ ldl_datablock::ldl_datablock(PointerList<char> *templateNames) :
   }
 }
 
-ldl_datablock::ldl_datablock(const ldl_datablock &rhs) :
-  m_name(rhs.m_name) {
-  for (const ldl_attribute &attr : rhs.GetAttributes()) {
-    m_attributes.push_back(attr);
-  }
-  for (const LDLBlockPtr &c : rhs.m_children) {
-    AddChild(std::make_shared<ldl_datablock>(*c));
-  }
-  for (const LDLBlockPtr &t : rhs.m_templates) {
-    m_templates.push_back(std::make_shared<ldl_datablock>(*t));
-  }
-}
-
-ldl_datablock::ldl_datablock(sint32 hash) :
-  m_attributes() {}
-
 ldl_datablock::ldl_datablock(ldl *theLdl, char const * name) :
-  m_attributes(),
   m_name(ldlif_getnameptr(name)) {
   ldlif_add_block_to_tree(shared_from_this());
 }
@@ -49,9 +33,23 @@ ldl_datablock::ldl_datablock(ldl *theLdl, char const * name) :
 ldl_datablock::~ldl_datablock() {
   m_children.clear();
   m_templates.clear();
+}
 
-  if (!GetName().empty())
-    ldlif_remove_block_from_tree(shared_from_this());
+void ldl_datablock::CopyFrom(const ldl_datablock & rhs) {
+  m_name = rhs.m_name;
+  for (const ldl_attribute &attr : rhs.GetAttributes()) {
+    m_attributes.push_back(attr);
+  }
+  for (LDLBlockPtr c : rhs.m_children) {
+    LDLBlockPtr newBlock = std::make_shared<ldl_datablock>();
+    newBlock->CopyFrom(*c);
+    AddChild(newBlock);
+  }
+  for (LDLBlockPtr t : rhs.m_templates) {
+    LDLBlockPtr newBlock = std::make_shared<ldl_datablock>();
+    newBlock->CopyFrom(*t);
+    m_templates.push_back(newBlock);
+  }
 }
 
 std::string ldl_datablock::GetFullName() const {
@@ -124,19 +122,19 @@ void ldl_datablock::SetValue(char *name, int value) {
 }
 
 void ldl_datablock::AddTemplateChildren() {
-  for (const LDLBlockPtr &b : m_templates) {
+  for (LDLBlockPtr b : m_templates) {
     CopyAttributesFrom(b);
     b->AddTemplateChildrenTo(shared_from_this());
   }
 }
 
 void ldl_datablock::AddTemplateChildrenTo(LDLBlockPtr block) {
-  for (const LDLBlockPtr &child : m_children) {
+  for (LDLBlockPtr child : m_children) {
     bool alreadyHaveIt = false;
-    for (LDLBlockPtr &childArg : block->m_children) {
+    for (LDLBlockPtr childArg : block->m_children) {
       if (childArg->GetName() == child->GetName()) {
         childArg->CopyAttributesFrom(child);
-        for (const LDLBlockPtr &templ : child->m_templates) {
+        for (LDLBlockPtr templ : child->m_templates) {
           childArg->m_templates.push_back(templ);
         }
         childArg->AddTemplateChildren();
@@ -146,7 +144,8 @@ void ldl_datablock::AddTemplateChildrenTo(LDLBlockPtr block) {
     }
 
     if (!alreadyHaveIt) {
-      LDLBlockPtr newblock = std::make_shared<ldl_datablock>(*child);
+      LDLBlockPtr newblock = std::make_shared<ldl_datablock>();
+      newblock->CopyFrom(*child);
       block->AddChild(newblock);
       newblock->AddTemplateChildren();
       ldlif_add_block_to_tree(newblock);
@@ -162,9 +161,9 @@ void ldl_datablock::CopyAttributesFrom(LDLBlockPtr templ) {
     }
   }
 
-  for (LDLBlockPtr &templChild : templ->m_children) {
+  for (LDLBlockPtr templChild : templ->m_children) {
     bool foundIt = false;
-    for (LDLBlockPtr &child : m_children) {
+    for (LDLBlockPtr child : m_children) {
       if (child->GetName() == templChild->GetName()) {
         child->CopyAttributesFrom(templChild);
         foundIt = true;
@@ -172,7 +171,8 @@ void ldl_datablock::CopyAttributesFrom(LDLBlockPtr templ) {
       }
     }
     if (!foundIt) {
-      LDLBlockPtr newblock = std::make_shared<ldl_datablock>(*templChild);
+      LDLBlockPtr newblock = std::make_shared<ldl_datablock>();
+      newblock->CopyFrom(*templChild);
       newblock->CopyAttributesFrom(templChild);
       AddChild(newblock);
       ldlif_add_block_to_tree(newblock);

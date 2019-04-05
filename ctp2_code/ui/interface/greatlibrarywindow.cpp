@@ -236,12 +236,12 @@ sint32 GreatLibraryWindow::LoadTechMovie ( void )
 	if (!m_techMovie) return 0;
 	if (!strcmp(m_movie_file,"null")) return 0;
 
-	MBCHAR fullPath[_MAX_PATH];
-	if (g_civPaths->FindFile(C3DIR_VIDEOS, m_movie_file, fullPath, TRUE)) {
+	const std::string fullPath = g_civPaths->FindFile(C3DIR_VIDEOS, m_movie_file, TRUE);
+	if (!fullPath.empty()) {
 
 		g_soundManager->ReleaseSoundDriver();
 
-		m_techMovie->OpenStream(fullPath);
+		m_techMovie->OpenStream(fullPath.c_str());
 
 		g_soundManager->ReacquireSoundDriver();
 	} else {
@@ -259,9 +259,8 @@ sint32 GreatLibraryWindow::LoadTechStill( void )
 	if ( !m_techStillShot ) return 0;
 	if ( !strcmp(m_still_file, "null") ) return 0;
 
-	MBCHAR fullPath[_MAX_PATH];
-	if ( g_civPaths->FindFile(C3DIR_PICTURES, m_still_file, fullPath, TRUE) )
-    {
+  const std::string fullPath = g_civPaths->FindFile(C3DIR_PICTURES, m_still_file, TRUE);
+  if (!fullPath.empty()) {
 		m_techStillShot->SetImage( m_still_file );
 	}
 	else {

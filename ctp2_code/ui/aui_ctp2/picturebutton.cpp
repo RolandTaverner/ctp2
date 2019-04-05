@@ -52,7 +52,7 @@ AUI_ERRCODE PictureButton::InitCommon(MBCHAR *upPicture, MBCHAR *downPicture, BO
 {
 	MBCHAR		*ldlBlock;
   std::string upName, downName;
-	MBCHAR		path[_MAX_PATH];
+	std::string path;
 
 	if (isLDL)
 	{
@@ -75,16 +75,16 @@ AUI_ERRCODE PictureButton::InitCommon(MBCHAR *upPicture, MBCHAR *downPicture, BO
 	AUI_ERRCODE retval = AUI_ERRCODE_OK;
 
 	delete m_upPicture;
-	if (g_civPaths->FindFile(C3DIR_PICTURES, upName.c_str(), path)) {
-		m_upPicture = new aui_Picture(&retval, path);
+	if (!(path = g_civPaths->FindFile(C3DIR_PICTURES, upName.c_str())).empty()) {
+		m_upPicture = new aui_Picture(&retval, path.c_str());
 		Assert(retval == AUI_ERRCODE_OK);
 	} else {
 		m_upPicture = NULL;
 	}
 
 	delete m_downPicture;
-	if (g_civPaths->FindFile(C3DIR_PICTURES, downName.c_str(), path)) {
-		m_downPicture = new aui_Picture(&retval, path);
+	if (!(path = g_civPaths->FindFile(C3DIR_PICTURES, downName.c_str())).empty()) {
+		m_downPicture = new aui_Picture(&retval, path.c_str());
 		Assert(retval == AUI_ERRCODE_OK);
 	} else {
 		m_downPicture = NULL;

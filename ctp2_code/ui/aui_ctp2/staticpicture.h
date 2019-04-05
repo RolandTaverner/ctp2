@@ -39,7 +39,7 @@ public:
 		sint32 x = 0,
 		sint32 y = 0 );
 
-	void SetPicture(MBCHAR *picture);
+	void SetPicture(const MBCHAR *picture);
 
 protected:
 	aui_Picture *m_picture;

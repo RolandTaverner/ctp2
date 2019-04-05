@@ -391,7 +391,7 @@ void spnewgamescreen_scenarioExitCallback(aui_Control *control, uint32 action, u
 {
 	MBCHAR	tempPath[_MAX_PATH];
 	sprintf(tempPath, "%s%s%s",
-	        g_civPaths->GetCurScenarioPath(),
+	        g_civPaths->GetCurScenarioPath().c_str(),
 	        FILE_SEP,
 	        k_SCENARIO_DEFAULT_SAVED_GAME_NAME
 	       );
@@ -408,7 +408,7 @@ void spnewgamescreen_scenarioExitCallback(aui_Control *control, uint32 action, u
 
 		if (GameFile::FetchExtendedSaveInfo(tempPath, saveInfo)) {
 			MBCHAR scenPath[_MAX_PATH];
-			strcpy(scenPath, g_civPaths->GetCurScenarioPath());
+			strcpy(scenPath, g_civPaths->GetCurScenarioPath().c_str());
 			g_startInfoType = saveInfo->startInfoType;
 			loadsavescreen_BeginLoadProcess(saveInfo, scenPath);
 		}
@@ -429,7 +429,7 @@ void spnewgamescreen_scenarioPress(aui_Control *control, uint32 action, uint32 d
 {
 	if ( action != (uint32)AUI_BUTTON_ACTION_EXECUTE ) return;
 
-	if (g_civPaths->GetCurScenarioPath())
+	if (!g_civPaths->GetCurScenarioPath().empty())
 	{
 		g_civPaths->ClearCurScenarioPath();
 		g_spNewGameWindow->Update();

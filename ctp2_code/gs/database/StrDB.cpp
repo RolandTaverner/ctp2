@@ -609,7 +609,7 @@ bool StringDB::ParseAStringEntryNoDuplicates(Token *strToken)
 // Remark(s)  : -
 //
 //----------------------------------------------------------------------------
-bool StringDB::Parse(MBCHAR * filename)
+bool StringDB::Parse(const MBCHAR * filename)
 {
 	g_load_defaults = true;
 
@@ -651,9 +651,8 @@ extern CivPaths *g_civPaths;
 void StringDB::Export(MBCHAR * file)
 {
 	char buff[_MAX_PATH];
-	MBCHAR *path = new MBCHAR[_MAX_PATH];
-	g_civPaths->GetSpecificPath(C3DIR_GAMEDATA, path, TRUE);
-	sprintf(buff, "%s%s%s", path, FILE_SEP, file);
+	const std::string path = g_civPaths->GetSpecificPath(C3DIR_GAMEDATA, TRUE);
+	sprintf(buff, "%s%s%s", path.c_str(), FILE_SEP, file);
 
 	FILE* fout = fopen(buff, "w");
 
@@ -668,5 +667,4 @@ void StringDB::Export(MBCHAR * file)
 	}
 
 	c3files_fclose(fout);
-	delete path;
 }

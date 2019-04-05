@@ -82,7 +82,7 @@ public:
 		MBCHAR const *			add_id,
 		MBCHAR const *			new_text
 	);
-	bool					Parse(MBCHAR * filename);
+	bool					Parse(const MBCHAR * filename);
 
 	// Accessors
 	MBCHAR *				GetIdStr

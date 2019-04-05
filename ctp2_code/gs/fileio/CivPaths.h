@@ -37,132 +37,90 @@
 #ifndef __CIVPATHS_H__
 #define __CIVPATHS_H__ 1
 
+#include <filesystem>
+#include <string>
+#include <vector> // list did not work: crashes on begin() for empty list
+
 #include "ctp/ctp2_utils/c3files.h"
-#include <vector>	// list did not work: crashes on begin() for empty list
-
-
-
-
-
-
 
 
 class CivPaths {
-private:
-	MBCHAR *m_hdPath;
-	MBCHAR *m_cdPath;
-
-	MBCHAR *m_defaultPath;
-	MBCHAR *m_localizedPath;
-
-	MBCHAR *m_dataPath;			                    // original data path (...\ctp2_data)
-	std::vector<MBCHAR const *> m_extraDataPaths;   // searched before m_dataPath
-	MBCHAR *m_scenariosPath;
-
-	MBCHAR *m_savePath;
-	MBCHAR *m_saveGamePath;
-	MBCHAR *m_saveQueuePath;
-	MBCHAR *m_saveMPPath;
-	MBCHAR *m_saveSCENPath;
-	MBCHAR *m_saveMapPath;
-	MBCHAR *m_saveClipsPath;
-
-	MBCHAR *m_assetPaths[C3DIR_MAX];
-
-	MBCHAR *m_curScenarioPath;
-
-	MBCHAR *m_curScenarioPackPath;
-
-	MBCHAR m_desktopPath[_MAX_PATH];
-
 public:
 
-	CivPaths ();
+  CivPaths();
 
-	virtual ~CivPaths();
+  virtual ~CivPaths();
 
-	void CreateSaveFolders(const MBCHAR *path);
+  void CreateSaveFolders(const std::filesystem::path &path);
 
-	void InitCDPath(void);
+  void InitCDPath(void);
 
-	MBCHAR *GetSavePath(C3SAVEDIR dir, MBCHAR *path);
+  const MBCHAR *GetSavePath(C3SAVEDIR dir, MBCHAR *path);
 
+  std::string FindFile(C3DIR dir, const std::string &filename, bool silent = false, bool check_prjfile = true, bool checkScenario = true);
 
+  std::string GetSpecificPath(C3DIR dir, BOOL local);
 
+  std::string GetScenarioRootPath();
 
-	MBCHAR *FindFile(C3DIR dir, const MBCHAR *filename, MBCHAR *path,
-                     bool silent = false, bool check_prjfile = true, bool checkScenario = true);
+  void SetCurScenarioPath(const MBCHAR *path);
 
-	MBCHAR *GetSpecificPath(C3DIR dir, MBCHAR *path, BOOL local);
+  const std::string &GetCurScenarioPath(void);
 
-	MBCHAR *GetScenarioRootPath(MBCHAR *path);
+  void ClearCurScenarioPath(void);
 
-	void	SetCurScenarioPath(const MBCHAR *path);
+  void SetCurScenarioPackPath(const MBCHAR *path);
 
-	MBCHAR *GetCurScenarioPath(void);
+  const std::string &GetCurScenarioPackPath(void);
 
-	void	ClearCurScenarioPath(void);
+  void ClearCurScenarioPackPath(void);
 
+  bool FindPath(C3DIR dir, int num, std::string &path);
 
+  const std::string &GetSavePathString(void) const { return m_savePath; }
 
+  const MBCHAR *    GetDesktopPath(void);
 
-	void	SetCurScenarioPackPath(const MBCHAR *path);
-
-	MBCHAR	* GetCurScenarioPackPath(void);
-
-	void	ClearCurScenarioPackPath(void);
-
-
-
-
-
-
-
-
-
-
-
-    bool        FindPath(C3DIR dir, int num, MBCHAR *path);
-
-	MBCHAR *    GetSavePathString(void) const { return m_savePath; }
-
-	MBCHAR *    GetDesktopPath(void);
-
-	std::vector<MBCHAR const *> const &
-                GetExtraDataPaths(void) const;
-	void	    InsertExtraDataPath(MBCHAR const * path);
-	void	    ResetExtraDataPaths(void);
+  void     InsertExtraDataPath(MBCHAR const * path);
 
 protected:
+  std::string MakeAssetPath(const std::string &s1,
+    const std::string &s2,
+    const std::string &s3,
+    const std::string &s4,
+    const std::string &s5);
 
-	MBCHAR *    MakeAssetPath
-    (
-        MBCHAR *        fullPath,
-        MBCHAR const *  s1,
-        MBCHAR const *  s2,
-        MBCHAR const *  s3,
-        MBCHAR const *  s4,
-        MBCHAR const *  s5
-    ) const;
+  std::string MakeSavePath(const std::string &s1, const std::string &s2, const std::string &s3);
 
-	MBCHAR *    MakeSavePath(MBCHAR *fullPath, MBCHAR *s1, MBCHAR *s2, MBCHAR *s3);
+private:
+  std::string m_hdPath;
+  std::string m_cdPath;
+
+  std::string m_defaultPath;
+  std::string m_localizedPath;
+
+  std::string m_dataPath;                       // original data path (...\ctp2_data)
+  std::vector<std::string> m_extraDataPaths;      // searched before m_dataPath
+  std::string m_scenariosPath;
+
+  std::string m_savePath;
+  std::string m_saveGamePath;
+  std::string m_saveQueuePath;
+  std::string m_saveMPPath;
+  std::string m_saveSCENPath;
+  std::string m_saveMapPath;
+  std::string m_saveClipsPath;
+
+  std::string m_assetPaths[C3DIR_MAX];
+
+  std::string m_curScenarioPath;
+  std::string m_curScenarioPackPath;
+
+  MBCHAR m_desktopPath[_MAX_PATH];
 };
 
-
-
-
-
-
-
 void CivPaths_InitCivPaths();
-
-
 void CivPaths_CleanupCivPaths();
-
-
-
-
-
 
 extern CivPaths *g_civPaths;
 

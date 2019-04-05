@@ -43,6 +43,9 @@
 #include <stdio.h>			// sprintf
 #include <string.h>			// strcpy
 
+#include <filesystem>
+#include <string>
+
 //----------------------------------------------------------------------------
 // Exported names
 //----------------------------------------------------------------------------
@@ -98,7 +101,9 @@ public:
 	AUI_ERRCODE	AddSearchPath( const MBCHAR *path );
 	AUI_ERRCODE	RemoveSearchPath( const MBCHAR *path );
 
-	BOOL FindFile( MBCHAR *fullPath, const MBCHAR *name );
+  bool FindFile(std::string &fullPath, const std::string &name);
+
+  bool FindFile( MBCHAR *fullPath, const MBCHAR *name );
 
 protected:
 	tech_WLList<aui_ResourceElement<T> *>	*m_resourceList;
@@ -258,45 +263,30 @@ AUI_ERRCODE aui_Resource<T>::RemoveSearchPath( const MBCHAR *path )
 }
 
 template<class T>
-T *aui_Resource<T>::Load( const MBCHAR *resName, C3DIR dir, uint32 size)
-{
+T *aui_Resource<T>::Load( const MBCHAR *resName, C3DIR dir, uint32 size) {
 	Assert(resName);
-	if (!resName || strlen(resName) == 0) return NULL;
+	if (!resName || strlen(resName) == 0) 
+    return NULL;
 
-	const MBCHAR *name;
+	std::string name;
 	MBCHAR tempName[MAX_PATH + 1];
 
-
-
-
-
-
-
-
-
-
-
-
-
-	if (size)
-	{
+	if (size) {
 		sprintf(tempName, "%s%d", resName, size);
 		name = tempName;
-	}
-	else
-	{
+	} else {
 		name = resName;
 	}
 
-	uint32 hash = aui_Base::CalculateHash( name );
+	uint32 hash = aui_Base::CalculateHash( name.c_str() );
 
 	ListPos position = m_resourceList->GetHeadPosition();
 	for ( sint32 i = m_resourceList->L(); i; i-- )
 	{
 		aui_ResourceElement<T> *re = m_resourceList->GetNext( position );
-		if (((hash == re->hash) && (strcmp(name, re->name) == 0))   ||
+		if (((hash == re->hash) && (strcmp(name.c_str(), re->name) == 0))   ||
 		    ((hash == re->pathhash) &&
-             (!re->resource || (strcmp(name, re->resource->GetFilename()) == 0))
+             (!re->resource || (strcmp(name.c_str(), re->resource->GetFilename()) == 0))
             )
            )
 		{
@@ -305,32 +295,24 @@ T *aui_Resource<T>::Load( const MBCHAR *resName, C3DIR dir, uint32 size)
 		}
 	}
 
-
-
-
 	if (size)
 		name = resName;
 
-	static MBCHAR fullPath[ MAX_PATH + 1 ];
-	strncpy( fullPath, name, MAX_PATH );
-
-
-
-
+  std::string fullPath = name;
 
 	if (dir != C3DIR_DIRECT) {
-
-		MBCHAR path[_MAX_PATH];
-		if (g_civPaths->FindFile(dir, name, path, TRUE)) {
-			strcpy(fullPath, path);
+		std::string path = g_civPaths->FindFile(dir, name, true);
+		if (!path.empty()) {
+			fullPath = path;
 		} else {
 			if (dir == C3DIR_PICTURES) {
-
-				if (g_civPaths->FindFile(C3DIR_PATTERNS, name, path, TRUE)) {
-					strcpy(fullPath, path);
+        path = g_civPaths->FindFile(C3DIR_PATTERNS, name, true);
+				if (!path.empty()) {
+					fullPath = path;
 				} else {
-					if (g_civPaths->FindFile(C3DIR_ICONS, name, path, TRUE)) {
-						strcpy(fullPath, path);
+          path = g_civPaths->FindFile(C3DIR_ICONS, name, true);
+					if (!path.empty()) {
+						fullPath = path;
 					} else {
 						FindFile( fullPath, name );
 					}
@@ -343,7 +325,7 @@ T *aui_Resource<T>::Load( const MBCHAR *resName, C3DIR dir, uint32 size)
 		FindFile( fullPath, name );
 	}
 
-	aui_ResourceElement<T> *re = new aui_ResourceElement<T>( name, fullPath );
+	aui_ResourceElement<T> *re = new aui_ResourceElement<T>( name.c_str(), fullPath.c_str());
 	Assert( re != NULL );
 	if ( re )
 	{
@@ -355,16 +337,32 @@ T *aui_Resource<T>::Load( const MBCHAR *resName, C3DIR dir, uint32 size)
 }
 
 template<class T>
-BOOL aui_Resource<T>::FindFile( MBCHAR *fullPath, const MBCHAR *name )
-{
-	if ( !strchr( name, ':' ) && strncmp( name, FILE_SEP FILE_SEP, 2 ) )
-	{
+bool aui_Resource<T>::FindFile(std::string &fullPath, const std::string &name) {
+  if (name.find_first_of(":") == std::string::npos && name.compare(0, 2, FILE_SEP FILE_SEP)) {
+    ListPos position = m_pathList->GetHeadPosition();
+    if (position) {
+      for (sint32 i = m_pathList->L(); i; --i) {
+        const std::filesystem::path p = std::filesystem::path(m_pathList->GetNext(position)) / name;
+        fullPath = p.string();
+        if (std::filesystem::exists(p) && std::filesystem::is_regular_file(p)) {
+          return true;
+        }
+      }
 
+      fullPath = name;
+    }
+  }
+
+  return false;
+}
+
+template<class T>
+bool aui_Resource<T>::FindFile( MBCHAR *fullPath, const MBCHAR *name )
+{
+	if ( !strchr( name, ':' ) && strncmp( name, FILE_SEP FILE_SEP, 2 ) ) {
 		ListPos position = m_pathList->GetHeadPosition();
-		if ( position )
-		{
-			for ( sint32 i = m_pathList->L(); i; i-- )
-			{
+		if ( position ) {
+			for ( sint32 i = m_pathList->L(); i; i-- ) {
 				MBCHAR *path = m_pathList->GetNext( position );
 				sprintf( fullPath, "%s%s%s", path, FILE_SEP, name );
 
@@ -375,7 +373,7 @@ BOOL aui_Resource<T>::FindFile( MBCHAR *fullPath, const MBCHAR *name )
             if (0 == stat(fullPath, &st))
 #endif
 				{
-                    return TRUE;
+                    return true;
 				}
 			}
 
@@ -383,7 +381,7 @@ BOOL aui_Resource<T>::FindFile( MBCHAR *fullPath, const MBCHAR *name )
 		}
 	}
 
-    return FALSE;
+    return false;
 }
 
 template<class T>

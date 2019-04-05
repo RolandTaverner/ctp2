@@ -54,7 +54,7 @@
  Uses fopen().
  Returns NULL on error.
 --------------------------------------------------------------------------*/
-shroud_t *shroud_readopen( char *filename )
+shroud_t *shroud_readopen(const char *filename )
 {
 	/* Allocate memory for the new shroud_t. */
 	shroud_t *sfile = (shroud_t *) malloc( sizeof( shroud_t ) );

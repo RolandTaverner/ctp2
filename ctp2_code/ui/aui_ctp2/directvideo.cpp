@@ -118,7 +118,7 @@ HRESULT DirectVideo::Initialize(aui_DirectUI *ui, aui_Window *window, BOOL modal
 	return 0;
 }
 
-HRESULT	DirectVideo::OpenStream(MBCHAR *name)
+HRESULT	DirectVideo::OpenStream(const MBCHAR *name)
 {
 	IAMMultiMediaStream *pAMStream;
 	HRESULT hr;

@@ -229,8 +229,7 @@ void *ProjectFile::getData_DOS(PFEntry *entry, size_t & size, C3DIR dir)
 {
     char tempstr[256];
 
-	if ((dir == C3DIR_DIRECT) || !g_civPaths->FindFile(dir, entry->rname, tempstr))
-    {
+	if ((dir == C3DIR_DIRECT) || g_civPaths->FindFile(dir, entry->rname).empty()) {
 		sprintf(tempstr, "%s%s%s", m_paths[entry->path].dos_path, FILE_SEP, entry->rname);
 	}
 

@@ -245,12 +245,12 @@ int messagewin_CreateMessage( Message data, BOOL bRecreate )
 		MBCHAR const * wavName = data.AccessData()->GetMsgSound();
 		if (wavName)
         {
-			MBCHAR filename[_MAX_PATH];
+			  const std::string filename = g_civPaths->FindFile(C3DIR_SOUNDS, wavName);
 
-			if (g_civPaths->FindFile(C3DIR_SOUNDS, wavName, filename))
+			if (!filename.empty())
             {
 #if defined(WIN32)
-			    PlaySound(filename, NULL, SND_ASYNC | SND_FILENAME);
+			    PlaySound(filename.c_str(), NULL, SND_ASYNC | SND_FILENAME);
 #endif
             }
 		}
@@ -267,11 +267,11 @@ int messagewin_CreateModalMessage(Message data)
 	MBCHAR const *  wavName = data.AccessData()->GetMsgSound();
 	if (wavName)
     {
-		MBCHAR filename[ _MAX_PATH ];
-		if (g_civPaths->FindFile( C3DIR_SOUNDS, wavName, filename))
+    const std::string filename = g_civPaths->FindFile(C3DIR_SOUNDS, wavName);
+		if (!filename.empty())
         {
 #if defined(WIN32)
-		    PlaySound(filename, NULL, SND_ASYNC | SND_FILENAME);
+		    PlaySound(filename.c_str(), NULL, SND_ASYNC | SND_FILENAME);
 #endif
         }
 	}

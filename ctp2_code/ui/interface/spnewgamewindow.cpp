@@ -313,7 +313,7 @@ void SPNewGameWindow::Update( void )
 
 	// Make sure start and end ages are still within range.
 	// A scenario was loaded.
-	if (g_civPaths->GetCurScenarioPath() != NULL) {
+	if (!g_civPaths->GetCurScenarioPath().empty()) {
 
 		if (strlen(g_scenarioName) > 0) {
 			m_scenarioName->SetText(g_scenarioName);

@@ -590,10 +590,9 @@ SpriteEditWindow::FileExists(char *name)
 	if (name==NULL)
 		return false;
 
-	MBCHAR spritePath[_MAX_PATH];
+	const std::string spritePath = g_civPaths->GetSpecificPath(C3DIR_SPRITES, FALSE);
 	MBCHAR fullPath[_MAX_PATH];
-	g_civPaths->GetSpecificPath(C3DIR_SPRITES, spritePath, FALSE);
-	sprintf(fullPath, "%s%s%s", spritePath, FILE_SEP, name);
+	sprintf(fullPath, "%s%s%s", spritePath.c_str(), FILE_SEP, name);
 
 	return c3files_PathIsValid(fullPath);
 }

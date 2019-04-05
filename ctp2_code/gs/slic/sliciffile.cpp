@@ -7,10 +7,12 @@
 extern CivPaths *g_civPaths;
 extern StringDB *g_theStringDB;
 
-int slicif_find_file(char *filename, char *fullpath)
-{
-	if(!g_civPaths->FindFile(C3DIR_GAMEDATA, filename, fullpath))
-		return 0;
+int slicif_find_file(char *filename, char *fullpath) {
+  const std::string fp = g_civPaths->FindFile(C3DIR_GAMEDATA, filename);
+  if (fp.empty()) {
+    return 0;
+  }
+  strcpy(fullpath, fp.c_str());
 	return 1;
 }
 

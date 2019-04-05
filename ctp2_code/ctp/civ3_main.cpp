@@ -398,8 +398,7 @@ int ui_Initialize(void)
 
 	pixelutils_Initialize();
 
-	MBCHAR ldlfile[_MAX_PATH];
-	g_civPaths->FindFile(C3DIR_LAYOUT, k_LDLName, ldlfile);
+	std::string ldlfile = g_civPaths->FindFile(C3DIR_LAYOUT, k_LDLName);
 
 	g_c3ui = new C3UI(
 		&auiErr,
@@ -408,7 +407,7 @@ int ui_Initialize(void)
 		g_ScreenWidth,
 		g_ScreenHeight,
 		16,
-		ldlfile,
+		ldlfile.c_str(),
 		g_exclusiveMode );
 	Assert( AUI_NEWOK(g_c3ui,auiErr) );
 	if ( !AUI_NEWOK(g_c3ui,auiErr) ) return 10;
@@ -422,7 +421,7 @@ int ui_Initialize(void)
 	g_is565Format = AUI_SURFACE_PIXELFORMAT_565 == g_c3ui->PixelFormat();
 
 	ColorSet::Initialize();
-    g_c3ui->RegisterCleanup(&ColorSet::Cleanup);
+  g_c3ui->RegisterCleanup(&ColorSet::Cleanup);
 
 	SPLASH_STRING("Creating Blitter...");
 
@@ -431,15 +430,15 @@ int ui_Initialize(void)
 
 	SPLASH_STRING("Initializing Paths...");
 
-    int     i;
-	char s[_MAX_PATH+1];
+  int i;
+	std::string s;
 
     for (i = 0; g_civPaths->FindPath(C3DIR_PATTERNS, i, s); ++i)
     {
         if (s[0])
         {
-            g_c3ui->AddPatternSearchPath(s);
-            g_c3ui->AddImageSearchPath(s);
+            g_c3ui->AddPatternSearchPath(s.c_str());
+            g_c3ui->AddImageSearchPath(s.c_str());
         }
     }
 
@@ -447,8 +446,8 @@ int ui_Initialize(void)
     {
         if (s[0])
         {
-            g_c3ui->AddIconSearchPath(s);
-            g_c3ui->AddImageSearchPath(s);
+            g_c3ui->AddIconSearchPath(s.c_str());
+            g_c3ui->AddImageSearchPath(s.c_str());
         }
     }
 
@@ -456,9 +455,9 @@ int ui_Initialize(void)
     {
         if (s[0])
         {
-            g_c3ui->AddPatternSearchPath(s);
-            g_c3ui->AddPictureSearchPath(s);
-            g_c3ui->AddImageSearchPath(s);
+            g_c3ui->AddPatternSearchPath(s.c_str());
+            g_c3ui->AddPictureSearchPath(s.c_str());
+            g_c3ui->AddImageSearchPath(s.c_str());
         }
     }
 
@@ -466,8 +465,8 @@ int ui_Initialize(void)
     {
         if (s[0])
         {
-            g_c3ui->AddCursorSearchPath(s);
-            g_c3ui->AddImageSearchPath(s);
+            g_c3ui->AddCursorSearchPath(s.c_str());
+            g_c3ui->AddImageSearchPath(s.c_str());
         }
     }
 
@@ -475,68 +474,15 @@ int ui_Initialize(void)
     {
         if (s[0])
         {
-            g_c3ui->AddBitmapFontSearchPath(s);
+            g_c3ui->AddBitmapFontSearchPath(s.c_str());
         }
     }
-
-#ifdef WIN32
-	if (!GetWindowsDirectory(s, _MAX_PATH)) {
-		c3errors_FatalDialog(appstrings_GetString(APPSTR_FONTS),
-								appstrings_GetString(APPSTR_NOWINDOWSDIR));
-	}
-	strcat(s, FILE_SEP "fonts");
-	g_c3ui->AddBitmapFontSearchPath(s);
-#elif defined(HAVE_X11)
-	Display *display = g_c3ui->getDisplay();
-	int ndirs;
-	bool noPath = true;
-	char **fontpaths = XGetFontPath(display, &ndirs);
-	if (fontpaths) {
-		struct stat st = { 0 };
-		for (int i = 0; i < ndirs; i++) {
-			int rc = stat(fontpaths[i], &st);
-			if ((rc == 0) && (S_ISDIR(st.st_mode))) {
-				g_c3ui->AddBitmapFontSearchPath(fontpaths[i]);
-				// Make some default paths get added, too
-				//noPath = false;
-			}
-		}
-		XFreeFontPath(fontpaths);
-	}
-	// Fontpath just contains server(s)?
-	if (noPath) {
-		const int maxPaths = 3;
-		const char* fontPaths[maxPaths] = {
-			"/usr/share/fonts",
-			"/usr/X11R6/lib/X11/fonts",
-			"/usr/lib/X11/fonts"
-		};
-		const int maxDirs = 4;
-		const char* fontDirs[maxDirs] = {
-			"TTF",
-			"corefonts",
-			"truetype",
-			"truetype/msttcorefonts"
-		};
-		for (int pIdx = 0; pIdx < maxPaths; pIdx++) {
-			for (int dIdx = 0; dIdx < maxDirs; dIdx++) {
-				struct stat st = { 0 };
-				snprintf(s, sizeof(s), "%s/%s",
-					fontPaths[pIdx], fontDirs[dIdx]);
-				int rc = stat(s, &st);
-				if ((rc == 0) && (S_ISDIR(st.st_mode))) {
-					g_c3ui->AddBitmapFontSearchPath(s);
-				}
-			}
-		}
-	}
-#endif
 
     for (i = 0; g_civPaths->FindPath(C3DIR_VIDEOS, i, s); ++i)
     {
         if (s[0])
         {
-            g_c3ui->AddMovieSearchPath(s);
+            g_c3ui->AddMovieSearchPath(s.c_str());
         }
     }
 

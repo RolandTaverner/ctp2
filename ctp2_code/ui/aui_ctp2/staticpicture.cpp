@@ -80,18 +80,15 @@ AUI_ERRCODE StaticPicture::InitCommon( MBCHAR *ldlBlock, MBCHAR *picture )
 
 AUI_ERRCODE StaticPicture::InitCommon( const MBCHAR *picture )
 {
-	MBCHAR filename[_MAX_PATH];
-
-	if (g_civPaths->FindFile(C3DIR_PICTURES, picture, filename))
-    {
-	    AUI_ERRCODE errcode;
-		m_picture = new aui_Picture(&errcode, filename);
+	const std::string filename = g_civPaths->FindFile(C3DIR_PICTURES, picture);
+	if (!filename.empty()) {
+	  AUI_ERRCODE errcode;
+		m_picture = new aui_Picture(&errcode, filename.c_str());
 	} else {
-		m_picture = NULL;
+    m_picture = NULL;
 	}
 
 	Assert( m_picture != NULL );
-
 	return AUI_ERRCODE_OK;
 }
 
@@ -126,18 +123,14 @@ AUI_ERRCODE StaticPicture::DrawThis( aui_Surface *surface, sint32 x, sint32 y )
 	return AUI_ERRCODE_OK;
 }
 
-void StaticPicture::SetPicture(MBCHAR *picture)
+void StaticPicture::SetPicture(const MBCHAR *picture)
 {
-	MBCHAR filename[_MAX_PATH];
-
-    delete m_picture;
-	if (g_civPaths->FindFile(C3DIR_PICTURES, picture, filename))
-    {
-	    AUI_ERRCODE errcode;
-		m_picture = new aui_Picture(&errcode, filename);
-	}
-    else
-    {
+  delete m_picture;
+  const std::string filename = g_civPaths->FindFile(C3DIR_PICTURES, picture);
+	if (!filename.empty()) {
+	  AUI_ERRCODE errcode;
+		m_picture = new aui_Picture(&errcode, filename.c_str());
+	} else {
 		m_picture = NULL;
 	}
 

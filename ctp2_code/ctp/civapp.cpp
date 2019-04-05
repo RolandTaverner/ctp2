@@ -422,19 +422,19 @@ void AddSearchDirectories
     MBCHAR const *  a_PackFileName
 )
 {
-    MBCHAR          path[_MAX_PATH];
+    std::string path;
 
     for (int i = 0; g_civPaths->FindPath(a_Type, i++, path); )
     {
-        if (path[0])
+        if (!path.empty())
         {
             // The directory, for looking up "loose" files
-            a_ProjectFile->addPath(path);
+            a_ProjectFile->addPath(path.c_str());
 
             // A predefined packed file in the directory
-            strcat(path, FILE_SEP);
-            strcat(path, a_PackFileName);
-            a_ProjectFile->addPath(path);
+            path += FILE_SEP;
+            path += a_PackFileName;
+            a_ProjectFile->addPath(path.c_str());
         }
     }
 }
@@ -451,16 +451,16 @@ void AddSearchPacks
     MBCHAR const *  a_PackFileName
 )
 {
-    MBCHAR          path[_MAX_PATH];
+    std::string path;
 
     for (int i = 0; g_civPaths->FindPath(a_Type, i++, path); )
     {
-        if (path[0])
+        if (!path.empty())
         {
             // A predefined packed file in the directory
-            strcat(path, FILE_SEP);
-            strcat(path, a_PackFileName);
-            a_ProjectFile->addPath(path, TRUE);
+          path += FILE_SEP;
+          path += a_PackFileName;
+          a_ProjectFile->addPath(path.c_str(), TRUE);
         }
     }
 }
