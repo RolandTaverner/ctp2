@@ -134,7 +134,7 @@ AUI_ERRCODE aui_Ldl::MakeSureBlockExists(MBCHAR const *ldlBlock) {
   ldl_datablock *block = s_ldl->FindDataBlock(ldlBlock);
   if (!block) {
 #if 1
-    LDLBlockPtr block = std::make_shared<ldl_datablock>(s_ldl, ldlBlock);
+    LDLDataBlockPtr block = std::make_shared<ldl_datablock>(s_ldl, ldlBlock);
 
     block->AddAttribute(k_AUI_LDL_HANCHOR, "left");
     block->AddAttribute(k_AUI_LDL_VANCHOR, "top");
@@ -356,7 +356,7 @@ aui_Region *aui_Ldl::BuildHierarchyFromRoot(MBCHAR const * rootBlock) {
 
 
 AUI_ERRCODE aui_Ldl::BuildHierarchyFromLeaf(ldl_datablock *parent, aui_Region *region) {
-  for (LDLBlockPtr dataBlock : parent->GetChildList()) {
+  for (LDLDataBlockPtr dataBlock : parent->GetChildList()) {
     Assert(dataBlock);
     if (!dataBlock)
       return AUI_ERRCODE_INVALIDPARAM;
@@ -505,7 +505,7 @@ AUI_ERRCODE aui_Ldl::DeleteHierarchyFromLeaf(ldl_datablock *parent) {
   
   if (parent == NULL) return AUI_ERRCODE_OK;
 
-  for (LDLBlockPtr dataBlock : parent->GetChildList()) {
+  for (LDLDataBlockPtr dataBlock : parent->GetChildList()) {
     BOOL isAtomic = dataBlock->GetBool(k_AUI_LDL_ATOMIC);
 
     if (!isAtomic) {

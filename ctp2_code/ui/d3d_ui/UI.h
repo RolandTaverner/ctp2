@@ -5,6 +5,7 @@
 #include "D3dTiles/Scene.h"
 #include "ui/d3d_ui/interface/D3dSplash.h"
 #include "ui/d3d_ui/D3d/D3dUI.h"
+#include "ui/d3d_ui/UILDL.h"
 
 #include "ui/d3d_ui/Resource/ResourceLoader.h"
 #include "ui/d3d_ui/Resource/UICursor.h"
@@ -55,6 +56,8 @@ private:
   TileEngine::Region::Ptr m_mouseLayer;
   TileEngine::Region::Ptr m_splashLayer;
   Splash::Ptr m_splash;
+
+  LDL m_LDL;
 
   ResourceLoader<UICursorResource> m_cursorLoader;
   ResourceLoader<UIImageResource> m_imageLoader;

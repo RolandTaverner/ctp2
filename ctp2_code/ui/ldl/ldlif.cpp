@@ -77,8 +77,8 @@ public:
 
 std::unordered_map<std::string, LDLString> s_ldlStringHash;
 
-std::stack<LDLBlockPtr> s_blockStack;
-std::map<std::string, LDLBlockPtr> s_blockTree;
+std::stack<LDLDataBlockPtr> s_blockStack;
+std::map<std::string, LDLDataBlockPtr> s_blockTree;
 
 extern "C" { void ldlif_report_error(const char *text); }
 
@@ -86,12 +86,12 @@ void ldlif_report_error(const char *text) {
   c3errors_ErrorDialog("LDL", text);
 }
 
-LDLBlockPtr ldlif_find_block(char const * name) {
+LDLDataBlockPtr ldlif_find_block(char const * name) {
   auto it = s_blockTree.find(std::string(name));
   if (it != s_blockTree.end()) {
     return it->second;
   }
-  return LDLBlockPtr();
+  return LDLDataBlockPtr();
 }
 
 int ldlif_find_file(const char *filename, char *fullpath) {
@@ -158,7 +158,7 @@ void ldlif_start_block(void *names) {
   PointerList<char> *namelist = (PointerList<char> *)names;
   Assert(namelist);
 
-  LDLBlockPtr block = std::make_shared<ldl_datablock>(namelist);
+  LDLDataBlockPtr block = std::make_shared<ldl_datablock>(namelist);
 
   if (!s_blockStack.empty()) {
     s_blockStack.top()->AddChild(block);
@@ -168,7 +168,7 @@ void ldlif_start_block(void *names) {
   ldlif_add_block_to_tree(block);
 }
 
-void ldlif_add_block_to_tree(LDLBlockPtr block) {
+void ldlif_add_block_to_tree(LDLDataBlockPtr block) {
   const std::string fullName = block->GetFullName();
   auto[it, ok] = s_blockTree.emplace(fullName, block);
   ldlif_log("Added: %s\n", fullName.c_str());
@@ -178,12 +178,12 @@ void ldlif_add_block_to_tree(LDLBlockPtr block) {
     ldlif_report_error(msg.c_str());
   }
 
-  for (LDLBlockPtr &c : block->GetChildList()) {
+  for (LDLDataBlockPtr &c : block->GetChildList()) {
     ldlif_add_block_to_tree(c);
   }
 }
 
-void ldlif_remove_block_from_tree(LDLBlockPtr block) {
+void ldlif_remove_block_from_tree(LDLDataBlockPtr block) {
   s_blockTree.erase(block->GetFullName());
 }
 
@@ -191,7 +191,7 @@ void *ldlif_end_block(void *names) {
   PointerList<char> *namelist = (PointerList<char> *)names;
   Assert(namelist);
 
-  LDLBlockPtr block = s_blockStack.top();
+  LDLDataBlockPtr block = s_blockStack.top();
   s_blockStack.pop();
 
   block->AddTemplateChildren();
@@ -225,7 +225,7 @@ void ldlif_allocate_stuff() {
 }
 
 void ldlif_deallocate_stuff() {
-  s_blockStack.swap(std::stack<LDLBlockPtr>());
+  s_blockStack.swap(std::stack<LDLDataBlockPtr>());
 
   s_ldlStringHash.clear();
 

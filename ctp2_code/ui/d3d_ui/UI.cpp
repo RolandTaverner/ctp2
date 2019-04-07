@@ -5,6 +5,8 @@
 namespace ui::d3d {
 
 void UI::InitializeUI(HINSTANCE hinst, int cmdshow, unsigned windowWidth, unsigned windowHeight, const std::string &ldlFile) {
+  m_LDL.Load(ldlFile);
+
   InitializeD3d(hinst, cmdshow, windowWidth, windowHeight);
 
   m_scene = std::make_shared<TileEngine::Scene>(ScreenWidth(), ScreenHeight());
@@ -20,7 +22,6 @@ void UI::InitializeUI(HINSTANCE hinst, int cmdshow, unsigned windowWidth, unsign
   m_mouseLayer = m_scene->Root()->CreateLayer(0xFFFFu + 1);
 
   m_splash = std::make_shared<Splash>(m_splashLayer, GetRenderer()->GetFontManager(), TileEngine::FontDesc("Arial", 8, TileEngine::FONTSTYLE_REGULAR));
-
 }
 
 UI::UI() {}

@@ -2665,6 +2665,9 @@
     <ClInclude Include="..\ui\d3d_ui\Resource\UIPicture.h">
       <Filter>ui\d3d_ui\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\UILDL.h">
+      <Filter>ui\d3d_ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctp2_utils\appstrings.cpp">
@@ -4961,6 +4964,9 @@
     </ClCompile>
     <ClCompile Include="..\ui\d3d_ui\Resource\UIPicture.cpp">
       <Filter>ui\d3d_ui\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\UILDL.cpp">
+      <Filter>ui\d3d_ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

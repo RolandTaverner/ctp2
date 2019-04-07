@@ -7,6 +7,8 @@
 
 #include "ui/ldl/ldlif.h"
 
+ldl::ldl() {}
+
 ldl::ldl(const char *fname, const char *outputDir, BOOL bUseInternalMemmap) {
   ReadData(fname);
 }
@@ -27,7 +29,7 @@ ldl_datablock *ldl::FindDataBlock(const char *szName, ldl_datablock *dbParent) {
   return ldlif_find_block(szName).get();
 }
 
-LDLBlockPtr ldl::FindDataBlockPtr(const char *szName, ldl_datablock *dbParent) {
+LDLDataBlockPtr ldl::FindDataBlockPtr(const char *szName) const {
   return ldlif_find_block(szName);
 }
 

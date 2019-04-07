@@ -15,7 +15,7 @@ ldl_datablock::ldl_datablock(PointerList<char> *templateNames) {
   walk.Next();
 
   while (walk.IsValid()) {
-    LDLBlockPtr temp = ldlif_find_block(walk.GetObj());
+    LDLDataBlockPtr temp = ldlif_find_block(walk.GetObj());
     if (temp) {
       m_templates.push_back(temp);
     } else {
@@ -40,13 +40,13 @@ void ldl_datablock::CopyFrom(const ldl_datablock & rhs) {
   for (const ldl_attribute &attr : rhs.GetAttributes()) {
     m_attributes.push_back(attr);
   }
-  for (LDLBlockPtr c : rhs.m_children) {
-    LDLBlockPtr newBlock = std::make_shared<ldl_datablock>();
+  for (LDLDataBlockPtr c : rhs.m_children) {
+    LDLDataBlockPtr newBlock = std::make_shared<ldl_datablock>();
     newBlock->CopyFrom(*c);
     AddChild(newBlock);
   }
-  for (LDLBlockPtr t : rhs.m_templates) {
-    LDLBlockPtr newBlock = std::make_shared<ldl_datablock>();
+  for (LDLDataBlockPtr t : rhs.m_templates) {
+    LDLDataBlockPtr newBlock = std::make_shared<ldl_datablock>();
     newBlock->CopyFrom(*t);
     m_templates.push_back(newBlock);
   }
@@ -86,7 +86,7 @@ void ldl_datablock::Dump(sint32 indent) {
 
   ldlif_log("%s", m_name.c_str());
 
-  for (const LDLBlockPtr &b : m_templates) {
+  for (const LDLDataBlockPtr &b : m_templates) {
     ldlif_log(":%s", b->GetName().c_str());
   }
   ldlif_log(" {\n");
@@ -98,7 +98,7 @@ void ldl_datablock::Dump(sint32 indent) {
       attr.GetValueText().c_str());
   }
 
-  for (LDLBlockPtr &b : m_templates) {
+  for (LDLDataBlockPtr &b : m_templates) {
     b->Dump(indent + 1);
   }
 
@@ -122,19 +122,19 @@ void ldl_datablock::SetValue(char *name, int value) {
 }
 
 void ldl_datablock::AddTemplateChildren() {
-  for (LDLBlockPtr b : m_templates) {
+  for (LDLDataBlockPtr b : m_templates) {
     CopyAttributesFrom(b);
     b->AddTemplateChildrenTo(shared_from_this());
   }
 }
 
-void ldl_datablock::AddTemplateChildrenTo(LDLBlockPtr block) {
-  for (LDLBlockPtr child : m_children) {
+void ldl_datablock::AddTemplateChildrenTo(LDLDataBlockPtr block) {
+  for (LDLDataBlockPtr child : m_children) {
     bool alreadyHaveIt = false;
-    for (LDLBlockPtr childArg : block->m_children) {
+    for (LDLDataBlockPtr childArg : block->m_children) {
       if (childArg->GetName() == child->GetName()) {
         childArg->CopyAttributesFrom(child);
-        for (LDLBlockPtr templ : child->m_templates) {
+        for (LDLDataBlockPtr templ : child->m_templates) {
           childArg->m_templates.push_back(templ);
         }
         childArg->AddTemplateChildren();
@@ -144,7 +144,7 @@ void ldl_datablock::AddTemplateChildrenTo(LDLBlockPtr block) {
     }
 
     if (!alreadyHaveIt) {
-      LDLBlockPtr newblock = std::make_shared<ldl_datablock>();
+      LDLDataBlockPtr newblock = std::make_shared<ldl_datablock>();
       newblock->CopyFrom(*child);
       block->AddChild(newblock);
       newblock->AddTemplateChildren();
@@ -153,7 +153,7 @@ void ldl_datablock::AddTemplateChildrenTo(LDLBlockPtr block) {
   }
 }
 
-void ldl_datablock::CopyAttributesFrom(LDLBlockPtr templ) {
+void ldl_datablock::CopyAttributesFrom(LDLDataBlockPtr templ) {
   for (const ldl_attribute &attr : templ->GetAttributes()) {
     auto[existingAttr, ok] = LDLAttrListFindAttribute(m_attributes, attr.GetName());
     if (!ok) {
@@ -161,9 +161,9 @@ void ldl_datablock::CopyAttributesFrom(LDLBlockPtr templ) {
     }
   }
 
-  for (LDLBlockPtr templChild : templ->m_children) {
+  for (LDLDataBlockPtr templChild : templ->m_children) {
     bool foundIt = false;
-    for (LDLBlockPtr child : m_children) {
+    for (LDLDataBlockPtr child : m_children) {
       if (child->GetName() == templChild->GetName()) {
         child->CopyAttributesFrom(templChild);
         foundIt = true;
@@ -171,7 +171,7 @@ void ldl_datablock::CopyAttributesFrom(LDLBlockPtr templ) {
       }
     }
     if (!foundIt) {
-      LDLBlockPtr newblock = std::make_shared<ldl_datablock>();
+      LDLDataBlockPtr newblock = std::make_shared<ldl_datablock>();
       newblock->CopyFrom(*templChild);
       newblock->CopyAttributesFrom(templChild);
       AddChild(newblock);

@@ -1183,6 +1183,7 @@ rem                                                 if                          
     <ClInclude Include="..\ui\d3d_ui\Resource\ResourceLoader.h" />
     <ClInclude Include="..\ui\d3d_ui\Resource\UIPattern.h" />
     <ClInclude Include="..\ui\d3d_ui\Resource\UIPicture.h" />
+    <ClInclude Include="..\ui\d3d_ui\UILDL.h" />
     <ClInclude Include="..\ui\d3d_ui\UIMain.h" />
     <ClInclude Include="..\ui\d3d_ui\D3d\D3dUI.h" />
     <ClInclude Include="..\ui\d3d_ui\interface\D3dSplash.h" />
@@ -2697,6 +2698,7 @@ rem                                                 if                          
     <ClCompile Include="..\ui\d3d_ui\Resource\UIImage.cpp" />
     <ClCompile Include="..\ui\d3d_ui\Resource\UIPattern.cpp" />
     <ClCompile Include="..\ui\d3d_ui\Resource\UIPicture.cpp" />
+    <ClCompile Include="..\ui\d3d_ui\UILDL.cpp" />
     <ClCompile Include="..\ui\d3d_ui\UIMain.cpp" />
     <ClCompile Include="..\ui\d3d_ui\D3d\D3dUI.cpp" />
     <ClCompile Include="..\ui\d3d_ui\interface\D3dSplash.cpp" />

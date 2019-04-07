@@ -13,11 +13,11 @@
 #include <memory>
 
 class ldl_datablock;
-typedef std::shared_ptr<ldl_datablock> LDLBlockPtr;
+typedef std::shared_ptr<ldl_datablock> LDLDataBlockPtr;
 
-LDLBlockPtr ldlif_find_block(char const * name);
-void ldlif_add_block_to_tree(LDLBlockPtr block);
-void ldlif_remove_block_from_tree(LDLBlockPtr block);
+LDLDataBlockPtr ldlif_find_block(char const * name);
+void ldlif_add_block_to_tree(LDLDataBlockPtr block);
+void ldlif_remove_block_from_tree(LDLDataBlockPtr block);
 
 extern "C" {
 #endif

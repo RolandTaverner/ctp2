@@ -38,9 +38,9 @@
 
 class ldl_datablock;
 
-typedef std::shared_ptr<ldl_datablock> LDLBlockPtr;
+typedef std::shared_ptr<ldl_datablock> LDLDataBlockPtr;
 typedef std::weak_ptr<ldl_datablock> LDLBlockWeakPtr;
-typedef std::list<LDLBlockPtr> LDLBlockList;
+typedef std::list<LDLDataBlockPtr> LDLBlockList;
 
 #include "ctp/ctp2_utils/pointerlist.h"
 #include "ui/ldl/ldl_list.h"
@@ -69,10 +69,11 @@ public:
 
   const std::string &GetName() const { return m_name; }
   LDLBlockList &GetChildList() { return m_children; }
+  const LDLBlockList &GetChildList() const { return m_children; }
   const ldl_attributelist &GetAttributes() const { return m_attributes; }
 
   // Add a child block
-  void AddChild(LDLBlockPtr child) {
+  void AddChild(LDLDataBlockPtr child) {
     m_children.push_back(child);
     child->m_parent = shared_from_this();
   }
@@ -92,10 +93,10 @@ public:
     m_attributes.push_back(ldl_attribute(name, ATTRIBUTE_TYPE_INT, value));
   }
 
-  void CopyAttributesFrom(LDLBlockPtr templ);
+  void CopyAttributesFrom(LDLDataBlockPtr templ);
 
   void AddTemplateChildren();
-  void AddTemplateChildrenTo(LDLBlockPtr block);
+  void AddTemplateChildrenTo(LDLDataBlockPtr block);
 
   void Dump(sint32 indent);
 

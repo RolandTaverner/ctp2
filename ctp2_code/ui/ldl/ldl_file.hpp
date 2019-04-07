@@ -14,10 +14,11 @@
 #include <memory>
 
 class ldl_datablock;
-typedef std::shared_ptr<ldl_datablock> LDLBlockPtr;
+typedef std::shared_ptr<ldl_datablock> LDLDataBlockPtr;
 
 class ldl {
 public:
+  ldl();
 	ldl(const char *szName, const char *szOutputDir = NULL, BOOL bUseInternalMemmap = TRUE );
 	~ldl();
 
@@ -25,7 +26,7 @@ public:
 	BOOL ReadData(const char *fname = NULL);
 
 	ldl_datablock *FindDataBlock(const char *szName, ldl_datablock *dbParent = NULL );
-  LDLBlockPtr FindDataBlockPtr(const char *szName, ldl_datablock *dbParent);
+  LDLDataBlockPtr FindDataBlockPtr(const char *szName) const;
 	BOOL WriteData();
 };
 
