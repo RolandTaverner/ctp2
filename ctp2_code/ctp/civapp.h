@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //
-// Project  : Call To Power 2
+// Project : Call To Power 2
 // File type : C++ header
 // Description : Main application
 //
@@ -39,7 +39,7 @@
 //
 //----------------------------------------------------------------------------
 
-#include <windows.h>   // HINSTANCE, MBCHAR
+#include <windows.h> // HINSTANCE, MBCHAR
 
 //----------------------------------------------------------------------------
 //
@@ -56,8 +56,8 @@ class CivApp;
 //----------------------------------------------------------------------------
 
 #include "ui/aui_common/aui_ldl.h"
-#include "ui/aui_common/aui_action.h"  // aui_Action
-#include "ui/d3d_ui/D3dUI.h"
+#include "ui/aui_common/aui_action.h" // aui_Action
+#include "ui/d3d_ui/UIMain.h"
 #include "os/include/ctp2_inttypes.h" // sint32, uint32
 class CivArchive;
 
@@ -102,7 +102,7 @@ public:
   sint32 LoadSavedGameMap(MBCHAR const * name);
   sint32 LoadScenarioGame(MBCHAR const * name);
   void PostEndGameAction(void);
-  void  PostLoadQuickSaveAction(sint32 player);
+  void PostLoadQuickSaveAction(sint32 player);
   void PostLoadSaveGameAction(MBCHAR const *);
   void PostLoadScenarioGameAction(MBCHAR const * name);
   void PostQuitToLobbyAction(void);
@@ -130,26 +130,26 @@ public:
   void StopKeyboardScrolling(sint32 key);
 
   void Render();
-  ui::d3d::D3dUI::D3dUIPtr UI();
+  ui::d3d::UIMainPtr UI();
 
 private:
   void CleanupAppUI(void);
   void CleanupGame(bool keepScenInfo);
   void CleanupGameUI(void);
-  void  InitializeAppUI(void);
+  void InitializeAppUI(void);
   sint32 InitializeGameUI(void);
   sint32 InitializeSpriteEditor(CivArchive &archive);
   void PostLoadSaveGameMapAction(MBCHAR const *);
-  sint32  ProcessAI();
-  sint32  ProcessNet(const uint32 target_milliseconds, uint32 &used_milliseconds);
+  sint32 ProcessAI();
+  sint32 ProcessNet(const uint32 target_milliseconds, uint32 &used_milliseconds);
   sint32 ProcessProfile(void);
-  sint32  ProcessRobot(const uint32 target_milliseconds, uint32 &used_milliseconds);
-  sint32  ProcessSLIC(void);
+  sint32 ProcessRobot(const uint32 target_milliseconds, uint32 &used_milliseconds);
+  sint32 ProcessSLIC(void);
   sint32 ProcessUI(const uint32 target_milliseconds, uint32 &used_milliseconds);
   void RestoreAutoSave(sint32 player);
-  void  StartMessageSystem();
+  void StartMessageSystem();
 
-  ui::d3d::D3dUI::D3dUIPtr m_UI;
+  ui::d3d::UIMainPtr m_UI;
   bool m_appLoaded;
   bool m_dbLoaded;
   bool m_gameLoaded;
@@ -182,8 +182,8 @@ public:
   virtual void Execute
   (
     aui_Control * control,
-    uint32  action,
-    uint32  data
+    uint32 action,
+    uint32 data
   );
 
 private:
@@ -197,21 +197,21 @@ public:
  LoadSaveGameMapAction(MBCHAR const * name = NULL)
  : aui_Action ()
  {
-  if (name)
-  {
-   strncpy(m_filename, name, k_AUI_LDL_MAXBLOCK);
-  }
-  else
-  {
-   m_filename[0] = 0;
-  }
+ if (name)
+ {
+ strncpy(m_filename, name, k_AUI_LDL_MAXBLOCK);
+ }
+ else
+ {
+ m_filename[0] = 0;
+ }
  };
 
  virtual void Execute
  (
  aui_Control * control,
- uint32  action,
- uint32  data
+ uint32 action,
+ uint32 data
  );
 
 private:
@@ -233,8 +233,8 @@ public:
   virtual void Execute
   (
     aui_Control * control,
-    uint32  action,
-    uint32  data
+    uint32 action,
+    uint32 data
   );
 
 private:

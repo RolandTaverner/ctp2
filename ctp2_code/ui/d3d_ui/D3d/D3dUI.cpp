@@ -5,11 +5,11 @@
 
 #include <comutil.h>
 
-#include "ui/d3d_ui/D3dUI.h"
+#include "ui/d3d_ui/D3d/D3dUI.h"
 
 #define k_MSWHEEL_ROLLMSG		0xC7AF
 
-namespace ui::d3d {
+namespace ui::d3d::Direct3d {
 
 LPCSTR gszMainWindowClass = "CTP II";
 LPCSTR gszMainWindowName = "CTP II";
@@ -19,25 +19,12 @@ D3dUI::D3dUIPtr D3dUI::m_self;
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 
 D3dUI::D3dUI() :
-  m_hWnd(0), m_hinst(0) {}
+  m_screenWidth(0), m_screenHeight(0), m_hWnd(0), m_hinst(0) {}
 
 D3dUI::~D3dUI() {}
 
-D3dUI::D3dUIPtr D3dUI::Self() {
-  return m_self;
-}
-
-void D3dUI::Free() {
-  m_self.reset();
-}
-
-Splash::Ptr D3dUI::GetSplash() {
-  return m_splash;
-}
-
-void D3dUI::Initialize(HINSTANCE hinst, int cmdshow,
+void D3dUI::InitializeD3d(HINSTANCE hinst, int cmdshow,
   unsigned windowWidth, unsigned windowHeight) {
-  m_self = shared_from_this();
   m_renderer = std::make_shared<TileEngine::D3d::Renderer>();
   m_hinst = hinst;
 
@@ -65,7 +52,6 @@ void D3dUI::Initialize(HINSTANCE hinst, int cmdshow,
   }
 
   const std::filesystem::path fontsPath = std::filesystem::path(exeFile).parent_path() / "Fonts";
-
   m_renderer->GetFontManager()->LoadFont((fontsPath / "arial_6.spritefont").string(), "Arial", 6, TileEngine::FONTSTYLE_REGULAR);
   m_renderer->GetFontManager()->LoadFont((fontsPath / "arial_8.spritefont").string(), "Arial", 8, TileEngine::FONTSTYLE_REGULAR);
   m_renderer->GetFontManager()->LoadFont((fontsPath / "arial_10.spritefont").string(), "Arial", 10, TileEngine::FONTSTYLE_REGULAR);
@@ -76,30 +62,10 @@ void D3dUI::Initialize(HINSTANCE hinst, int cmdshow,
 
   RECT rc;
   GetClientRect(Wnd(), &rc);
-  unsigned screenWidth = rc.right - rc.left;
-  unsigned screenHeight = rc.bottom - rc.top;
+  m_screenWidth = rc.right - rc.left;
+  m_screenHeight = rc.bottom - rc.top;
 
-  m_scene = std::make_shared<TileEngine::Scene>(screenWidth, screenHeight);
-  m_renderer->SetScene(m_scene);
-
-  m_desktopLayer = m_scene->Root()->CreateLayer(0);
-
-  m_desktopLayer->DrawPrimitive(TileEngine::Position(),
-    std::make_shared<TileEngine::ColoredRectangle>(m_desktopLayer->Width(), m_desktopLayer->Height(),
-      TileEngine::MakeColor(60, 60, 60, 255)));
-  
-  m_splashLayer = m_scene->Root()->CreateLayer(0xFFFFu);
-  m_mouseLayer = m_scene->Root()->CreateLayer(0xFFFFu + 1);
-
-  m_splash = std::make_shared<Splash>(m_splashLayer, m_renderer->GetFontManager(), TileEngine::FontDesc("Arial", 8, TileEngine::FONTSTYLE_REGULAR));
-}
-
-unsigned D3dUI::Width() {
-  return m_scene ? m_scene->Width() : 0;
-}
-
-unsigned D3dUI::Height() {
-  return m_scene ? m_scene->Height() : 0;
+  m_self = shared_from_this();
 }
 
 HWND D3dUI::Wnd() {
@@ -110,24 +76,40 @@ HINSTANCE D3dUI::Hinst() {
   return m_hinst;
 }
 
-void D3dUI::HandleKeyPress(WPARAM wParam, LPARAM lParam) {}
+unsigned D3dUI::ScreenWidth() const {
+  return m_screenWidth;
+}
 
-void D3dUI::HandleWindowsMessage(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {}
-
-void D3dUI::HandleMouseWheel(std::int16_t delta) {}
+unsigned D3dUI::ScreenHeight() const {
+  return m_screenHeight;
+}
 
 void D3dUI::Render() {
   m_renderer->Render();
 }
 
 void D3dUI::Destroy() {
-  D3dUI::Free();
-
   m_renderer.reset();
-  m_scene.reset();
 
   DestroyWindow(Wnd());
   m_hWnd = 0;
+  Free();
+}
+
+D3dUI::D3dUIPtr D3dUI::GetD3dUI() {
+  return m_self;
+}
+
+TileEngine::D3d::RendererPtr D3dUI::GetRenderer() {
+  return m_renderer;
+}
+
+TileEngine::FontManager::Ptr D3dUI::GetFontManager() {
+  return m_renderer->GetFontManager();
+}
+
+void D3dUI::Free() {
+  m_self.reset();
 }
 
 void D3dUI::InitWindow(int cmdshow, unsigned windowWidth, unsigned windowHeight) {
@@ -164,7 +146,6 @@ void D3dUI::InitWindow(int cmdshow, unsigned windowWidth, unsigned windowHeight)
       ShowWindow(hwnd, SW_RESTORE);
     }
     SetForegroundWindow(hwnd);
-    Free();
     exit(0);
   }
 
@@ -198,14 +179,15 @@ void D3dUI::InitWindow(int cmdshow, unsigned windowWidth, unsigned windowHeight)
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
-  D3dUI::D3dUIPtr ui = D3dUI::Self();
-  if (!ui) {
+  D3dUI::D3dUIPtr d3dUI = D3dUI::GetD3dUI();
+  if (!d3dUI) {
     // Error?
-    PostQuitMessage(-1);
+    return DefWindowProc(hwnd, iMsg, wParam, lParam);
+    //PostQuitMessage(-1);
   }
 
-  if (/*!gDone && */ ui) { // TODO
-    ui->HandleWindowsMessage(hwnd, iMsg, wParam, lParam);
+  if (/*!gDone && */ d3dUI) { // TODO
+    d3dUI->HandleWindowsMessage(hwnd, iMsg, wParam, lParam);
   }
 
   static bool swallowNextChar = false;
@@ -213,7 +195,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
   switch (iMsg) {
   case WM_CHAR:
     if (!swallowNextChar) {
-      ui->HandleKeyPress(wParam, lParam);
+      d3dUI->HandleKeyPress(wParam, lParam);
     }
     swallowNextChar = false;
     break;
@@ -230,41 +212,41 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
     case VK_F8:
     case VK_F9:
       if (!(GetKeyState(VK_SHIFT) & 0x8000)) {
-        ui->HandleKeyPress(wParam - VK_F1 + '1' + 128, lParam);
+        d3dUI->HandleKeyPress(wParam - VK_F1 + '1' + 128, lParam);
       }
       break;
     case VK_F10:
       if (!(GetKeyState(VK_SHIFT) & 0x8000)) {
-        ui->HandleKeyPress(wParam - VK_F10 + '0' + 128, lParam);
+        d3dUI->HandleKeyPress(wParam - VK_F10 + '0' + 128, lParam);
       }
       break;
     case VK_F11:
       if (!(GetKeyState(VK_SHIFT) & 0x8000)) {
-        ui->HandleKeyPress('!' + 128, lParam);
+        d3dUI->HandleKeyPress('!' + 128, lParam);
       }
       break;
     case VK_F12:
       if (!(GetKeyState(VK_SHIFT) & 0x8000)) {
-        ui->HandleKeyPress('@' + 128, lParam);
+        d3dUI->HandleKeyPress('@' + 128, lParam);
       }
       break;
     case VK_TAB:
-      ui->HandleKeyPress('\t' + 128, lParam);
+      d3dUI->HandleKeyPress('\t' + 128, lParam);
       swallowNextChar = true;
       return 0;
     case VK_RETURN:
-      ui->HandleKeyPress('\r' + 128, lParam);
+      d3dUI->HandleKeyPress('\r' + 128, lParam);
       swallowNextChar = true;
       return 0;
     case VK_BACK:
-      ui->HandleKeyPress(8 + 128, lParam);
+      d3dUI->HandleKeyPress(8 + 128, lParam);
       swallowNextChar = true;
       return 0;
     case VK_UP:
     case VK_DOWN:
     case VK_LEFT:
     case VK_RIGHT:
-      ui->HandleKeyPress(wParam + 256, lParam);
+      d3dUI->HandleKeyPress(wParam + 256, lParam);
       break;
     }
     break;
@@ -272,17 +254,18 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 
     if (wParam == VK_F10) {
       if (!(GetKeyState(VK_SHIFT) & 0x8000)) {
-        ui->HandleKeyPress(wParam - VK_F10 + '0' + 128, lParam);
+        d3dUI->HandleKeyPress(wParam - VK_F10 + '0' + 128, lParam);
       }
     }
     break;
   case WM_CLOSE:
-    if (hwnd != ui->Wnd()) {
+    if (hwnd != d3dUI->Wnd()) {
       break;
     }
     // TODO
-   //gDone = TRUE;
-    ui->Destroy();
+    PostQuitMessage(0);
+    //gDone = TRUE;
+    //d3dUI->Destroy();
     return 0;
 
   case k_MSWHEEL_ROLLMSG:
@@ -290,25 +273,25 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
     sint16 dir = HIWORD(wParam);
     if (dir >= 0) dir = 1;
     if (dir < 0) dir = -1;
-    ui->HandleMouseWheel(dir);
+    d3dUI->HandleMouseWheel(dir);
   }
 
   case WM_VSCROLL:
   {
     sint16 scrollCode = LOWORD(wParam);
     if (scrollCode == SB_LINEDOWN) {
-      ui->HandleMouseWheel((sint16)-1);
+      d3dUI->HandleMouseWheel((sint16)-1);
     } else if (scrollCode == SB_LINEUP) {
-      ui->HandleMouseWheel((sint16)1);
+      d3dUI->HandleMouseWheel((sint16)1);
     }
   }
   break;
   case WM_MOUSEWHEEL:
-    ui->HandleMouseWheel((sint16)HIWORD(wParam));
+    d3dUI->HandleMouseWheel((sint16)HIWORD(wParam));
     break;
   }
 
   return DefWindowProc(hwnd, iMsg, wParam, lParam);
 }
 
-} // namespace ui::d3d
+} // namespace ui::d3d::Direct3d

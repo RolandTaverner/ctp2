@@ -158,7 +158,7 @@
 #include "ui/interface/workwindow.h"
 #include "gs/world/World.h"                      // g_theWorld
 
-#include "ui/d3d_ui/D3dUI.h"
+#include "ui/d3d_ui/UIMain.h"
 
 #if !defined(__GNUC__) // TODO: replacement needed (wine doesnt have these headers...)
 #include "ui/aui_ctp2/directvideo.h"
@@ -435,7 +435,7 @@ int ui_Initialize(void)
 
     for (i = 0; g_civPaths->FindPath(C3DIR_PATTERNS, i, s); ++i)
     {
-        if (s[0])
+        if (!s.empty())
         {
             g_c3ui->AddPatternSearchPath(s.c_str());
             g_c3ui->AddImageSearchPath(s.c_str());
@@ -444,7 +444,7 @@ int ui_Initialize(void)
 
     for (i = 0; g_civPaths->FindPath(C3DIR_ICONS, i, s); ++i)
     {
-        if (s[0])
+        if (!s.empty())
         {
             g_c3ui->AddIconSearchPath(s.c_str());
             g_c3ui->AddImageSearchPath(s.c_str());
@@ -453,7 +453,7 @@ int ui_Initialize(void)
 
     for (i = 0; g_civPaths->FindPath(C3DIR_PICTURES, i, s); ++i)
     {
-        if (s[0])
+        if (!s.empty())
         {
             g_c3ui->AddPatternSearchPath(s.c_str());
             g_c3ui->AddPictureSearchPath(s.c_str());
@@ -463,7 +463,7 @@ int ui_Initialize(void)
 
     for (i = 0; g_civPaths->FindPath(C3DIR_CURSORS, i, s); ++i)
     {
-        if (s[0])
+        if (!s.empty())
         {
             g_c3ui->AddCursorSearchPath(s.c_str());
             g_c3ui->AddImageSearchPath(s.c_str());
@@ -472,7 +472,7 @@ int ui_Initialize(void)
 
     for (i = 0; g_civPaths->FindPath(C3DIR_FONTS, i, s); ++i)
     {
-        if (s[0])
+        if (!s.empty())
         {
             g_c3ui->AddBitmapFontSearchPath(s.c_str());
         }
@@ -480,7 +480,7 @@ int ui_Initialize(void)
 
     for (i = 0; g_civPaths->FindPath(C3DIR_VIDEOS, i, s); ++i)
     {
-        if (s[0])
+        if (!s.empty())
         {
             g_c3ui->AddMovieSearchPath(s.c_str());
         }
@@ -1470,7 +1470,7 @@ int CivMain
 int WINAPI CivMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
 
-	HWND hwnd = FindWindow(ui::d3d::gszMainWindowClass, ui::d3d::gszMainWindowName);
+	HWND hwnd = FindWindow(ui::d3d::Direct3d::gszMainWindowClass, ui::d3d::Direct3d::gszMainWindowName);
 	if (hwnd) {
 
 		if (IsIconic(hwnd)) {

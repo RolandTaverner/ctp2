@@ -345,8 +345,8 @@ public:
 	virtual AUI_ERRCODE	AddChild( aui_Region *child );
 	virtual AUI_ERRCODE	RemoveChild( uint32 windowId );
 
-	AUI_ERRCODE	ShowWindow( uint32 windowId );
-	AUI_ERRCODE	HideWindow( uint32 windowId );
+	//AUI_ERRCODE	ShowWindow( uint32 windowId );
+	//AUI_ERRCODE	HideWindow( uint32 windowId );
 
 	virtual AUI_ERRCODE	Idle( aui_Region *recurse = NULL );
 

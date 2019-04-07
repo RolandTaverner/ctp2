@@ -51,6 +51,9 @@ public:
 
   virtual ~CivPaths();
 
+  static void InitCivPaths();
+  static void CleanupCivPaths();
+
   void CreateSaveFolders(const std::filesystem::path &path);
 
   void InitCDPath(void);
@@ -118,9 +121,6 @@ private:
 
   MBCHAR m_desktopPath[_MAX_PATH];
 };
-
-void CivPaths_InitCivPaths();
-void CivPaths_CleanupCivPaths();
 
 extern CivPaths *g_civPaths;
 

@@ -48,13 +48,13 @@ CivPaths *g_civPaths;
 extern ProjectFile *g_ImageMapPF;
 
 
-void CivPaths_InitCivPaths() {
+void CivPaths::InitCivPaths() {
   delete g_civPaths;
   g_civPaths = new CivPaths;
 }
 
 
-void CivPaths_CleanupCivPaths() {
+void CivPaths::CleanupCivPaths() {
   delete g_civPaths;
   g_civPaths = NULL;
 }

@@ -281,6 +281,9 @@
 #include <thread>
 #include <chrono>
 
+const char *CTP2LDLName = "civ3.ldl";
+
+
 extern ScreenManager *          g_screenManager;
 extern OzoneDatabase            *g_theUVDB;
 extern MovieDB                  *g_theVictoryMovieDB;
@@ -1250,36 +1253,25 @@ bool CivApp::InitializeAppDB(void)
 }
 
 
-
-
-
-
-
-
 sint32 CivApp::InitializeApp(HINSTANCE hInstance, int iCmdShow)
 {
 #ifdef WIN32
     // COM needed for DirectX/Movies
 	CoInitialize(NULL);
 #endif
-  m_UI = std::make_shared<ui::d3d::D3dUI>();
-  m_UI->Initialize(hInstance, iCmdShow, 1024, 768); // TODO: use config
-
-  SPLASH_STRING("UI initialized.");
-
-	CivPaths_InitCivPaths();
+	CivPaths::InitCivPaths();
 
 	g_theProfileDB = new ProfileDB;
 	if (!g_theProfileDB->Init(FALSE)) {
 		c3errors_FatalDialog("CivApp", "Unable to init the ProfileDB.");
 		return -1;
 	}
-  SPLASH_STRING("ProfileDB initialized.");
 
 	g_logCrashes = g_theProfileDB->GetEnableLogs();
 
 	InitDataIncludePath();
-	c3files_InitializeCD();
+
+  c3files_InitializeCD();
 	g_civPaths->InitCDPath();
 	GreatLibrary::Initialize_Great_Library_Data();
 
@@ -1289,8 +1281,60 @@ sint32 CivApp::InitializeApp(HINSTANCE hInstance, int iCmdShow)
 #endif
 
 	init_keymap();
+  SPLASH_STRING("Key map initialized.");
 
-  (void)ui_Initialize();
+  const std::string ldlfile = g_civPaths->FindFile(C3DIR_LAYOUT, CTP2LDLName);
+
+  m_UI = std::make_shared<ui::d3d::UIMain>();
+  m_UI->Initialize(hInstance, iCmdShow, 1024, 768, ldlfile); // TODO: use config
+
+  //(void)ui_Initialize();
+
+  {
+    std::string s;
+    for (unsigned i = 0; g_civPaths->FindPath(C3DIR_PATTERNS, i, s); ++i) {
+      if (!s.empty()) {
+        m_UI->AddPatternSearchPath(s);
+        m_UI->AddImageSearchPath(s);
+      }
+    }
+
+    for (unsigned i = 0; g_civPaths->FindPath(C3DIR_ICONS, i, s); ++i) {
+      if (!s.empty()) {
+        m_UI->AddIconSearchPath(s.c_str());
+        m_UI->AddImageSearchPath(s.c_str());
+      }
+    }
+
+    for (unsigned i = 0; g_civPaths->FindPath(C3DIR_PICTURES, i, s); ++i) {
+      if (!s.empty()) {
+        m_UI->AddPatternSearchPath(s.c_str());
+        m_UI->AddPictureSearchPath(s.c_str());
+        m_UI->AddImageSearchPath(s.c_str());
+      }
+    }
+
+    for (unsigned i = 0; g_civPaths->FindPath(C3DIR_CURSORS, i, s); ++i) {
+      if (!s.empty()) {
+        m_UI->AddCursorSearchPath(s.c_str());
+        m_UI->AddImageSearchPath(s.c_str());
+      }
+    }
+
+    for (unsigned i = 0; g_civPaths->FindPath(C3DIR_FONTS, i, s); ++i) {
+      if (!s.empty()) {
+        // TODO
+        // m_UI->AddBitmapFontSearchPath(s.c_str());
+      }
+    }
+
+    for (unsigned i = 0; g_civPaths->FindPath(C3DIR_VIDEOS, i, s); ++i) {
+      if (!s.empty()) {
+        // TODO
+        // m_UI->AddMovieSearchPath(s.c_str());
+      }
+    }
+  }
 
   return 0;
   //(void)ui_Initialize();
@@ -1546,7 +1590,7 @@ void CivApp::CleanupApp(void)
 		CleanupAppUI();
 		cleanup_keymap();
 		CleanupAppDB();
-		CivPaths_CleanupCivPaths();
+		CivPaths::CleanupCivPaths();
 		SlicSegment::Cleanup();
 
 #ifdef WIN32
@@ -3052,7 +3096,7 @@ void CivApp::Render() {
  }
 }
 
-ui::d3d::D3dUI::D3dUIPtr CivApp::UI() {
+ui::d3d::UIMainPtr CivApp::UI() {
   return m_UI;
 }
 

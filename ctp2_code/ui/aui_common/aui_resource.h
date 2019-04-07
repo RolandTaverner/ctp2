@@ -93,17 +93,17 @@ public:
 	aui_Resource();
 	virtual ~aui_Resource();
 
-	T			*Load( const MBCHAR *name, C3DIR dir = C3DIR_DIRECT, uint32 size = 0);
+  T			*Load(const MBCHAR *name, C3DIR dir = C3DIR_DIRECT, uint32 size = 0);
 
-	AUI_ERRCODE	Unload( T *resource );
-	AUI_ERRCODE	Unload( const MBCHAR *name );
+  AUI_ERRCODE	Unload(T *resource);
+  AUI_ERRCODE	Unload(const MBCHAR *name);
 
-	AUI_ERRCODE	AddSearchPath( const MBCHAR *path );
-	AUI_ERRCODE	RemoveSearchPath( const MBCHAR *path );
+  AUI_ERRCODE	AddSearchPath(const MBCHAR *path);
+  AUI_ERRCODE	RemoveSearchPath(const MBCHAR *path);
 
   bool FindFile(std::string &fullPath, const std::string &name);
 
-  bool FindFile( MBCHAR *fullPath, const MBCHAR *name );
+  bool FindFile(MBCHAR *fullPath, const MBCHAR *name);
 
 protected:
 	tech_WLList<aui_ResourceElement<T> *>	*m_resourceList;

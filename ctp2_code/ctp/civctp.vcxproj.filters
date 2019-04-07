@@ -225,6 +225,12 @@
     <Filter Include="ui\d3d_ui\interface">
       <UniqueIdentifier>{821130bc-f841-4a24-9a3a-8be7879b41fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ui\d3d_ui\D3d">
+      <UniqueIdentifier>{e1cd69b3-38d7-43c7-95d2-b9dea1c8737b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui\d3d_ui\Resource">
+      <UniqueIdentifier>{ac386882-0f41-4080-ab5e-d4cdce1ed2fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ctp2_rsrc\civ3.rc">
@@ -2611,9 +2617,6 @@
     <ClInclude Include="..\ui\d3d_ui\UIRegion.h">
       <Filter>ui\d3d_ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\ui\d3d_ui\D3dUI.h">
-      <Filter>ui\d3d_ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\ui\d3d_ui\UIWindow.h">
       <Filter>ui\d3d_ui</Filter>
     </ClInclude>
@@ -2631,6 +2634,36 @@
     </ClInclude>
     <ClInclude Include="..\ui\ldl\ldl_list.h">
       <Filter>ui\ldl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\D3d\D3dUI.h">
+      <Filter>ui\d3d_ui\D3d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\UI.h">
+      <Filter>ui\d3d_ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\UIMain.h">
+      <Filter>ui\d3d_ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\Resource\ResourceLoader.h">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\Resource\ResourceElement.h">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\Resource\UIImage.h">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\Resource\UIIcon.h">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\Resource\UICursor.h">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\Resource\UIPattern.h">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\Resource\UIPicture.h">
+      <Filter>ui\d3d_ui\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4887,9 +4920,6 @@
     <ClCompile Include="..\gfx\spritesys\DirectorActionHandlers.cpp">
       <Filter>gfx\spritesys</Filter>
     </ClCompile>
-    <ClCompile Include="..\ui\d3d_ui\D3dUI.cpp">
-      <Filter>ui\d3d_ui</Filter>
-    </ClCompile>
     <ClCompile Include="..\ui\d3d_ui\UIRegion.cpp">
       <Filter>ui\d3d_ui</Filter>
     </ClCompile>
@@ -4907,6 +4937,30 @@
     </ClCompile>
     <ClCompile Include="..\ui\ldl\ldl_list.cpp">
       <Filter>ui\ldl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\D3d\D3dUI.cpp">
+      <Filter>ui\d3d_ui\D3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\UI.cpp">
+      <Filter>ui\d3d_ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\UIMain.cpp">
+      <Filter>ui\d3d_ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\Resource\UIImage.cpp">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\Resource\UIIcon.cpp">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\Resource\UICursor.cpp">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\Resource\UIPattern.cpp">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\Resource\UIPicture.cpp">
+      <Filter>ui\d3d_ui\Resource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

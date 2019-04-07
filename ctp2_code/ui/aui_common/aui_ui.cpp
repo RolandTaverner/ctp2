@@ -679,39 +679,39 @@ AUI_ERRCODE aui_UI::FlushDirtyList( void )
 	return AUI_ERRCODE_OK;
 }
 
-AUI_ERRCODE aui_UI::ShowWindow( uint32 windowId )
-{
-	ListPos position = m_childList->GetHeadPosition();
-	for ( sint32 i = m_childList->L(); i; i-- )
-	{
-		aui_Window *window = (aui_Window *)m_childList->GetNext( position );
-		if ( window->Id() == windowId )
-		{
-			window->Show();
-
-			break;
-		}
-	}
-
-	return AUI_ERRCODE_OK;
-}
-
-AUI_ERRCODE aui_UI::HideWindow( uint32 windowId )
-{
-	ListPos position = m_childList->GetHeadPosition();
-	for ( sint32 i = m_childList->L(); i; i-- )
-	{
-		aui_Window *window = (aui_Window *)m_childList->GetNext( position );
-		if ( window->Id() == windowId )
-		{
-
-			window->Hide();
-			break;
-		}
-	}
-
-	return AUI_ERRCODE_OK;
-}
+//AUI_ERRCODE aui_UI::ShowWindow( uint32 windowId )
+//{
+//	ListPos position = m_childList->GetHeadPosition();
+//	for ( sint32 i = m_childList->L(); i; i-- )
+//	{
+//		aui_Window *window = (aui_Window *)m_childList->GetNext( position );
+//		if ( window->Id() == windowId )
+//		{
+//			window->Show();
+//
+//			break;
+//		}
+//	}
+//
+//	return AUI_ERRCODE_OK;
+//}
+//
+//AUI_ERRCODE aui_UI::HideWindow( uint32 windowId )
+//{
+//	ListPos position = m_childList->GetHeadPosition();
+//	for ( sint32 i = m_childList->L(); i; i-- )
+//	{
+//		aui_Window *window = (aui_Window *)m_childList->GetNext( position );
+//		if ( window->Id() == windowId )
+//		{
+//
+//			window->Hide();
+//			break;
+//		}
+//	}
+//
+//	return AUI_ERRCODE_OK;
+//}
 
 AUI_ERRCODE aui_UI::ClipAndConsolidate(void)
 {
