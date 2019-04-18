@@ -37,6 +37,7 @@ public:
   const std::string GetName() const;
   const std::string GetFullName() const;
 
+  bool HasAttribute(const std::string &attrName) const;
   int GetInt(const std::string &attrName) const;
   double GetDouble(const std::string &attrName) const;
   std::string GetString(const std::string &attrName) const;
@@ -50,6 +51,66 @@ public:
   typedef boost::iterator_range<LDLBlockIterator> LDLBlockRange;
 
   LDLBlockRange GetChildren();
+
+  template<typename T> bool Is(const std::string &attrName) const {
+    return false;
+  }
+
+  template<> bool Is<bool>(const std::string &attrName) const {
+    return m_dataBlockPtr->GetAttributeType(attrName.c_str()) == ATTRIBUTE_TYPE_BOOL;
+  }
+
+  template<> bool Is<std::string>(const std::string &attrName) const {
+    return m_dataBlockPtr->GetAttributeType(attrName.c_str()) == ATTRIBUTE_TYPE_STRING;
+  }
+
+  template<> bool Is<double>(const std::string &attrName) const {
+    return m_dataBlockPtr->GetAttributeType(attrName.c_str()) == ATTRIBUTE_TYPE_DOUBLE;
+  }
+
+  template<> bool Is<int>(const std::string &attrName) const {
+    return m_dataBlockPtr->GetAttributeType(attrName.c_str()) == ATTRIBUTE_TYPE_INT;
+  }
+  
+  template<typename T> T As(const std::string &attrName) const {
+    throw std::runtime_error("Unknown type conversion requested");
+  }
+
+  template<> bool As<bool>(const std::string &attrName) const {
+    if (!HasAttribute(attrName)) {
+      return false;
+    } else if (!Is<bool>(attrName)) {
+      throw std::runtime_error("Can't convert " + attrName + " to bool");
+    }
+    return GetBool(attrName.c_str());
+  }
+
+  template<> int As<int>(const std::string &attrName) const {
+    if (!HasAttribute(attrName)) {
+      return 0;
+    } else if (!Is<int>(attrName)) {
+      throw std::runtime_error("Can't convert " + attrName + " to int");
+    }
+    return GetInt(attrName.c_str());
+  }
+
+  template<> double As<double>(const std::string &attrName) const {
+    if (!HasAttribute(attrName)) {
+      return 0.0;
+    } else if (!Is<double>(attrName)) {
+      throw std::runtime_error("Can't convert " + attrName + " to double");
+    }
+    return GetDouble(attrName.c_str());
+  }
+
+  template<> std::string As<std::string>(const std::string &attrName) const {
+    if (!HasAttribute(attrName)) {
+      return std::string();
+    } else if (!Is<std::string>(attrName)) {
+      throw std::runtime_error("Can't convert " + attrName + " to std::string");
+    }
+    return GetString(attrName.c_str());
+  }
 
 private:
   LDLDataBlockPtr m_dataBlockPtr;

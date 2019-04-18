@@ -16,9 +16,10 @@ typedef std::shared_ptr<UICursor> UICursorPtr;
 class UICursorResource : public ResourceElement<UICursorResource> {
 public:
   UICursorResource();
-  UICursorResource(const std::string &name, const std::string &fullPath);
+  UICursorResource(const std::string &name);
 
-  bool LoadImpl(const std::string &name, const std::string &fullPath);
+  bool LoadImpl(const std::string &fullPath);
+  bool LoadImpl(const FileInfo &fi);
 
   UICursorPtr GetUICursor();
 

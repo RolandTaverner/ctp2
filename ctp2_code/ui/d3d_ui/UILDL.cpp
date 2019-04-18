@@ -70,6 +70,10 @@ const std::string LDLBlock::GetFullName() const {
   return m_dataBlockPtr->GetFullName();
 }
 
+bool LDLBlock::HasAttribute(const std::string &attrName) const {
+  return m_dataBlockPtr->GetAttributeType(attrName.c_str()) != ATTRIBUTE_TYPE_UNKNOWN;
+}
+
 int LDLBlock::GetInt(const std::string &attrName) const {
   if (!m_dataBlockPtr) {
     throw std::runtime_error("Empty block");

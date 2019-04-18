@@ -16,9 +16,10 @@ typedef std::shared_ptr<UIIcon> UIIconPtr;
 class UIIconResource : public ResourceElement<UIIconResource> {
 public:
   UIIconResource();
-  UIIconResource(const std::string &name, const std::string &fullPath);
+  UIIconResource(const std::string &name);
 
-  bool LoadImpl(const std::string &name, const std::string &fullPath);
+  bool LoadImpl(const std::string &fullPath);
+  bool LoadImpl(const FileInfo &fi);
 
   UIIconPtr GetUIIcon();
 

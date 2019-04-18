@@ -1,13 +1,14 @@
 #include "stdafx.h"
 
-#include <codecvt>
 #include <stdexcept>
 
 #include "DirectXTK/SpriteFont.h"
 
 #include "D3dTiles/D3d/D3dFontManager.h"
+#include "D3dTiles/D3d/UTF8Converter.h"
 
 namespace TileEngine::D3d {
+
 
 class D3dFontManager::ImplType {
 public:
@@ -18,8 +19,7 @@ public:
   }
 
   D3dFont::Ptr LoadFont(const std::string &file, const std::string &fontFace, unsigned fontSize, FontStyle style) {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> convert;
-    const std::wstring wFile(convert.from_bytes(file));
+    const std::wstring wFile = utf8<std::wstring>(file);
 
     return std::make_shared<D3dFont>(std::move(std::make_unique<DirectX::SpriteFont>(m_device.GetInterfacePtr(), wFile.c_str(), false)),
       fontFace, fontSize, style);

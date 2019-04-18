@@ -390,7 +390,7 @@ AUI_ERRCODE aui_Ldl::BuildHierarchyFromLeaf(ldl_datablock *parent, aui_Region *r
 AUI_ERRCODE aui_Ldl::BuildObjectFromType(const MBCHAR *typeString,
   const MBCHAR *ldlBlockName,
   aui_Region **theObject) {
-  MBCHAR *ldlName = const_cast<MBCHAR *>(ldlBlockName); // For compatibility TODO: remove
+  MBCHAR *ldlName = const_cast<MBCHAR *>(ldlBlockName); // For compatibility TODO: remove const_cast<MBCHAR *>
 
   AUI_ERRCODE		retval = AUI_ERRCODE_OK;
   aui_Region		*region = NULL;

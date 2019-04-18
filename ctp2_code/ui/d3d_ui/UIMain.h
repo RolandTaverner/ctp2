@@ -18,7 +18,11 @@ public:
   UIMain &operator=(const UIMain &) = delete;
 
   void Initialize(HINSTANCE hinst, int cmdshow, unsigned windowWidth, unsigned windowHeight, const std::string &ldlFile);
-
+  void InitPaths(const std::string &pathsFile, const ExtraDataPaths &extraDataPaths);
+  void SetCurScenarioPath(const std::string &path);
+  const std::string &GetCurScenarioPath();
+  void SetCurScenarioPackPath(const std::string &path);
+  const std::string &GetCurScenarioPackPath();
 };
 
 } // namespace ui::d3d

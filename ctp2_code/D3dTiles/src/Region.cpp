@@ -29,12 +29,24 @@ namespace TileEngine {
     return m_position;
   }
 
+  void Region::SetPosition(const Position &pos) {
+    m_position = pos;
+  }
+
   unsigned Region::Width() const {
     return m_width;
   }
 
+  void Region::SetWidth(unsigned w) {
+    m_width = w;
+  }
+
   unsigned Region::Height() const {
     return m_height;
+  }
+
+  void Region::SetHeight(unsigned h) {
+    m_height = h;
   }
   
   bool Region::IsVisible() const {
@@ -45,13 +57,13 @@ namespace TileEngine {
     m_isVisible = isVisible;
   }
 
-  void Region::MoveTo(unsigned x, unsigned y) {
-    // TODO: check bounds
+  void Region::MoveTo(int x, int y) {
+    // TODO: check bounds?
     m_position = Position(x, y);
   }
   
   void Region::MoveBy(int dx, int dy) {
-    // TODO: check bounds
+    // TODO: check bounds?
     boost::geometry::add_point(m_position, Position(dx, dy));
   }
   

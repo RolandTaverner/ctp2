@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="UserMacros">
-    <BOOST_INC>$(SolutionDir)externals\boost-1.67.0\include</BOOST_INC>
-    <BOOST_LIB>$(SolutionDir)externals\boost-1.67.0\lib</BOOST_LIB>
+    <BOOST_INC>$(SolutionDir)externals\boost-1.70.0\include</BOOST_INC>
+    <BOOST_LIB>$(SolutionDir)externals\boost-1.70.0\lib</BOOST_LIB>
     <BZIP2_INC>$(SolutionDir)externals\bzip2\include</BZIP2_INC>
     <BZIP2_LIB>$(SolutionDir)externals\bzip2\lib</BZIP2_LIB>
     <ICU_INC>$(SolutionDir)externals\icu59\include</ICU_INC>
@@ -19,8 +19,8 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(BOOST_LIB);$(BZIP2_LIB);$(ICU_LIB);$(ZLIB_LIB);$(DXTK_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">DirectXTK_d.lib;sicudtd.lib;sicuind.lib;sicuiod.lib;sicutud.lib;sicuucd.lib;libboost_atomic-vc141-mt-gd-x32-1_67.lib;libboost_bzip2-vc141-mt-gd-x32-1_67.lib;libboost_chrono-vc141-mt-gd-x32-1_67.lib;libboost_date_time-vc141-mt-gd-x32-1_67.lib;libboost_filesystem-vc141-mt-gd-x32-1_67.lib;libboost_iostreams-vc141-mt-gd-x32-1_67.lib;libboost_locale-vc141-mt-gd-x32-1_67.lib;libboost_program_options-vc141-mt-gd-x32-1_67.lib;libboost_regex-vc141-mt-gd-x32-1_67.lib;libboost_system-vc141-mt-gd-x32-1_67.lib;libboost_thread-vc141-mt-gd-x32-1_67.lib;libboost_zlib-vc141-mt-gd-x32-1_67.lib;libboost_serialization-vc141-mt-gd-x32-1_67.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">DirectXTK.lib;sicudt.lib;sicuin.lib;sicuio.lib;sicutu.lib;sicuuc.lib;libboost_bzip2-vc141-mt-x32-1_67.lib;libboost_chrono-vc141-mt-x32-1_67.lib;libboost_date_time-vc141-mt-x32-1_67.lib;libboost_filesystem-vc141-mt-x32-1_67.lib;libboost_iostreams-vc141-mt-x32-1_67.lib;libboost_locale-vc141-mt-x32-1_67.lib;libboost_program_options-vc141-mt-x32-1_67.lib;libboost_regex-vc141-mt-x32-1_67.lib;libboost_system-vc141-mt-x32-1_67.lib;libboost_thread-vc141-mt-x32-1_67.lib;libboost_zlib-vc141-mt-x32-1_67.lib;libboost_serialization-vc141-mt-x32-1_67.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">DirectXTK_d.lib;sicudtd.lib;sicuind.lib;sicuiod.lib;sicutud.lib;sicuucd.lib;libboost_atomic-vc141-mt-gd-x32-1_70.lib;libboost_bzip2-vc141-mt-gd-x32-1_70.lib;libboost_chrono-vc141-mt-gd-x32-1_70.lib;libboost_date_time-vc141-mt-gd-x32-1_70.lib;libboost_filesystem-vc141-mt-gd-x32-1_70.lib;libboost_iostreams-vc141-mt-gd-x32-1_70.lib;libboost_locale-vc141-mt-gd-x32-1_70.lib;libboost_program_options-vc141-mt-gd-x32-1_70.lib;libboost_regex-vc141-mt-gd-x32-1_70.lib;libboost_system-vc141-mt-gd-x32-1_70.lib;libboost_thread-vc141-mt-gd-x32-1_70.lib;libboost_zlib-vc141-mt-gd-x32-1_70.lib;libboost_serialization-vc141-mt-gd-x32-1_70.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">DirectXTK.lib;sicudt.lib;sicuin.lib;sicuio.lib;sicutu.lib;sicuuc.lib;libboost_bzip2-vc141-mt-x32-1_70.lib;libboost_chrono-vc141-mt-x32-1_70.lib;libboost_date_time-vc141-mt-x32-1_70.lib;libboost_filesystem-vc141-mt-x32-1_70.lib;libboost_iostreams-vc141-mt-x32-1_70.lib;libboost_locale-vc141-mt-x32-1_70.lib;libboost_program_options-vc141-mt-x32-1_70.lib;libboost_regex-vc141-mt-x32-1_70.lib;libboost_system-vc141-mt-x32-1_70.lib;libboost_thread-vc141-mt-x32-1_70.lib;libboost_zlib-vc141-mt-x32-1_70.lib;libboost_serialization-vc141-mt-x32-1_70.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(BOOST_LIB);$(BZIP2_LIB);$(ICU_LIB);$(ZLIB_LIB);$(DXTK_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

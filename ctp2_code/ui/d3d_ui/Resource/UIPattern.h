@@ -16,9 +16,10 @@ typedef std::shared_ptr<UIPattern> UIPatternPtr;
 class UIPatternResource : public ResourceElement<UIPatternResource> {
 public:
   UIPatternResource();
-  UIPatternResource(const std::string &name, const std::string &fullPath);
+  explicit UIPatternResource(const std::string &name);
 
-  bool LoadImpl(const std::string &name, const std::string &fullPath);
+  bool LoadImpl(const std::string &fullPath);
+  bool LoadImpl(const FileInfo &fi);
 
   UIPatternPtr GetUIPattern();
 

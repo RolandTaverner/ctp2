@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <tuple>
 
 #include "D3dTiles/Geometry.h"
 
@@ -60,6 +61,8 @@ public:
   // Direct access
   const TileEngine::Position &GetPosition() const;
   void SetPosition(const TileEngine::Position &position);
+  void SetHorizontalPosition(int x);
+  void SetVerticalPosition(int y);
   unsigned GetWidth() const;
   void SetWidth(unsigned width);
   unsigned GetHeight() const;
@@ -82,10 +85,12 @@ public:
   void SetCalcWidth(unsigned width);
   void SetCalcHeight(unsigned height);
 
-  int CalculateX(void);
-  int CalculateY(void);
-  unsigned CalculateWidth(void);
-  unsigned CalculateHeight(void);
+  int CalculateX(void) const;
+  int CalculateY(void) const;
+  unsigned CalculateWidth(void) const;
+  unsigned CalculateHeight(void) const;
+
+  std::tuple<TileEngine::Position, unsigned, unsigned> CalculateAll() const;
 
 private:
   UIRegionWPtr m_owner;

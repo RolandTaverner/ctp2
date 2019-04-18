@@ -48,8 +48,12 @@ namespace TileEngine {
 
     RegionID ID() const;
     const Position &Pos() const;
+    void SetPosition(const Position &pos);
     unsigned Width() const;
+    void SetWidth(unsigned w);
     unsigned Height() const;
+    void SetHeight(unsigned h);
+
     bool IsVisible() const;
     void SetVisible(bool isVisible);
     Rect GetRect() const;
@@ -60,7 +64,7 @@ namespace TileEngine {
     Ptr CreateLayer();
     void Render(unsigned level, const Position &parentPosition, RendererBasePtr renderer);
 
-    void MoveTo(unsigned x, unsigned y);
+    void MoveTo(int x, int y);
     void MoveBy(int dx, int dy);
     void Resize(unsigned width, unsigned height);
 

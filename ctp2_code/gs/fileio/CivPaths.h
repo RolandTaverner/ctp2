@@ -83,8 +83,10 @@ public:
   const std::string &GetSavePathString(void) const { return m_savePath; }
 
   const MBCHAR *    GetDesktopPath(void);
-
-  void     InsertExtraDataPath(MBCHAR const * path);
+  
+  std::vector<std::string> const &GetExtraDataPaths(void) const;
+  
+  void InsertExtraDataPath(MBCHAR const * path);
 
 protected:
   std::string MakeAssetPath(const std::string &s1,

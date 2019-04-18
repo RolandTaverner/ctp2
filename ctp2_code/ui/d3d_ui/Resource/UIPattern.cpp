@@ -4,12 +4,17 @@
 
 namespace ui::d3d {
 
-UIPatternResource::UIPatternResource() : UIPatternResource("", "") {}
+UIPatternResource::UIPatternResource() : UIPatternResource("") {}
 
-UIPatternResource::UIPatternResource(const std::string &name, const std::string &fullPath) :
-  ResourceElement<UIPatternResource>(name, fullPath) {}
+UIPatternResource::UIPatternResource(const std::string &name) :
+  ResourceElement<UIPatternResource>(name) {}
 
-bool UIPatternResource::LoadImpl(const std::string &name, const std::string &fullPath) {
+bool UIPatternResource::LoadImpl(const std::string &fullPath) {
+  // TODO: impl
+  return false;
+}
+
+bool UIPatternResource::LoadImpl(const FileInfo &fi) {
   // TODO: impl
   return false;
 }

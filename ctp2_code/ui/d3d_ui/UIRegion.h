@@ -9,6 +9,7 @@
 
 #include "ui/d3d_ui/UIDimensioner.h"
 #include "ui/d3d_ui/UIRegionFwd.h"
+#include "ui/d3d_ui/UILDL.h"
 
 namespace ui::d3d {
 
@@ -17,7 +18,7 @@ public:
   typedef std::vector<UIRegionPtr> ChildList;
 
   UIRegion(UIRegionPtr parent, unsigned id, const TileEngine::Position &pos, unsigned width, unsigned height);
-  UIRegion(UIRegionPtr parent, unsigned id, const std::string &ldlBlockName);
+  UIRegion(UIRegionPtr parent, unsigned id, LDLBlockPtr ldlBlock);
   virtual ~UIRegion();
 
   unsigned ID() const;
@@ -41,10 +42,11 @@ private:
 private:
   unsigned m_id;
   UIDimensioner m_dim;
-  std::string m_ldlBlockName;
+  LDLBlockPtr m_ldlBlock;
   TileEngine::Region::Ptr m_region;
   UIRegionWPtr m_parent;
   ChildList m_children;
+  bool m_blind;
 };
 
 } // namespace ui::d3d

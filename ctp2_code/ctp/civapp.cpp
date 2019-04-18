@@ -98,30 +98,112 @@
 //----------------------------------------------------------------------------
 
 #include "ctp/c3.h"
+
+#include <algorithm>                    // std::find
+#include <string>                       // std::string
+
 #include "ctp/civapp.h"
 
+#include "ai/ctpai.h"
+#include "ai/diplomacy/diplomacyutil.h"
+#include "ctp/civ3_main.h"
+#include "ctp/ctp2_utils/appstrings.h"
+#include "ctp/ctp2_utils/netconsole.h"
+#include "ctp/debugtools/debugmemory.h"
+#include "ctp/display.h"
+#include "ctp/fingerprint/ctp_finger.h"
+#include "gfx/gfx_utils/gfx_options.h"
+#include "gfx/spritesys/director.h"                   // g_director
+#include "gfx/spritesys/screenmanager.h"
+#include "gfx/tilesys/tiledmap.h"
+#include "gs/database/DB.h"
+#include "gs/database/PlayListDB.h"
+#include "gs/database/StrDB.h"
+#include "gs/database/UVDB.h"
+#include "gs/database/filenamedb.h"
+#include "gs/database/moviedb.h"
+#include "gs/database/profileDB.h"                  // g_theProfileDB
+#include "gs/database/thronedb.h"                   // g_theThroneDB
+#include "gs/events/GameEventManager.h"
+#include "gs/fileio/CivPaths.h"
+#include "gs/fileio/civscenarios.h"
+#include "gs/fileio/gamefile.h"                   // SAVE_LEADER_NAME_SIZE
+#include "gs/fileio/prjfile.h"
+#include "gs/gameobj/Advances.h"
+#include "gs/gameobj/ArmyData.h"                   // ArmyData::Cleanup
+#include "gs/gameobj/Events.h"
+#include "gs/gameobj/Exclusions.h"
+#include "gs/gameobj/GameSettings.h"
+#include "gs/gameobj/MessagePool.h"                // g_theMessagePool
+#include "gs/gameobj/Player.h"                     // g_player
+#include "gs/gameobj/Unit.h"
+#include "gs/gameobj/advanceutil.h"
+#include "gs/gameobj/buildingutil.h"
+#include "gs/gameobj/message.h"
+#include "gs/gameobj/terrainutil.h"
+#include "gs/gameobj/unitutil.h"
 #include "gs/newdb/AdvanceBranchRecord.h"
 #include "gs/newdb/AdvanceListRecord.h"
 #include "gs/newdb/AdvanceRecord.h"
-#include "gs/gameobj/Advances.h"
-#include "gs/gameobj/advanceutil.h"
 #include "gs/newdb/AgeCityStyleRecord.h"
 #include "gs/newdb/AgeRecord.h"
-#include <algorithm>                    // std::find
-#include "ui/interface/ancientwindows.h"
-#include "ctp/ctp2_utils/appstrings.h"
-#include "gs/gameobj/ArmyData.h"                   // ArmyData::Cleanup
-#include "ui/interface/armymanagerwindow.h"
-#include "ui/interface/AttractWindow.h"
-#include "ui/aui_common/aui_blitter.h"
-#include "ui/aui_ctp2/background.h"
-#include "ui/interface/backgroundwin.h"
-#include "ui/interface/battleview.h"
-#include "ui/aui_ctp2/bevellesswindow.h"
+#include "gs/newdb/BuildListSequenceRecord.h"
 #include "gs/newdb/BuildingBuildListRecord.h"
 #include "gs/newdb/BuildingRecord.h"
-#include "gs/gameobj/buildingutil.h"
-#include "gs/newdb/BuildListSequenceRecord.h"
+#include "gs/newdb/CitySizeRecord.h"
+#include "gs/newdb/CityStyleRecord.h"
+#include "gs/newdb/CivilisationRecord.h"
+#include "gs/newdb/ConceptRecord.h"
+#include "gs/newdb/ConstRecord.h"                    // g_theConstDB
+#include "gs/newdb/DBLexer.h"
+#include "gs/newdb/DifficultyRecord.h"
+#include "gs/newdb/DiplomacyProposalRecord.h"
+#include "gs/newdb/DiplomacyRecord.h"
+#include "gs/newdb/DiplomacyThreatRecord.h"
+#include "gs/newdb/EndGameObjectRecord.h"
+#include "gs/newdb/FeatRecord.h"
+#include "gs/newdb/GlobalWarmingRecord.h"
+#include "gs/newdb/GoalRecord.h"
+#include "gs/newdb/GovernmentRecord.h"
+#include "gs/newdb/IconRecord.h"
+#include "gs/newdb/ImprovementListRecord.h"
+#include "gs/newdb/MapIconRecord.h"
+#include "gs/newdb/MapRecord.h"
+#include "gs/newdb/OrderRecord.h"
+#include "gs/newdb/PersonalityRecord.h"
+#include "gs/newdb/PollutionRecord.h"
+#include "gs/newdb/PopRecord.h"
+#include "gs/newdb/ResourceRecord.h"
+#include "gs/newdb/RiskRecord.h"
+#include "gs/newdb/SoundRecord.h"
+#include "gs/newdb/SpecialAttackInfoRecord.h"
+#include "gs/newdb/SpecialEffectRecord.h"
+#include "gs/newdb/SpriteRecord.h"
+#include "gs/newdb/StrategyRecord.h"
+#include "gs/newdb/TerrainImprovementRecord.h"
+#include "gs/newdb/TerrainRecord.h"
+#include "gs/newdb/UnitBuildListRecord.h"
+#include "gs/newdb/UnitRecord.h"
+#include "gs/newdb/WonderBuildListRecord.h"
+#include "gs/newdb/WonderMovieRecord.h"
+#include "gs/newdb/WonderRecord.h"
+#include "gs/slic/SlicEngine.h"
+#include "gs/slic/SlicSegment.h"                // SlicSegment::Cleanup
+#include "gs/utility/Globals.h"                    // allocated::clear, allocated::reassign
+#include "gs/utility/RandGen.h"                    // g_rand
+#include "gs/utility/TurnCnt.h"                    // g_turn
+#include "gs/utility/UnitDynArr.h"
+#include "gs/utility/gameinit.h"
+#include "net/general/network.h"
+#include "robot/aibackdoor/civarchive.h"
+#include "robot/utility/RoboInit.h"
+#include "sound/gamesounds.h"
+#include "sound/soundmanager.h"               // g_soundManager
+#include "ui/aui_common/aui_blitter.h"
+#include "ui/aui_ctp2/InfoBar.h"
+#include "ui/aui_ctp2/SelItem.h"                    // g_selected_item
+#include "ui/aui_ctp2/background.h"
+#include "ui/aui_ctp2/bevellesswindow.h"
 #include "ui/aui_ctp2/c3_button.h"
 #include "ui/aui_ctp2/c3_checkbox.h"
 #include "ui/aui_ctp2/c3_dropdown.h"
@@ -131,147 +213,68 @@
 #include "ui/aui_ctp2/c3ui.h"
 #include "ui/aui_ctp2/c3window.h"
 #include "ui/aui_ctp2/c3windows.h"
-#include "ui/interface/chatbox.h"
-#include "gs/newdb/CitySizeRecord.h"
-#include "gs/newdb/CityStyleRecord.h"
-#include "ui/interface/citywindow.h"
-#include "ctp/civ3_main.h"
-#include "robot/aibackdoor/civarchive.h"
-#include "gs/newdb/CivilisationRecord.h"
-#include "gs/fileio/CivPaths.h"
-#include "gs/fileio/civscenarios.h"
-#include "gs/newdb/ConceptRecord.h"
-#include "gs/newdb/ConstRecord.h"                    // g_theConstDB
-#include "ui/interface/controlpanelwindow.h"
-#include "ai/ctpai.h"
-#include "ctp/fingerprint/ctp_finger.h"
-#include "ui/interface/cursormanager.h"
-#include "gs/database/DB.h"
-#include "gs/newdb/DBLexer.h"
-#include "ctp/debugtools/debugmemory.h"
-#include "gs/newdb/DifficultyRecord.h"
+#include "ui/aui_ctp2/grabitem.h"
+#include "ui/aui_ctp2/keymap.h"
+#include "ui/aui_ctp2/keypress.h"
+#include "ui/aui_ctp2/radarmap.h"                   // g_radarMap
+#include "ui/aui_ctp2/statuswindow.h"
+#include "ui/d3d_ui/UIMain.h"
+#include "ui/interface/AttractWindow.h"
 #include "ui/interface/DiplomacyDetails.h"
-#include "gs/newdb/DiplomacyProposalRecord.h"
-#include "gs/newdb/DiplomacyRecord.h"
-#include "gs/newdb/DiplomacyThreatRecord.h"
-#include "ai/diplomacy/diplomacyutil.h"
-#include "ui/interface/diplomacywindow.h"
-#include "ui/interface/dipwizard.h"
-#include "gfx/spritesys/director.h"                   // g_director
-#include "ctp/display.h"
 #include "ui/interface/DomesticManagementDialog.h"
 #include "ui/interface/EditQueue.h"
-#include "gs/newdb/EndGameObjectRecord.h"
 #include "ui/interface/EndgameWindow.h"
-#include "gs/gameobj/Events.h"
-#include "gs/gameobj/Exclusions.h"
-#include "gs/newdb/FeatRecord.h"
-#include "gs/database/filenamedb.h"
-#include "gs/events/GameEventManager.h"
-#include "gs/fileio/gamefile.h"                   // SAVE_LEADER_NAME_SIZE
-#include "gs/utility/gameinit.h"
+#include "ui/interface/IntroMovieWin.h"
+#include "ui/interface/MainControlPanel.h"
+#include "ui/interface/NationalManagementDialog.h"
+#include "ui/interface/ProfileEdit.h"
+#include "ui/interface/ScienceManagementDialog.h"
+#include "ui/interface/ancientwindows.h"
+#include "ui/interface/armymanagerwindow.h"
+#include "ui/interface/backgroundwin.h"
+#include "ui/interface/battleview.h"
+#include "ui/interface/chatbox.h"
+#include "ui/interface/citywindow.h"
+#include "ui/interface/controlpanelwindow.h"
+#include "ui/interface/cursormanager.h"
+#include "ui/interface/diplomacywindow.h"
+#include "ui/interface/dipwizard.h"
 #include "ui/interface/gameplayoptions.h"
-#include "gs/gameobj/GameSettings.h"
-#include "sound/gamesounds.h"
-#include "gfx/gfx_utils/gfx_options.h"
-#include "gs/utility/Globals.h"                    // allocated::clear, allocated::reassign
-#include "gs/newdb/GlobalWarmingRecord.h"
-#include "gs/newdb/GoalRecord.h"
-#include "gs/newdb/GovernmentRecord.h"
-#include "ui/aui_ctp2/grabitem.h"
 #include "ui/interface/graphicsresscreen.h"          // graphicsresscreen_Cleanup
 #include "ui/interface/graphicsscreen.h"
 #include "ui/interface/greatlibrarywindow.h"
 #include "ui/interface/helptile.h"
-#include "gs/newdb/IconRecord.h"
-#include "gs/newdb/ImprovementListRecord.h"
-#include "ui/aui_ctp2/InfoBar.h"
 #include "ui/interface/infowin.h"
 #include "ui/interface/infowindow.h"                 // Info Window cleanup
 #include "ui/interface/initialplaywindow.h"
 #include "ui/interface/intelligencewindow.h"
-#include "ui/interface/IntroMovieWin.h"
-#include "ui/aui_ctp2/keymap.h"
-#include "ui/aui_ctp2/keypress.h"
 #include "ui/interface/km_screen.h"
 #include "ui/interface/loadsavewindow.h"
-#include "ui/interface/MainControlPanel.h"
-#include "gs/newdb/MapIconRecord.h"
-#include "gs/newdb/MapRecord.h"
-#include "gs/gameobj/message.h"
-#include "gs/gameobj/MessagePool.h"                // g_theMessagePool
 #include "ui/interface/messagewin.h"
-#include "gs/database/moviedb.h"
 #include "ui/interface/musicscreen.h"
-#include "ui/interface/NationalManagementDialog.h"
-#include "ctp/ctp2_utils/netconsole.h"
-#include "ui/netshell/netshell.h"
-#include "ui/netshell/netshell_game.h"
-#include "net/general/network.h"
 #include "ui/interface/optionswindow.h"
 #include "ui/interface/optionwarningscreen.h"
-#include "gs/newdb/OrderRecord.h"
-#include "gs/newdb/PersonalityRecord.h"
-#include "gs/gameobj/Player.h"                     // g_player
-#include "gs/database/PlayListDB.h"
-#include "gs/newdb/PollutionRecord.h"
-#include "gs/newdb/PopRecord.h"
-#include "gs/fileio/prjfile.h"
-#include "gs/database/profileDB.h"                  // g_theProfileDB
-#include "ui/interface/ProfileEdit.h"
 #include "ui/interface/progresswindow.h"
-#include "ui/aui_ctp2/radarmap.h"                   // g_radarMap
 #include "ui/interface/radarwindow.h"
-#include "gs/utility/RandGen.h"                    // g_rand
-#include "gs/newdb/ResourceRecord.h"
-#include "gs/newdb/RiskRecord.h"
-#include "robot/utility/RoboInit.h"
+#include "ui/interface/scenarioeditor.h"
 #include "ui/interface/scenariowindow.h"
 #include "ui/interface/sci_advancescreen.h"
-#include "ui/interface/ScienceManagementDialog.h"
 #include "ui/interface/sciencevictorydialog.h"       // Gaia controller window cleanup
 #include "ui/interface/sciencewin.h"
-#include "gfx/spritesys/screenmanager.h"
 #include "ui/interface/screenutils.h"
-#include "ui/aui_ctp2/SelItem.h"                    // g_selected_item
-#include "gs/slic/SlicEngine.h"
-#include "gs/slic/SlicSegment.h"                // SlicSegment::Cleanup
-#include "sound/soundmanager.h"               // g_soundManager
-#include "gs/newdb/SoundRecord.h"
 #include "ui/interface/soundscreen.h"
-#include "gs/newdb/SpecialAttackInfoRecord.h"
-#include "gs/newdb/SpecialEffectRecord.h"
-#include "ui/interface/scenarioeditor.h"
 #include "ui/interface/splash.h"						// g_splash_old
 #include "ui/interface/spnewgametribescreen.h"
 #include "ui/interface/spnewgamewindow.h"
 #include "ui/interface/spriteeditor.h"
-#include "gs/newdb/SpriteRecord.h"
 #include "ui/interface/statswindow.h"
-#include "ui/aui_ctp2/statuswindow.h"
-#include "gs/newdb/StrategyRecord.h"
-#include "gs/database/StrDB.h"
-#include <string>                       // std::string
-#include "gs/database/thronedb.h"                   // g_theThroneDB
-#include "gs/newdb/TerrainImprovementRecord.h"
-#include "gs/newdb/TerrainRecord.h"
-#include "gs/gameobj/terrainutil.h"
-#include "gfx/tilesys/tiledmap.h"
 #include "ui/interface/trademanager.h"
-#include "gs/utility/TurnCnt.h"                    // g_turn
 #include "ui/interface/tutorialwin.h"
-#include "gs/gameobj/Unit.h"
-#include "gs/newdb/UnitBuildListRecord.h"
-#include "gs/utility/UnitDynArr.h"
 #include "ui/interface/unitmanager.h"
-#include "gs/newdb/UnitRecord.h"
-#include "gs/gameobj/unitutil.h"
-#include "gs/database/UVDB.h"
 #include "ui/interface/victorywin.h"
-#include "gs/newdb/WonderBuildListRecord.h"
-#include "gs/newdb/WonderRecord.h"
-#include "gs/newdb/WonderMovieRecord.h"
 #include "ui/interface/workwin.h"
+#include "ui/netshell/netshell.h"
+#include "ui/netshell/netshell_game.h"
 
 #ifndef _NO_GAME_WATCH
 #include "GameWatch/gamewatch/GameWatch.h"
@@ -1281,15 +1284,14 @@ sint32 CivApp::InitializeApp(HINSTANCE hInstance, int iCmdShow)
 #endif
 
 	init_keymap();
-  SPLASH_STRING("Key map initialized.");
-
-  const std::string ldlfile = g_civPaths->FindFile(C3DIR_LAYOUT, CTP2LDLName);
 
   m_UI = std::make_shared<ui::d3d::UIMain>();
-  m_UI->Initialize(hInstance, iCmdShow, 1024, 768, ldlfile); // TODO: use config
+  m_UI->InitPaths("civpaths.txt", g_civPaths->GetExtraDataPaths());
+  m_UI->Initialize(hInstance, iCmdShow, 1024, 768, CTP2LDLName); // TODO: use config
+  SPLASH_STRING("UI initialized.");
 
   //(void)ui_Initialize();
-
+  /*
   {
     std::string s;
     for (unsigned i = 0; g_civPaths->FindPath(C3DIR_PATTERNS, i, s); ++i) {
@@ -1334,7 +1336,10 @@ sint32 CivApp::InitializeApp(HINSTANCE hInstance, int iCmdShow)
         // m_UI->AddMovieSearchPath(s.c_str());
       }
     }
-  }
+  }*/
+  InitializeImageMaps();
+
+  //m_UI->LoadUIPattern("uptg20e.tga");
 
   return 0;
   //(void)ui_Initialize();
@@ -3168,7 +3173,7 @@ void InitializeImageMaps()
     delete g_ImageMapPF;
     g_ImageMapPF = new ProjectFile();
 
-    if (g_c3ui->PixelFormat() == AUI_SURFACE_PIXELFORMAT_555)
+    if (true || g_c3ui->PixelFormat() == AUI_SURFACE_PIXELFORMAT_555)
     {
         AddSearchPacks(g_ImageMapPF, C3DIR_PATTERNS, "pat555.zfs");
         AddSearchPacks(g_ImageMapPF, C3DIR_PICTURES, "pic555.zfs");

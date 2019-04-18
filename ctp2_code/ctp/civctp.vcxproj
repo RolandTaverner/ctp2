@@ -1176,6 +1176,8 @@ rem                                                 if                          
     <ClInclude Include="..\ui\aui_utils\primitives.h" />
     <ClInclude Include="..\ui\aui_utils\textutils.h" />
     <ClInclude Include="..\ui\aui_utils\vidplay.h" />
+    <ClInclude Include="..\ui\d3d_ui\Resource\ResourceFileManager.h" />
+    <ClInclude Include="..\ui\d3d_ui\Resource\FormatFactory.h" />
     <ClInclude Include="..\ui\d3d_ui\Resource\UICursor.h" />
     <ClInclude Include="..\ui\d3d_ui\Resource\UIIcon.h" />
     <ClInclude Include="..\ui\d3d_ui\Resource\UIImage.h" />
@@ -1183,6 +1185,7 @@ rem                                                 if                          
     <ClInclude Include="..\ui\d3d_ui\Resource\ResourceLoader.h" />
     <ClInclude Include="..\ui\d3d_ui\Resource\UIPattern.h" />
     <ClInclude Include="..\ui\d3d_ui\Resource\UIPicture.h" />
+    <ClInclude Include="..\ui\d3d_ui\Resource\ZFSFile.h" />
     <ClInclude Include="..\ui\d3d_ui\UILDL.h" />
     <ClInclude Include="..\ui\d3d_ui\UIMain.h" />
     <ClInclude Include="..\ui\d3d_ui\D3d\D3dUI.h" />
@@ -2693,11 +2696,14 @@ rem                                                 if                          
     <ClCompile Include="..\ui\aui_utils\primitives.cpp" />
     <ClCompile Include="..\ui\aui_utils\textutils.cpp" />
     <ClCompile Include="..\ui\aui_utils\vidplay.cpp" />
+    <ClCompile Include="..\ui\d3d_ui\Resource\ResourceFileManager.cpp" />
+    <ClCompile Include="..\ui\d3d_ui\Resource\FormatFactory.cpp" />
     <ClCompile Include="..\ui\d3d_ui\Resource\UICursor.cpp" />
     <ClCompile Include="..\ui\d3d_ui\Resource\UIIcon.cpp" />
     <ClCompile Include="..\ui\d3d_ui\Resource\UIImage.cpp" />
     <ClCompile Include="..\ui\d3d_ui\Resource\UIPattern.cpp" />
     <ClCompile Include="..\ui\d3d_ui\Resource\UIPicture.cpp" />
+    <ClCompile Include="..\ui\d3d_ui\Resource\ZFSFile.cpp" />
     <ClCompile Include="..\ui\d3d_ui\UILDL.cpp" />
     <ClCompile Include="..\ui\d3d_ui\UIMain.cpp" />
     <ClCompile Include="..\ui\d3d_ui\D3d\D3dUI.cpp" />

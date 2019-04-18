@@ -5,7 +5,12 @@
 namespace ui::d3d {
 
 void UI::InitializeUI(HINSTANCE hinst, int cmdshow, unsigned windowWidth, unsigned windowHeight, const std::string &ldlFile) {
-  m_LDL.Load(ldlFile);
+  auto fi = GetFileManager()->FindFile(ldlFile, PATH_LAYOUT);
+  if (!fi) {
+    throw std::runtime_error("Can't find file " + ldlFile);
+  }
+
+  m_LDL.Load(fi.GetFullPath());
 
   InitializeD3d(hinst, cmdshow, windowWidth, windowHeight);
 
@@ -24,7 +29,17 @@ void UI::InitializeUI(HINSTANCE hinst, int cmdshow, unsigned windowWidth, unsign
   m_splash = std::make_shared<Splash>(m_splashLayer, GetRenderer()->GetFontManager(), TileEngine::FontDesc("Arial", 8, TileEngine::FONTSTYLE_REGULAR));
 }
 
-UI::UI() {}
+ResourceFileManagerPtr UI::GetFileManager() {
+  return  m_fileManager;
+}
+
+UI::UI() :
+  m_fileManager(std::make_shared<ResourceFileManager>()), 
+  m_cursorLoader(m_fileManager, ResourcePathContentTags{ PATH_CURSORS }),
+  m_imageLoader(m_fileManager, ResourcePathContentTags{ PATH_PICTURES, PATH_PATTERNS, PATH_ICONS, PATH_CURSORS }),
+  m_iconLoader(m_fileManager, ResourcePathContentTags{ PATH_ICONS }),
+  m_patternLoader(m_fileManager, ResourcePathContentTags{ PATH_PATTERNS, PATH_PICTURES }),
+  m_pictureLoader(m_fileManager, ResourcePathContentTags{ PATH_PICTURES }) {}
 
 UI::~UI() {}
 
@@ -38,44 +53,24 @@ void UI::HandleWindowsMessage(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam
 
 void UI::HandleMouseWheel(std::int16_t delta) {}
 
-UICursorPtr UI::LoadUICursor(const std::string & name) {
-  return m_cursorLoader.Load(name).GetUICursor();
+UICursorPtr UI::LoadUICursor(const std::string &name) {
+  return m_cursorLoader.Load(name, PATH_CURSORS).GetUICursor();
 }
 
-void UI::AddCursorSearchPath(const std::string &path) {
-  m_cursorLoader.AddPath(path);
+UIImagePtr UI::LoadUIImage(const std::string &name) {
+  return m_imageLoader.Load(name, PATH_PICTURES).GetUIImage();
 }
 
-UIImagePtr UI::LoadUIImage(const std::string & name) {
-  return m_imageLoader.Load(name).GetUIImage();
+UIIconPtr UI::LoadUIIcon(const std::string &name) {
+  return m_iconLoader.Load(name, PATH_DIRECT).GetUIIcon();
 }
 
-void UI::AddImageSearchPath(const std::string &path) {
-  m_imageLoader.AddPath(path);
+UIPatternPtr UI::LoadUIPattern(const std::string &name) {
+  return m_patternLoader.Load(name, PATH_DIRECT).GetUIPattern();
 }
 
-UIIconPtr UI::LoadUIIcon(const std::string & name) {
-  return m_iconLoader.Load(name).GetUIIcon();
-}
-
-void UI::AddIconSearchPath(const std::string &path) {
-  m_iconLoader.AddPath(path);
-}
-
-UIPatternPtr UI::LoadUIPattern(const std::string & name) {
-  return m_patternLoader.Load(name).GetUIPattern();
-}
-
-void UI::AddPatternSearchPath(const std::string &path) {
-  m_patternLoader.AddPath(path);
-}
-
-UIPicturePtr UI::LoadUIPicture(const std::string & name) {
-  return m_pictureLoader.Load(name).GetUIPicture();
-}
-
-void UI::AddPictureSearchPath(const std::string &path) {
-  m_pictureLoader.AddPath(path);
+UIPicturePtr UI::LoadUIPicture(const std::string &name) {
+  return m_pictureLoader.Load(name, PATH_DIRECT).GetUIPicture();
 }
 
 unsigned UI::Width() {

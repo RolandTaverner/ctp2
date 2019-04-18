@@ -16,9 +16,10 @@ typedef std::shared_ptr<UIImage> UIImagePtr;
 class UIImageResource : public ResourceElement<UIImageResource> {
 public:
   UIImageResource();
-  UIImageResource(const std::string &name, const std::string &fullPath);
+  UIImageResource(const std::string &name);
 
-  bool LoadImpl(const std::string &name, const std::string &fullPath);
+  bool LoadImpl(const std::string &fullPath);
+  bool LoadImpl(const FileInfo &fi);
 
   UIImagePtr GetUIImage();
 

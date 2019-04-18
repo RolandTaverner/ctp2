@@ -1,6 +1,8 @@
 #include "ctp/c3.h"
 
 #include "ctp/civapp.h"
+#include "ui/d3d_ui/UIMain.h"
+
 #include "ui/interface/splash.h"
 
 #ifdef _DEBUG

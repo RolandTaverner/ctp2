@@ -4,12 +4,17 @@
 
 namespace ui::d3d {
 
-UIIconResource::UIIconResource() : UIIconResource("", "") {}
+UIIconResource::UIIconResource() : UIIconResource("") {}
 
-UIIconResource::UIIconResource(const std::string &name, const std::string &fullPath) :
-  ResourceElement<UIIconResource>(name, fullPath) {}
+UIIconResource::UIIconResource(const std::string &name) :
+  ResourceElement<UIIconResource>(name) {}
 
-bool UIIconResource::LoadImpl(const std::string &name, const std::string &fullPath) {
+bool UIIconResource::LoadImpl(const std::string &fullPath) {
+  // TODO: impl
+  return false;
+}
+
+bool UIIconResource::LoadImpl(const FileInfo &fi) {
   // TODO: impl
   return false;
 }

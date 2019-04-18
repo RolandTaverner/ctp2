@@ -445,6 +445,25 @@ const MBCHAR *CivPaths::GetDesktopPath(void) {
 
 //----------------------------------------------------------------------------
 //
+// Name       : CivPaths::GetExtraDataPaths
+//
+// Description: Inspect the data include directory lookup paths
+//
+// Parameters : -
+//
+// Globals    : -
+//
+// Returns    : std::vector<MBCHAR const *> const & : the extra lookup paths
+//
+// Remark(s)  : -
+//
+//----------------------------------------------------------------------------
+std::vector<std::string> const &CivPaths::GetExtraDataPaths(void) const {
+  return m_extraDataPaths;
+}
+
+//----------------------------------------------------------------------------
+//
 // Name       : CivPaths::InsertExtraDataPath
 //
 // Description: Insert a data include directory to the lookup path

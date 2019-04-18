@@ -2668,6 +2668,15 @@
     <ClInclude Include="..\ui\d3d_ui\UILDL.h">
       <Filter>ui\d3d_ui</Filter>
     </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\Resource\FormatFactory.h">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\Resource\ResourceFileManager.h">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ui\d3d_ui\Resource\ZFSFile.h">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ctp2_utils\appstrings.cpp">
@@ -4967,6 +4976,15 @@
     </ClCompile>
     <ClCompile Include="..\ui\d3d_ui\UILDL.cpp">
       <Filter>ui\d3d_ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\Resource\FormatFactory.cpp">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\Resource\ResourceFileManager.cpp">
+      <Filter>ui\d3d_ui\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ui\d3d_ui\Resource\ZFSFile.cpp">
+      <Filter>ui\d3d_ui\Resource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -16,9 +16,10 @@ typedef std::shared_ptr<UIPicture> UIPicturePtr;
 class UIPictureResource : public ResourceElement<UIPictureResource> {
 public:
   UIPictureResource();
-  UIPictureResource(const std::string &name, const std::string &fullPath);
+  explicit UIPictureResource(const std::string &name);
 
-  bool LoadImpl(const std::string &name, const std::string &fullPath);
+  bool LoadImpl(const std::string &fullPath);
+  bool LoadImpl(const FileInfo &fi);
 
   UIPicturePtr GetUIPicture();
 

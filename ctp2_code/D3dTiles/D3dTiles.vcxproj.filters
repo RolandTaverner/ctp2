@@ -102,6 +102,9 @@
     <ClInclude Include="include\D3dTiles\D3d\D3dFont.h">
       <Filter>Header Files\D3d</Filter>
     </ClInclude>
+    <ClInclude Include="include\D3dTiles\D3d\UTF8Converter.h">
+      <Filter>Header Files\D3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

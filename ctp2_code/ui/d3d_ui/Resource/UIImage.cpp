@@ -4,12 +4,17 @@
 
 namespace ui::d3d {
 
-UIImageResource::UIImageResource() : UIImageResource("", "") {}
+UIImageResource::UIImageResource() : UIImageResource("") {}
 
-UIImageResource::UIImageResource(const std::string &name, const std::string &fullPath) :
-  ResourceElement<UIImageResource>(name, fullPath) {}
+UIImageResource::UIImageResource(const std::string &name) :
+  ResourceElement<UIImageResource>(name) {}
 
-bool UIImageResource::LoadImpl(const std::string &name, const std::string &fullPath) {
+bool UIImageResource::LoadImpl(const std::string &fullPath) {
+  // TODO: impl
+  return false;
+}
+
+bool UIImageResource::LoadImpl(const FileInfo &fi) {
   // TODO: impl
   return false;
 }

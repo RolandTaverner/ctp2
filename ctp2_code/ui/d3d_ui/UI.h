@@ -7,6 +7,7 @@
 #include "ui/d3d_ui/D3d/D3dUI.h"
 #include "ui/d3d_ui/UILDL.h"
 
+#include "ui/d3d_ui/Resource/ResourceFileManager.h"
 #include "ui/d3d_ui/Resource/ResourceLoader.h"
 #include "ui/d3d_ui/Resource/UICursor.h"
 #include "ui/d3d_ui/Resource/UIImage.h"
@@ -33,22 +34,14 @@ public:
   void HandleMouseWheel(std::int16_t delta) override;
   
   UICursorPtr LoadUICursor(const std::string &name);
-  void AddCursorSearchPath(const std::string &path);
-
   UIImagePtr LoadUIImage(const std::string &name);
-  void AddImageSearchPath(const std::string &path);
-
   UIIconPtr LoadUIIcon(const std::string &name);
-  void AddIconSearchPath(const std::string &path);
-
   UIPatternPtr LoadUIPattern(const std::string &name);
-  void AddPatternSearchPath(const std::string &path);
-
   UIPicturePtr LoadUIPicture(const std::string &name);
-  void AddPictureSearchPath(const std::string &path);
-
+  
 protected:
   void InitializeUI(HINSTANCE hinst, int cmdshow, unsigned windowWidth, unsigned windowHeight, const std::string & ldlFile);
+  ResourceFileManagerPtr GetFileManager();
 
 private:
   TileEngine::Scene::Ptr m_scene;
@@ -59,12 +52,12 @@ private:
 
   LDL m_LDL;
 
+  ResourceFileManagerPtr m_fileManager;
   ResourceLoader<UICursorResource> m_cursorLoader;
   ResourceLoader<UIImageResource> m_imageLoader;
   ResourceLoader<UIIconResource> m_iconLoader;
   ResourceLoader<UIPatternResource> m_patternLoader;
   ResourceLoader<UIPictureResource> m_pictureLoader;
-
 };
 
 } // namespace ui::d3d

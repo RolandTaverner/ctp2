@@ -4,12 +4,17 @@
 
 namespace ui::d3d {
 
-UICursorResource::UICursorResource() : UICursorResource("", "") {}
+UICursorResource::UICursorResource() : UICursorResource("") {}
 
-UICursorResource::UICursorResource(const std::string &name, const std::string &fullPath) :
-  ResourceElement<UICursorResource>(name, fullPath) {}
+UICursorResource::UICursorResource(const std::string &name) :
+  ResourceElement<UICursorResource>(name) {}
 
-bool UICursorResource::LoadImpl(const std::string &name, const std::string &fullPath) {
+bool UICursorResource::LoadImpl(const std::string &fullPath) {
+  // TODO: impl
+  return false;
+}
+
+bool UICursorResource::LoadImpl(const FileInfo &fi) {
   // TODO: impl
   return false;
 }

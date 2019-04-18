@@ -59,6 +59,14 @@ void UIDimensioner::SetPosition(const TileEngine::Position &position) {
   m_position = position;
 }
 
+void UIDimensioner::SetHorizontalPosition(int x) {
+  m_position.set<0>(x);
+}
+
+void UIDimensioner::SetVerticalPosition(int y) {
+  m_position.set<1>(y);
+}
+
 unsigned UIDimensioner::GetWidth() const {
   return m_width;
 }
@@ -115,7 +123,7 @@ void UIDimensioner::AbsoluteVerticalSize(bool absolute) {
   m_vSizeType = absolute ? AUI_DIMENSION_VSIZE_ABSOLUTE : AUI_DIMENSION_VSIZE_RELATIVE;
 }
 
-int UIDimensioner::CalculateX(void) {
+int UIDimensioner::CalculateX(void) const {
   UIRegionPtr owner = m_owner.lock();
   if (!owner) {
     return m_position.get<0>();
@@ -153,7 +161,7 @@ int UIDimensioner::CalculateX(void) {
   return result;
 }
 
-int UIDimensioner::CalculateY(void) {
+int UIDimensioner::CalculateY(void) const {
   UIRegionPtr owner = m_owner.lock();
   if (!owner) {
     return m_position.get<1>();
@@ -191,7 +199,7 @@ int UIDimensioner::CalculateY(void) {
   return result;
 }
 
-unsigned UIDimensioner::CalculateWidth(void) {
+unsigned UIDimensioner::CalculateWidth(void) const {
   UIRegionPtr owner = m_owner.lock();
   if (!owner) {
     return m_width;
@@ -206,7 +214,7 @@ unsigned UIDimensioner::CalculateWidth(void) {
   return m_width;
 }
 
-unsigned UIDimensioner::CalculateHeight(void) {
+unsigned UIDimensioner::CalculateHeight(void) const {
   UIRegionPtr owner = m_owner.lock();
   if (!owner) {
     return m_height;
@@ -219,6 +227,10 @@ unsigned UIDimensioner::CalculateHeight(void) {
   }
   Assert(FALSE);
   return m_height;
+}
+
+std::tuple<TileEngine::Position, unsigned, unsigned> UIDimensioner::CalculateAll() const {
+  return std::make_tuple<>(TileEngine::Position(CalculateX(), CalculateY()), CalculateWidth(), CalculateHeight());
 }
 
 void UIDimensioner::SetCalcHorizontalPosition(int x) {

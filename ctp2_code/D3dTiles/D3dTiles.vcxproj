@@ -175,6 +175,7 @@
     <ClInclude Include="include\D3dTiles\D3d\DXGIFactory.h" />
     <ClInclude Include="include\D3dTiles\D3d\Renderer.h" />
     <ClInclude Include="include\D3dTiles\D3d\TextureShader.h" />
+    <ClInclude Include="include\D3dTiles\D3d\UTF8Converter.h" />
     <ClInclude Include="include\D3dTiles\Font.h" />
     <ClInclude Include="include\D3dTiles\FontManager.h" />
     <ClInclude Include="include\D3dTiles\Geometry.h" />

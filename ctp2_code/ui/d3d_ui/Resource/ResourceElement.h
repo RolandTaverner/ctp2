@@ -3,26 +3,27 @@
 #include <memory>
 #include <string>
 
+#include "ui/d3d_ui/Resource/ResourceFileManager.h"
+
 namespace ui::d3d {
 
 template<typename ImplType> class ResourceElement {
 public:
-  ResourceElement(const std::string &name, const std::string &fullPath) :
-    m_name(name), m_fullPath(fullPath) {
-    Load();
+  explicit ResourceElement(const std::string &name) :
+    m_name(name) {
   }
   virtual ~ResourceElement() {}
 
-  bool Load() {
-    return self()->LoadImpl(Name(), FullPath());
+  bool Load(const std::string &fullPath) {
+    return self()->LoadImpl(fullPath);
+  }
+
+  bool Load(const FileInfo &fi) {
+    return self()->LoadImpl(fi);
   }
 
   const std::string &Name() const {
     return m_name;
-  }
-
-  const std::string &FullPath() const {
-    return m_fullPath;
   }
 
 private:
@@ -31,7 +32,6 @@ private:
   }
 
   std::string m_name;
-  std::string m_fullPath;
 };
 
 } // namespace ui::d3d

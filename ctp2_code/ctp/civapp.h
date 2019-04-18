@@ -57,8 +57,13 @@ class CivApp;
 
 #include "ui/aui_common/aui_ldl.h"
 #include "ui/aui_common/aui_action.h" // aui_Action
-#include "ui/d3d_ui/UIMain.h"
 #include "os/include/ctp2_inttypes.h" // sint32, uint32
+
+namespace ui::d3d {
+class UIMain;
+typedef std::shared_ptr<UIMain> UIMainPtr;
+}
+
 class CivArchive;
 
 //----------------------------------------------------------------------------

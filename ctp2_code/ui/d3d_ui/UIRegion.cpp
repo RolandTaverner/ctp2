@@ -2,116 +2,103 @@
 
 #include <stdexcept>
 
+#include <boost/algorithm/string.hpp>
+
 #include "ui/aui_common/aui_ldl.h"
 #include "ui/ldl/ldl_attr.hpp"
 #include "ui/ldl/ldl_data.hpp"
 
 #include "ui/d3d_ui/UIRegion.h"
 
+namespace ba = boost::algorithm;
+
 namespace ui::d3d {
+
+static const char *LDLAttrBlindness = "mouseblind";
 
 UIRegion::UIRegion(UIRegionPtr parent, unsigned id,
   const TileEngine::Position &pos, unsigned width, unsigned height) :
   m_id(id),
   m_region(std::make_shared<TileEngine::Region>(parent ? parent->Region() : TileEngine::Region::Ptr(), id, pos, width, height, true, true)),
-  m_dim(parent) {
+  m_dim(parent), m_blind(false) {
 }
 
-UIRegion::UIRegion(UIRegionPtr parent, unsigned id, const std::string &ldlBlockName) :
-  m_id(id), m_ldlBlockName(ldlBlockName), m_dim(parent) {
+UIRegion::UIRegion(UIRegionPtr parent, unsigned id, LDLBlockPtr ldlBlock) :
+  m_id(id), m_parent(parent), m_ldlBlock(ldlBlock), m_dim(parent), m_blind(false) {
   InitFromLDL();
 }
 
 UIRegion::~UIRegion() {}
 
 void UIRegion::InitFromLDL() {
+  Assert(m_ldlBlock);
+
+  if (m_ldlBlock->Is<bool>(LDLAttrBlindness)) {
+    m_blind = m_ldlBlock->As<bool>(LDLAttrBlindness);
+  }
+
+  if (const std::string horizontalAnchor = m_ldlBlock->GetString(LDLAttrHAnchor); 
+    !horizontalAnchor.empty()) {
+    if (ba::iequals(horizontalAnchor, "right")) {
+      m_dim.AnchorRight();
+    } else if (ba::iequals(horizontalAnchor, "center")) {
+      m_dim.AnchorHorizontalCenter();
+    } else {
+      m_dim.AnchorLeft();
+    }
+  } else {
+    m_dim.AnchorLeft();
+  }
+
+  if (const std::string verticalAnchor = m_ldlBlock->GetString(LDLAttrVAnchor);
+    !verticalAnchor.empty()) {
+    if (ba::iequals(verticalAnchor, "bottom")) {
+      m_dim.AnchorBottom();
+    } else if (ba::iequals(verticalAnchor, "center")) {
+      m_dim.AnchorVerticalCenter();
+    } else {
+      m_dim.AnchorTop();
+    }
+  } else {
+    m_dim.AnchorTop();
+  }
+
+  if (m_ldlBlock->Is<int>(LDLAttrHRelPosition)) {
+    m_dim.SetHorizontalPosition(m_ldlBlock->As<int>(LDLAttrHRelPosition));
+    m_dim.AbsoluteHorizontalPosition(false);
+  } else {
+    m_dim.SetHorizontalPosition(m_ldlBlock->As<int>(LDLAttrHAbsPosition));
+    m_dim.AbsoluteHorizontalPosition(true);
+  }
+
+  if (m_ldlBlock->Is<int>(LDLAttrVRelPosition)) {
+    m_dim.SetVerticalPosition(m_ldlBlock->As<int>(LDLAttrVRelPosition));
+    m_dim.AbsoluteVerticalPosition(false);
+  } else {
+    m_dim.SetVerticalPosition(m_ldlBlock->As<int>(LDLAttrVAbsPosition));
+    m_dim.AbsoluteVerticalPosition(true);
+  }
+
+  if (m_ldlBlock->Is<int>(LDLAttrHRelSize)) {
+    m_dim.SetWidth(m_ldlBlock->As<int>(LDLAttrHRelSize));
+    m_dim.AbsoluteHorizontalSize(false);
+  } else {
+    m_dim.SetWidth(m_ldlBlock->As<int>(LDLAttrHAbsSize));
+    m_dim.AbsoluteHorizontalSize(true);
+  }
+
+  if (m_ldlBlock->Is<int>(LDLAttrVRelSize)) {
+    m_dim.SetHeight(m_ldlBlock->As<int>(LDLAttrVRelSize));
+    m_dim.AbsoluteVerticalSize(false);
+  } else {
+    m_dim.SetHeight(m_ldlBlock->As<int>(LDLAttrVAbsSize));
+    m_dim.AbsoluteVerticalSize(true);
+  }
+
+  auto[position, width, height] = m_dim.CalculateAll();
+
+  Region()->Pos() ;
   /*
-  ldl_datablock *block = aui_Ldl::FindDataBlock(m_ldlBlockName.c_str());
-  Assert(block != NULL);
-  if (!block) {
-    throw std::runtime_error("Ldl block " + m_ldlBlockName + " not found");
-  }
-
-  aui_Region *parent = NULL;
-
-  if (block->GetAttributeType(k_AUI_LDL_PARENT) == ATTRIBUTE_TYPE_STRING) {
-    parent = (aui_Region *)aui_Ldl::GetObject(block->GetString(k_AUI_LDL_PARENT));
-    Assert(parent != NULL);
-  }
-
-  if (!parent) {
-    MBCHAR const * lastDot = strrchr(ldlBlock, '.');
-    if (lastDot) {
-      MBCHAR tempStr[k_AUI_LDL_MAXBLOCK];
-
-      strncpy(tempStr, ldlBlock, (lastDot - ldlBlock));
-      tempStr[lastDot - ldlBlock] = '\0';
-
-      parent = (aui_Region *)aui_Ldl::GetObject(tempStr);
-    } else {
-      parent = g_ui;
-    }
-  }
-
-  m_dim->SetParent(parent);
-
-  if (block->GetAttributeType(k_AUI_REGION_LDL_BLINDNESS))
-    m_blind = block->GetBool(k_AUI_REGION_LDL_BLINDNESS);
-
-  if (MBCHAR * horizontalAnchor = block->GetString(k_AUI_LDL_HANCHOR)) {
-    if (stricmp(horizontalAnchor, "right") == 0) {
-      m_dim->AnchorRight();
-    } else if (stricmp(horizontalAnchor, "center") == 0) {
-      m_dim->AnchorHorizontalCenter();
-    } else {
-      m_dim->AnchorLeft();
-    }
-  } else
-    m_dim->AnchorLeft();
-
-  if (MBCHAR * verticalAnchor = block->GetString(k_AUI_LDL_VANCHOR)) {
-    if (stricmp(verticalAnchor, "bottom") == 0) {
-      m_dim->AnchorBottom();
-    } else if (stricmp(verticalAnchor, "center") == 0) {
-      m_dim->AnchorVerticalCenter();
-    } else {
-      m_dim->AnchorTop();
-    }
-  } else
-    m_dim->AnchorTop();
-
-  if (block->GetAttributeType(k_AUI_LDL_HRELPOSITION) == ATTRIBUTE_TYPE_INT) {
-    m_dim->HorizontalPositionData() = block->GetInt(k_AUI_LDL_HRELPOSITION);
-    m_dim->AbsoluteHorizontalPosition(FALSE);
-  } else {
-    m_dim->HorizontalPositionData() = block->GetInt(k_AUI_LDL_HABSPOSITION);
-    m_dim->AbsoluteHorizontalPosition(TRUE);
-  }
-
-  if (block->GetAttributeType(k_AUI_LDL_VRELPOSITION) == ATTRIBUTE_TYPE_INT) {
-    m_dim->VerticalPositionData() = block->GetInt(k_AUI_LDL_VRELPOSITION);
-    m_dim->AbsoluteVerticalPosition(FALSE);
-  } else {
-    m_dim->VerticalPositionData() = block->GetInt(k_AUI_LDL_VABSPOSITION);
-    m_dim->AbsoluteVerticalPosition(TRUE);
-  }
-
-  if (block->GetAttributeType(k_AUI_LDL_HRELSIZE) == ATTRIBUTE_TYPE_INT) {
-    m_dim->HorizontalSizeData() = block->GetInt(k_AUI_LDL_HRELSIZE);
-    m_dim->AbsoluteHorizontalSize(FALSE);
-  } else {
-    m_dim->HorizontalSizeData() = block->GetInt(k_AUI_LDL_HABSSIZE);
-    m_dim->AbsoluteHorizontalSize(TRUE);
-  }
-
-  if (block->GetAttributeType(k_AUI_LDL_VRELSIZE) == ATTRIBUTE_TYPE_INT) {
-    m_dim->VerticalSizeData() = block->GetInt(k_AUI_LDL_VRELSIZE);
-    m_dim->AbsoluteVerticalSize(FALSE);
-  } else {
-    m_dim->VerticalSizeData() = block->GetInt(k_AUI_LDL_VABSSIZE);
-    m_dim->AbsoluteVerticalSize(TRUE);
-  }
-
   m_dim->CalculateAll(&m_x, &m_y, &m_width, &m_height);
 
   AUI_ERRCODE errcode = aui_Ldl::Associate(this, ldlBlock);
@@ -135,7 +122,7 @@ unsigned UIRegion::ID() const {
 }
 
 const std::string &UIRegion::GetLDLBlockName() const {
-  return m_ldlBlockName;
+  return m_ldlBlock ? m_ldlBlock->GetFullName() : std::string();
 }
 
 unsigned UIRegion::Width() const {
